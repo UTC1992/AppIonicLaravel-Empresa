@@ -33,7 +33,6 @@ class OrdenTempController extends Controller
   {
       //
   }
-
   /**
    * Store a newly created resource in storage.
    *
@@ -90,7 +89,7 @@ class OrdenTempController extends Controller
             'cuesta'=> $value->cuesta,
             'cutari'=> $value->cutari,
             'estado'=> false,
-            'referencia'=>"archivo csv",
+            'referencia'=>"sin asignar",
             'id_emp'=>1
           ];
         }

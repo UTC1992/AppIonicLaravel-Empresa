@@ -19,4 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //rutas de servicio cliente angular
 Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::resource('ordenes','Angular\OrdenTempController');
+    Route::resource('tecnicos','Angular\TecnicoController');
+    Route::get('delete-tecnico/{id_tecnico}','Angular\TecnicoController@delete');
+    Route::get('get-tecnico/{id_tecnico}','Angular\TecnicoController@getTecnicoById');
+    Route::post('update-tecnico','Angular\TecnicoController@editTecnicoAngular');
+    Route::get('build-task/{tipo}/{id_tecnico}','Angular\TecnicoController@buildTaskTecnicos');
+
 });
+
+Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){
+    Route::get('get-data/{cedula}','Mobile\MobileController@getTechnicalData');
+  });

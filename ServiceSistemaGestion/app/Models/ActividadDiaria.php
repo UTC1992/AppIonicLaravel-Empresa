@@ -58,6 +58,6 @@ class ActividadDiaria extends Model
     'id_emp',
   ];
   protected $hidden = [
-      'id_act','remember_token'
+    'remember_token'
   ];
 }

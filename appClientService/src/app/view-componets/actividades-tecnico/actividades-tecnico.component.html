@@ -1,0 +1,24 @@
+<h5 class="card-title">Distribuir actividades</h5>
+    <p class="card-text">Asignar  actividad</p>
+    <div class="row">
+        <div class="col">
+            <button  class="btn btn-primary" (click)="buildTask(10)">NOTIFICACIONES</button>
+        </div>
+        <div class="col">
+            <button  class="btn btn-warning" (click)="buildTask(40)">RECONECCIONES</button>
+        </div>
+        <div class="col">
+            <button  class="btn btn-danger" (click)="buildTask(30)">CORTES</button>
+        </div>
+    </div>
+    <hr>
+    <p class="card-text">Seleccionar Técnicos</p>
+    <div class="row">
+        <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
+            <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef > <label for="cbox2">{{tecnico.nombres}}</label>  
+        </div>
+    </div>
+
+    
+    
+   

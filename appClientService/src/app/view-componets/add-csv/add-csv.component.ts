@@ -53,14 +53,20 @@ export class AddCsvComponent implements OnInit {
     );
     this.clearFile();
     setTimeout(() => {
-      alert('done!');
+      alert('Archivo subido correctamente!');
       this.loading = false;
+      location.reload();
     }, 1000);
+   
   }
 
   clearFile() {
     this.form.get('archivo').setValue(null);
     this.fileInput.nativeElement.value = '';
   }
+
+
+  
+
 
 }

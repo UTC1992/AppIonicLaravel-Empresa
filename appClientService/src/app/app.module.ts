@@ -12,10 +12,14 @@ import { NavClientComponent } from './view-componets/nav-client/nav-client.compo
 import { TableClientComponent } from './view-componets/table-client/table-client.component';
 import { AddCsvComponent } from './view-componets/add-csv/add-csv.component';
 import { OrdenService } from './services/orden.service';
+import { TecnicoService } from './services/tecnico.service';
 import { DistribucionComponent } from './view-componets/distribucion/distribucion.component';
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
 import { AdminComponent } from './view-componets/admin/admin.component';
+import { TecnicosComponent } from './view-componets/tecnicos/tecnicos.component';
+import { FormTecnicoComponent } from './view-componets/form-tecnico/form-tecnico.component';
+import { ActividadesTecnicoComponent } from './view-componets/actividades-tecnico/actividades-tecnico.component';
 
 
 const appRoutes: Routes = [
@@ -32,6 +36,10 @@ const appRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent
+  },
+  {
+    path:'tecnicos',
+    component:TecnicosComponent
   }
 ];
 
@@ -45,6 +53,9 @@ const appRoutes: Routes = [
     DistribucionComponent,
     WelcomeComponent,
     AdminComponent,
+    TecnicosComponent,
+    FormTecnicoComponent,
+    ActividadesTecnicoComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),
@@ -63,7 +74,7 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [OrdenService],
+  providers: [OrdenService,TecnicoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

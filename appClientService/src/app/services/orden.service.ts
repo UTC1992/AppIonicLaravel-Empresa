@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OrdenService {
-  urlServe='http://192.168.100.144:8080/ServiceSistemaGestion/public/api/angular/ordenes';
+  urlServe='http://192.168.100.165:8080/ServiceSistemaGestion/public/api/angular/ordenes';
   constructor(private http:Http) { }
 
   getOrdenes():Observable<Orden[]>{
@@ -16,6 +16,8 @@ export class OrdenService {
   }
 
   addCsvFiles(file:object):Observable<Orden[]>{
-      return this.http.post('http://192.168.100.144:8080/ServiceSistemaGestion/public/api/angular/ordenes',file).pipe(map((e:Response)=> e.json()));
+      return this.http.post(this.urlServe,file).pipe(map((e:Response)=> e.json()));
   }
+
+  
 }

@@ -12,6 +12,6 @@ class OrdenTemp extends Model
       'id_ode','n9cono','n9cocu','n9cose','n9coru','n9meco','n9leco','n9cocl','n9nomb','n9refe','cusecu','cucoon','foto','observacion','fecha','hora','id_tecn'
   ];
   protected $hidden = [
-      'id_ode','remember_token'
+      'remember_token'
   ];
 }
