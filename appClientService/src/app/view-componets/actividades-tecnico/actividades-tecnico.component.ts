@@ -36,13 +36,12 @@ export class ActividadesTecnicoComponent implements OnInit {
     }
 
     var res=this.tecnicoService.buildTecnicoByTask(tipo,cadena);
-    setTimeout(() => {
-      alert('Tareas Asignadas correctamente!');
-      //this.loading = false;
-      //this.clearFile();
-      location.reload();
-    }, 1000);
+      res.subscribe(
+        msj=>console.log("mensje servidor: "+msj),
+        location.reload
+      );
   }
 
+ 
 
 }
