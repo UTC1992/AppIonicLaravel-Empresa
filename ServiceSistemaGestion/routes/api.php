@@ -29,4 +29,5 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){
     Route::get('get-data/{cedula}','Mobile\MobileController@getTechnicalData');
+    Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
   });

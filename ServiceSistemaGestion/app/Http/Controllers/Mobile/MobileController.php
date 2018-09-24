@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OrdenTemp;
 use App\Models\Tecnico;
+use App\Models\ReconexionManual;
 use Illuminate\Http\JsonResponse;
 
 class MobileController extends Controller
@@ -22,6 +23,27 @@ class MobileController extends Controller
       return response()->json("Técnico no encontrado");
     }
 
+  }
+  //actualiza datos temporales
+  public function updateOrdenTemp(Request $request){
+    $orden=OrdenTemp::find($request->id_or);
+    $input=$request->all();
+    $orden->update($input);
+  }
+
+  //insertar reconnexion desde movil
+  public function insertReconexionManual(Request $request){
+      $input = $request->all();
+      if(!is_null($input)){
+        $res=ReconexionManual::create($input);
+        if($res){
+          return response()->json(true);
+        }else{
+          return response()->json(false);
+        }
+      }else{
+        return response()->json("Data Empty");
+      }
   }
 
 }

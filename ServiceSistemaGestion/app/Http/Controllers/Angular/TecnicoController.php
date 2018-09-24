@@ -117,6 +117,8 @@ class TecnicoController extends Controller
             $temp->n9cocu=$value->n9cocu;
             $temp->n9cose=$value->n9cose;
             $temp->n9coru=$value->n9coru;
+            $temp->n9plve=$value->n9plve;
+            $temp->n9vaca=$value->n9vaca;
             $temp->n9meco=$value->n9meco;
             $temp->n9leco=$value->n9leco;
             $temp->n9cocl=$value->n9cocl;
