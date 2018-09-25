@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OrdenService {
-  urlServe='http://192.168.100.173:8080/ServiceSistemaGestion/public/api/angular/ordenes';
+  urlServe='http://192.168.100.179:8080/ServiceSistemaGestion/public/api/angular/ordenes';
   constructor(private http:Http) { }
 
   getOrdenes():Observable<Orden[]>{

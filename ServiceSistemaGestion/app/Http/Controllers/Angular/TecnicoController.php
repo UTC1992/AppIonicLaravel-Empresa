@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\OrdenTemp;
+use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
 
 class TecnicoController extends Controller
@@ -42,7 +43,7 @@ class TecnicoController extends Controller
     {
         $input=$request->all();
         $tecnico=new Tecnico();
-        $res=$tecnico->insert($input);
+        $res=$tecnico->create($input);
         return response()->json($res);
     }
 
@@ -95,14 +96,18 @@ class TecnicoController extends Controller
     public function buildTaskTecnicos($tipo,$cadena){
       $array_id_tecnicos=explode('&&',$cadena);
       $likeValue="";
+      $actividad="";
       if($tipo=="10"){
         $likeValue="%10%";
+        $actividad="Notificación";
       }
       if($tipo=="30"){
         $likeValue="%30%";
+        $actividad="Corte";
       }
       if($tipo=="40"){
         $likeValue="%40%";
+        $actividad="Reconexión";
       }
       $contador=0;
       $num=new ActividadDiaria();
@@ -112,26 +117,16 @@ class TecnicoController extends Controller
           $orden=new ActividadDiaria();
           $result=$orden->where('estado',0)->where('n9cono','like',''.$likeValue.'')->get();
           foreach ($result as $key => $value) {
-            $temp=new OrdenTemp();
-            $temp->n9cono=$value->n9cono;
-            $temp->n9cocu=$value->n9cocu;
-            $temp->n9cose=$value->n9cose;
-            $temp->n9coru=$value->n9coru;
-            $temp->n9plve=$value->n9plve;
-            $temp->n9vaca=$value->n9vaca;
-            $temp->n9meco=$value->n9meco;
-            $temp->n9leco=$value->n9leco;
-            $temp->n9cocl=$value->n9cocl;
-            $temp->n9nomb=$value->n9nomb;
-            $temp->n9refe=$value->n9refe;
-            $temp->cusecu=$value->cusecu;
-            $temp->cucoon=$value->cucoon;
-            $temp->observacion="tarea temporal";
-            $temp->estado=0;
-            $temp->fecha=date('Y-m-d');
-            $temp->hora=date('H:i:s');
-            $temp->id_tecn=$array_id_tecnicos[$i];
-            $temp->save();
+
+            $ordenTrabajo=new OrdenTrabajo();
+            $ordenTrabajo->id_tecn=$array_id_tecnicos[$i];
+            $ordenTrabajo->id_act=$value->id_act;
+            $ordenTrabajo->estado=0;
+            $ordenTrabajo->fecha=date('Y-m-d');
+            $ordenTrabajo->observacion="Orden de trabajo pendiente ".$actividad;
+            $ordenTrabajo->tipo_actividad=$tipo;
+            $ordenTrabajo->save();
+
             $ordenProc=ActividadDiaria::find($value->id_act);
             $ordenProc->estado=1;
             $ordenProc->referencia="Asignado";

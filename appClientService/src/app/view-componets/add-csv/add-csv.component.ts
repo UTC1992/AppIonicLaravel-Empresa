@@ -9,7 +9,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class AddCsvComponent implements OnInit {
   form: FormGroup;
-  loading: boolean = false;
+  loading2: boolean = false;
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(private ordenService:OrdenService,private fb: FormBuilder) {
     this.createForm();
@@ -43,9 +43,14 @@ export class AddCsvComponent implements OnInit {
     input.append('archivo', this.form.get('archivo').value);
     return input;
   }
+  //subir archivo al servidor 
   onSubmit() {
+    if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
+      alert("Seleccione un archivo");
+      return;
+    }
     const formModel = this.prepareSave();
-    this.loading = true;
+    this.loading2 = true;
     this.ordenService.addCsvFiles(formModel)
     .subscribe(
       file=>console.log(file),
@@ -54,7 +59,7 @@ export class AddCsvComponent implements OnInit {
     this.clearFile();
     setTimeout(() => {
       alert('Archivo subido correctamente!');
-      this.loading = false;
+      this.loading2 = false;
       location.reload();
     }, 1000);
    

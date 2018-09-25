@@ -12,11 +12,41 @@
         </div>
     </div>
     <hr>
-    <p class="card-text">Seleccionar Técnicos</p>
-    <div class="row">
+    <p class="card-text">Técnicos Sin Asignar</p>
+    <div class="row lert alert-danger">
         <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
             <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef > <label for="cbox2">{{tecnico.nombres}}</label>  
-        </div>
+        </div>   
+    </div>
+    <hr>
+    <p class="card-text">Técnicos Asignados</p>
+    <div class="row lert">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tecnico</th>
+                    <th>Fecha tareas</th>
+                    <th>Número tareas</th>
+                    <th>Tipo Tarea</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tecnico_tareas of actividades | async" class="alert alert-success">
+                    <td>6</td>
+                    <td>{{tecnico_tareas.id_tecn}}</td>
+                    <td>{{tecnico_tareas.nombres}}</td>
+                    <td>{{tecnico_tareas.apellidos}}</td>
+                    <td>{{tecnico_tareas.cedula}}</td>
+                    <td>{{tecnico_tareas.telefono}}</td>
+                    <td>
+                        <button class="btn btn-info btn-xs">Ver detalle</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>  
     </div>
 
     

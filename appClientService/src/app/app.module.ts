@@ -6,7 +6,7 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
+import { MatTableModule, MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
 import { PanelLayoutComponent } from './view-componets/panel-layout/panel-layout.component';
 import { NavClientComponent } from './view-componets/nav-client/nav-client.component';
 import { TableClientComponent } from './view-componets/table-client/table-client.component';
@@ -70,6 +70,7 @@ const appRoutes: Routes = [
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
+    MatTableModule,
     HttpModule,
     FormsModule,
     ReactiveFormsModule

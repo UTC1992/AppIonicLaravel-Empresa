@@ -89,6 +89,7 @@ class OrdenTempController extends Controller
             'cuesta'=> $value->cuesta,
             'cutari'=> $value->cutari,
             'estado'=> false,
+            'created_at'=>date('Y-m-d H:i:s'),
             'referencia'=>"sin asignar",
             'id_emp'=>1
           ];
