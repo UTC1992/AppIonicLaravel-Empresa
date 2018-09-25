@@ -25,6 +25,7 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::post('update-tecnico','Angular\TecnicoController@editTecnicoAngular');
     Route::get('build-task/{tipo}/{id_tecnico}','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
+    Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
 });
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){

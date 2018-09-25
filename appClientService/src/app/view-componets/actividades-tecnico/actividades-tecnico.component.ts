@@ -21,12 +21,12 @@ export class ActividadesTecnicoComponent implements OnInit {
   constructor(private tecnicoService:TecnicoService) { }
 
   ngOnInit() {
-    this.tecnicos =this.tecnicoService.getAllTecnicos();
+    this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
     this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
   }
 
   buildTask(tipo){
-    var cadena="";
+    var cadena="";  
     var mensaje="";
     var cont=0;
     var result = document.getElementsByClassName("tec");

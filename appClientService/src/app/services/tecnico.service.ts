@@ -15,6 +15,10 @@ export class TecnicoService {
   getAllTecnicos():Observable<Tecnico[]>{
     return this.http.get(this.baseUrl+"/tecnicos").pipe(map((e:Response)=> e.json()));
   }
+  //metodo tecnicos con actividades
+  getTecnicosSinActividades():Observable<Tecnico[]>{
+    return this.http.get(this.baseUrl+"/tecnicos-sin-actividades").pipe(map((e:Response)=> e.json()));
+  }
   //metodo obtien por id de tenico
   getTecnicoById(id):Observable<Tecnico>{
     return this.http.get(this.baseUrl+"/get-tecnico/"+id).pipe(map((e:Response)=> e.json()));
