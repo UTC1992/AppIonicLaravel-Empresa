@@ -24,23 +24,19 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Tecnico</th>
-                    <th>Fecha tareas</th>
-                    <th>Número tareas</th>
-                    <th>Tipo Tarea</th>
-                    <th>Estado</th>
+                    <th>Número Actividades</th>
+                    <th>Tipo Actividad</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let tecnico_tareas of actividades | async" class="alert alert-success">
-                    <td>6</td>
                     <td>{{tecnico_tareas.id_tecn}}</td>
-                    <td>{{tecnico_tareas.nombres}}</td>
-                    <td>{{tecnico_tareas.apellidos}}</td>
-                    <td>{{tecnico_tareas.cedula}}</td>
-                    <td>{{tecnico_tareas.telefono}}</td>
+                    <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
+                    <td>{{tecnico_tareas.cantidad}}</td>
+                    <td>{{tecnico_tareas.tipo}}</td>
                     <td>
                         <button class="btn btn-info btn-xs">Ver detalle</button>
                     </td>
