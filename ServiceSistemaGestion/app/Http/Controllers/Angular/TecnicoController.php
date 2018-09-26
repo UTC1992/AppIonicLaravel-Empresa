@@ -124,36 +124,42 @@ class TecnicoController extends Controller
             $i=0;
             $orden=new ActividadDiaria();
             $result=$orden->where('estado',0)->where('n9cono','like',''.$likeValue.'')->get();
-            foreach ($result as $key => $value) {
+            if(count($result)>0){
+              foreach ($result as $key => $value) {
 
-              $ordenTrabajo=new OrdenTrabajo();
-              $ordenTrabajo->id_tecn=$array_id_tecnicos[$i];
-              $ordenTrabajo->id_act=$value->id_act;
-              $ordenTrabajo->estado=0;
-              $ordenTrabajo->fecha=date('Y-m-d');
-              $ordenTrabajo->observacion="Orden de trabajo pendiente ".$actividad;
-              $ordenTrabajo->tipo_actividad=$tipo;
-              $ordenTrabajo->save();
+                $ordenTrabajo=new OrdenTrabajo();
+                $ordenTrabajo->id_tecn=$array_id_tecnicos[$i];
+                $ordenTrabajo->id_act=$value->id_act;
+                $ordenTrabajo->estado=0;
+                $ordenTrabajo->fecha=date('Y-m-d');
+                $ordenTrabajo->observacion="Orden de trabajo pendiente ".$actividad;
+                $ordenTrabajo->tipo_actividad=$tipo;
+                $ordenTrabajo->save();
 
-              $ordenProc=ActividadDiaria::find($value->id_act);
-              $ordenProc->estado=1;
-              $ordenProc->referencia="Asignado";
-              $ordenProc->save();
-              if($contador>ceil($num_act_by_tec)){
-                $i++;
-                $contador=0;
+                $ordenProc=ActividadDiaria::find($value->id_act);
+                $ordenProc->estado=1;
+                $ordenProc->referencia="Asignado";
+                $ordenProc->save();
+                if($contador==ceil($num_act_by_tec)){
+                  $i++;
+                  $contador=0;
+                }
+                $contador++;
               }
-              $contador++;
+
+              for ($x=0; $x < count($array_id_tecnicos); $x++) {
+                  $tecnico=Tecnico::find($array_id_tecnicos[$x]);
+                  $tecnico->asignado=1;
+                  $tecnico->save();
+              }
+              return response()->json(true);
+            }else{
+              return response()->json(false);
             }
 
-            for ($x=0; $x < count($array_id_tecnicos); $x++) {
-                $tecnico=Tecnico::find($array_id_tecnicos[$x]);
-                $tecnico->asignado=1;
-                $tecnico->save();
-            }
-        return response()->json(true);
+
       }else{
-        return response()->json(false);
+        return response()->json("1");
       }
 
     }

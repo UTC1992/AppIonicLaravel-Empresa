@@ -12,13 +12,15 @@ import { Observable } from 'rxjs';
 export class ActividadesTecnicoComponent implements OnInit {
 
   tecnicos:Observable<Tecnico[]>; 
-  loading: boolean = false;
+  public loading: boolean;
   res: Observable<any>;
   actividades:Observable<any[]>;
 
 
   @ViewChild('inputRef') inputRef: ElementRef;
-  constructor(private tecnicoService:TecnicoService) { }
+  constructor(private tecnicoService:TecnicoService) {
+    this.loading=false;
+   }
 
   ngOnInit() {
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
@@ -26,6 +28,7 @@ export class ActividadesTecnicoComponent implements OnInit {
   }
 
   buildTask(tipo){
+    
     var cadena="";  
     var mensaje="";
     var cont=0;
@@ -38,6 +41,7 @@ export class ActividadesTecnicoComponent implements OnInit {
       }    
     }
     if(cont>0){
+      this.loading=true;
       if(cadena!=""){
         cadena=cadena.substring(0,cadena.length-2);         
       }
@@ -48,19 +52,25 @@ export class ActividadesTecnicoComponent implements OnInit {
             console.log("mensaje servidor: "+mensaje);
             if(mensaje){
                 alert("Actividades asignadas correctamente");
-                location.reload();
-            }else{
+                this.loading=false;
+                this.reloadComponent();
+            }else if(!mensaje){
+              this.loading=false;
+              alert("La actividad ya fue asignada o no existe actividad que asignar");
+            }else if(mensaje=="1"){
+              this.loading=false;
               alert("Ocurrio un error");
             }
           }  
         );  
     }else{
-      alert("Seleccione al menos un tecnico");
+      alert("Seleccione al menos un técnico");
     }  
   }
 
-  reloadPage(){
-    location.reload();
+  reloadComponent(){
+    this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
+    this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
   }
  
 

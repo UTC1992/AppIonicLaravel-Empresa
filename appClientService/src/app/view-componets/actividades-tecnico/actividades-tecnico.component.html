@@ -1,5 +1,5 @@
-<h5 class="card-title">Distribuir actividades</h5>
-    <p class="card-text">Asignar  actividad</p>
+<h5 class="card-title"> Actividades</h5>
+
     <div class="row">
         <div class="col">
             <button  class="btn btn-primary" (click)="buildTask(10)">NOTIFICACIONES</button>
@@ -10,6 +10,11 @@
         <div class="col">
             <button  class="btn btn-danger" (click)="buildTask(30)">CORTES</button>
         </div>
+    </div>
+    <div class="loading" *ngIf="loading">
+        <span class="text-danger">
+            Asignando actividades, por favor espere....
+        </span>
     </div>
     <hr>
     <p class="card-text">Técnicos Sin Asignar</p>

@@ -45,70 +45,77 @@ class OrdenTempController extends Controller
       $path = $request->file('archivo')->getRealPath();
       $data = \Excel::load($path)->get();
       if($data->count()){
-        foreach ($data as $key => $value) {
-          $actividades_list[] = [
-            'n9sepr'=> $value->n9sepr,
-            'n9cono'=> $value->n9cono,
-            'n9cocu'=> $value->n9cocu,
-            'n9selo'=> $value->n9selo,
-            'n9cozo'=> $value->n9cozo,
-            'n9coag'=> $value->n9coag,
-            'n9cose'=> $value->n9cose,
-            'n9coru'=> $value->n9coru,
-            'n9seru'=> $value->n9seru,
-            'n9vano'=> $value->n9vano,
-            'n9plve'=> $value->n9plve,
-            'n9vaca'=> $value->n9vaca,
-            'n9esta'=> $value->n9esta,
-            'n9cocn'=> $value->n9cocn,
-            'n9fech'=> $value->n9fech,
-            'n9meco'=> $value->n9meco,
-            'n9seri'=> $value->n9seri,
-            'n9feco'=> $value->n9feco,
-            'n9leco'=> $value->n9leco,
-            'n9manp'=> $value->n9manp,
-            'n9cocl'=> $value->n9cocl,
-            'n9nomb'=> $value->n9nomb,
-            'n9cedu'=> $value->n9cedu,
-            'n9prin'=> $value->n9prin,
-            'n9nrpr'=> $value->n9nrpr,
-            'n9refe'=> $value->n9refe,
-            'n9tele'=> $value->n9tele,
-            'n9medi'=> $value->n9medi,
-            'n9fecl'=> $value->n9fecl,
-            'n9lect'=> $value->n9lect,
-            'n9cobs'=> $value->n9cobs,
-            'n9cob2'=> $value->n9cob2,
-            'n9ckd1'=> $value->n9ckd1,
-            'n9ckd2'=> $value->n9ckd2,
-            'cusecu'=> $value->cusecu,
-            'cupost'=> $value->cupost,
-            'cucoon'=> $value->cucoon,
-            'cucooe'=> $value->cucooe,
-            'cuclas'=> $value->cuclas,
-            'cuesta'=> $value->cuesta,
-            'cutari'=> $value->cutari,
-            'estado'=> false,
-            'created_at'=>date('Y-m-d H:i:s'),
-            'referencia'=>"sin asignar",
-            'id_emp'=>1
-          ];
+        $con=0;
+        try {
+          foreach ($data as $key => $value) {
+            $con++;
+            $actividad=new ActividadDiaria();
+              $actividad->n9sepr=$value->n9sepr;
+              $actividad->n9cono= $value->n9cono;
+              $actividad->n9cocu= $value->n9cocu;
+              $actividad->n9selo= $value->n9selo;
+              $actividad->n9cozo= $value->n9cozo;
+              $actividad->n9coag= $value->n9coag;
+              $actividad->n9cose= $value->n9cose;
+              $actividad->n9coru= $value->n9coru;
+              $actividad->n9seru= $value->n9seru;
+              $actividad->n9vano= $value->n9vano;
+              $actividad->n9plve= $value->n9plve;
+              $actividad->n9vaca= $value->n9vaca;
+              $actividad->n9esta= $value->n9esta;
+              $actividad->n9cocn= $value->n9cocn;
+              $actividad->n9fech= $value->n9fech;
+              $actividad->n9meco= $value->n9meco;
+              $actividad->n9seri= $value->n9seri;
+              $actividad->n9feco= $value->n9feco;
+              $actividad->n9leco= $value->n9leco;
+              $actividad->n9manp= $value->n9manp;
+              $actividad->n9cocl= $value->n9cocl;
+              $actividad->n9nomb= $value->n9nomb;
+              $actividad->n9cedu= $value->n9cedu;
+              $actividad->n9prin= $value->n9prin;
+              $actividad->n9nrpr= $value->n9nrpr;
+              $actividad->n9refe= $value->n9refe;
+              $actividad->n9tele= $value->n9tele;
+              $actividad->n9medi= $value->n9medi;
+              $actividad->n9fecl= $value->n9fecl;
+              $actividad->n9lect= $value->n9lect;
+              $actividad->n9cobs= $value->n9cobs;
+              $actividad->n9cob2= $value->n9cob2;
+              $actividad->n9ckd1= $value->n9ckd1;
+              $actividad->n9ckd2= $value->n9ckd2;
+              $actividad->cusecu= $value->cusecu;
+              $actividad->cupost= $value->cupost;
+              $actividad->cucoon= $value->cucoon;
+              $actividad->cucooe= $value->cucooe;
+              $actividad->cuclas= $value->cuclas;
+              $actividad->cuesta= $value->cuesta;
+              $actividad->cutari= $value->cutari;
+              $actividad->estado= false;
+              $actividad->created_at=date('Y-m-d H:i:s');
+              $actividad->referencia="sin asignar";
+              $actividad->id_emp=1;
+              $actividad->save();
+
+          }
+          if($con>0){
+              $mesagge=true;
+              return response()->json($mesagge);
+          }
+        } catch (\Exception $e) {
+          return response()->json($e);
         }
-        if(!empty($actividades_list)){
-            ActividadDiaria::insert($actividades_list);
-            $mesagge="Ok";
-            $response=response()->json($mesagge);
-            return $response;
-        }
+
+
       }else{
-        $mesagge="Fail";
-        $response=response()->json($mesagge);
-        return $response;
+        $mesagge=false;
+        return response()->json($mesagge);
+
       }
     }else{
-      $mesagge="Don't search files";
-      $response=response()->json($mesagge);
-      return $response;
+      $mesagge=false;
+      return response()->json($mesagge);
+
     }
 
   }
