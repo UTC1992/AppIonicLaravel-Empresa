@@ -11,13 +11,20 @@ import {Router} from "@angular/router";
 })
 export class TableClientComponent implements OnInit {
  
-
+  p:number=1;
+  total:number=0;
   ordenes:Observable<Orden[]>; 
 
   constructor(private ordenService:OrdenService,private router:Router ) { }
 
   ngOnInit() {
     this.ordenes =this.ordenService.getOrdenes();
+    this.ordenes.subscribe(
+      result=>{
+        this.total=result.length;
+      }
+    );
+    
   }
  
 

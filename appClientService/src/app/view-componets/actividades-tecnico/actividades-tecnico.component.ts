@@ -15,11 +15,16 @@ export class ActividadesTecnicoComponent implements OnInit {
   public loading: boolean;
   res: Observable<any>;
   actividades:Observable<any[]>;
-
+  public view_table:boolean;
+  actividades_tecncio:Observable<any>;
+  key: string = 'name'; //set default
+  reverse: boolean = false;
+  p: number = 1;
 
   @ViewChild('inputRef') inputRef: ElementRef;
   constructor(private tecnicoService:TecnicoService) {
     this.loading=false;
+    this.view_table=false;
    }
 
   ngOnInit() {
@@ -27,6 +32,12 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
   }
 
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
+    //distribuir actividades tecnico
   buildTask(tipo){
     
     var cadena="";  
@@ -67,11 +78,18 @@ export class ActividadesTecnicoComponent implements OnInit {
       alert("Seleccione al menos un técnico");
     }  
   }
-
+  // recargar componentes
   reloadComponent(){
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
     this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
   }
  
+  //ver detalle en modal 
+  verDetalleActividades(id) {
+    this.p = 1;
+    this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id);
+    this.view_table=true;
+
+  }
 
 }

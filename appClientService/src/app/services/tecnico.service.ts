@@ -40,8 +40,12 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/build-task/"+tipo+"/"+cadena).pipe(map((e:Response)=> e.json()));
   }
 
-  // obtener actividades asignadas por tecnico
+  // obtener resumen todas las actividades asignadas por tecnico
   getAllActivitiesTecnicos():Observable<any[]>{
     return this.http.get(this.baseUrl+"/actividades-tecnicos").pipe(map((e:Response)=> e.json()));
+  }
+  // obtiene detalle de actidades por tecnico
+  getActivitiesByTecnico(id):Observable<any>{
+    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id).pipe(map((e:Response)=> e.json()));
   }
 }

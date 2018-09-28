@@ -20,7 +20,9 @@ import { AdminComponent } from './view-componets/admin/admin.component';
 import { TecnicosComponent } from './view-componets/tecnicos/tecnicos.component';
 import { FormTecnicoComponent } from './view-componets/form-tecnico/form-tecnico.component';
 import { ActividadesTecnicoComponent } from './view-componets/actividades-tecnico/actividades-tecnico.component';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import {NgxPaginationModule} from 'ngx-pagination'; 
 
 const appRoutes: Routes = [
   { path: '',
@@ -73,7 +75,10 @@ const appRoutes: Routes = [
     MatTableModule,
     HttpModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2SearchPipeModule,
+    Ng2OrderModule,
+    NgxPaginationModule
   ],
   providers: [OrdenService,TecnicoService],
   bootstrap: [AppComponent]

@@ -1,5 +1,81 @@
 <h5 class="card-title"> Actividades</h5>
+<div class="row">
+    <!-- Modal -->
+    <div class="modal fade" id="DetalleTareasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Detalle de Actividades</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                
+              <!--tabla detalle actividades-->
+              <div class="table-responsive" style="font-size: 11px;">
+                    <table class="table table-sm" *ngIf="view_table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <!--<th>ID Actividad</th>-->
+                                <th>Fecha</th>
+                                <!--<th>N9CONO</th>-->
+                                <!--<th>N9COCU</th>-->
+                                <!--<th>N9COSE</th>-->
+                                <!--<th >N9CORU </th>-->
+                                <!--<th>N9PLVE</th>-->
+                                <!--<th>N9VACA</th>-->
+                                <!--<th>N9MECO</th>-->
+                                <!--<th>N9LECO</th>-->
+                                <!--<th>N9COCL</th>-->
+                                <th>N9NOMB</th>
+                                <th>N9REFE</th>
+                                <th>CUSECU</th>
+                                <th>CUCOON</th>
+                                <th>CUCOOE</th>
+                                <th>ESTADO</th>
+                                <!--<th>OBSERVAciÓN</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let actividades of actividades_tecncio | async | paginate: { itemsPerPage: 10, currentPage: p }; let i=index">
+                                <td>{{i+1}}</td>
+                                 <!--<td>{{actividades.id_act}}</td>-->
+                                <td>{{actividades.fecha}}</td>
+                                <!--<td>{{actividades.n9cono}}</td>-->
+                                <!--<td>{{actividades.n9cocu}}</td>-->
+                                <!--<td>{{actividades.n9cose}}</td>-->
+                                <!--<td>{{actividades.n9coru}}</td>-->
+                                <!--<td>{{actividades.n9plve}}</td>-->
+                                <!--<td>{{actividades.n9vaca}}</td>-->
+                                <!--<td>{{actividades.n9meco}}</td>-->
+                                <!--<td>{{actividades.n9leco}}</td>-->
+                               <!-- <td>{{actividades.n9cocl}}</td>-->
+                                <td>{{actividades.n9nomb}}</td>
+                                <td>{{actividades.n9refe}}</td>
+                                <td>{{actividades.cusecu}}</td>
+                                <td>{{actividades.cucoon}}</td>
+                                <td>{{actividades.cucooe}}</td>
+                                <td *ngIf="actividades.estado==0"><span class="text-danger">Pendiente</span> </td>
+                                <td *ngIf="actividades.estado==1"><span class="text-success">Realizado</span> </td>
+                                <!--<td>{{actividades.observacion}}</td>-->
+                            </tr>
+                        </tbody>
+                        <pagination-controls (pageChange)="p = $event" class="text-danger"></pagination-controls>
+                    </table>
+              </div>
+              <!--fin tabla detalles-->
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          
+          </div>
 
+          </div>
+        </div>
+    </div>
+</div>
     <div class="row">
         <div class="col">
             <button  class="btn btn-primary" (click)="buildTask(10)">NOTIFICACIONES</button>
@@ -37,13 +113,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let tecnico_tareas of actividades | async" class="alert alert-success">
-                    <td>{{tecnico_tareas.id_tecn}}</td>
+                <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="alert alert-success">
+                    <td>{{j+1}}</td>
                     <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
                     <td>{{tecnico_tareas.cantidad}}</td>
                     <td>{{tecnico_tareas.tipo}}</td>
                     <td>
-                        <button class="btn btn-info btn-xs">Ver detalle</button>
+                        <button type="button"  (click)="verDetalleActividades(tecnico_tareas.id_tecn)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
+                            Ver Detalle    
+                          </button>
                     </td>
                 </tr>
             </tbody>

@@ -27,10 +27,10 @@ class MobileController extends Controller
 
   }
   //actualiza datos temporales
-  public function updateOrdenTemp(Request $request){
-    $orden=OrdenTemp::find($request->id_or);
-    $input=$request->all();
-    $orden->update($input);
+  public function updateActivities(Request $request){
+    foreach ($request as $key => $value) {
+
+    }
   }
 
   //insertar reconexion desde movil
@@ -48,4 +48,6 @@ class MobileController extends Controller
       }
   }
 
+
+  
 }

@@ -1,8 +1,12 @@
 <br>
+<div class="row">
+  <span class="text-success">Total de actividadesa: {{total}}</span>
+</div>
 <div class="table-responsive" style="font-size: 11px;">
     <table class="table table-striped">
         <thead>
           <tr>
+            <th>#</th>
             <th>ID</th>
             <th>N9CONO</th>
             <th>N9COCU</th>
@@ -19,7 +23,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let orden of ordenes | async">
+          <tr *ngFor="let orden of ordenes | async | paginate: { itemsPerPage: 10, currentPage: p }; let i=index">
+            <td>{{i+1}}</td>
             <td>{{orden.id_act}}</td>
             <td>{{orden.n9cono}}</td>
             <td>{{orden.n9cocu}}</td>
@@ -35,5 +40,6 @@
             <td>{{orden.referencia}}</td>
           </tr>
         </tbody>
+        <pagination-controls (pageChange)="p = $event" class="text-danger"></pagination-controls>
       </table>
 </div>
