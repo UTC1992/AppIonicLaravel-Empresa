@@ -26,11 +26,43 @@ class MobileController extends Controller
     }
 
   }
-  //actualiza datos temporales
+  //actualiza datos enviados desde aplicativo movil
   public function updateActivities(Request $request){
-    foreach ($request as $key => $value) {
+    try {
+      if(!is_null($request)){
+        $input=$request->all();
+        $con=0;
+        foreach ($input as $key => $value) {
+          $con++;
+            $actividad=ActividadDiaria::find($value->id_act);
+            $actividad->n9leco=$value->n9leco;
+            $actividad->estado=$value->estado
+              if($value->estado==2){
+                $actividad->referencia="Finalizado";
+              }
+            $actividad->save();
 
+            $ordenTrabajo=new OrdenTrabajo();
+            $res=$ordenTrabajo->where('id_act',$value->id_act);
+            if(!is_null($value->observacion)){
+              $res->observacion=$value->observacion;
+            }else{
+              $res->observacion="Sin novedad";
+            }
+            $res->estado=1;
+            $res->foto=$value->foto;
+            $res->save();
+        }
+        if($con>0){
+          return response()->json(true);
+        }
+      }else{
+        return response()->json(false);
+      }
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
     }
+
   }
 
   //insertar reconexion desde movil
@@ -49,5 +81,5 @@ class MobileController extends Controller
   }
 
 
-  
+
 }
