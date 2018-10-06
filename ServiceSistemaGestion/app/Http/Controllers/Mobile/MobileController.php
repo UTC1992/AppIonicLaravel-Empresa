@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\OrdenTemp;
 use App\Models\Tecnico;
+use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
 use App\Models\ReconexionManual;
 use Illuminate\Http\JsonResponse;
