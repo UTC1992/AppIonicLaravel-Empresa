@@ -26,34 +26,35 @@ class MobileController extends Controller
     }
 
   }
+
   //actualiza datos enviados desde aplicativo movil
   public function updateActivities(Request $request){
     try {
       if(!is_null($request)){
-        $input=$request->all();
+        $input=$request->json()->all();
         $con=0;
         foreach ($input as $key => $value) {
           $con++;
-            $actividad=ActividadDiaria::find($value->id_act);
-            $actividad->n9leco=$value->n9leco;
-            $actividad->estado=2;
-              if($value->estado==2){
+            $actividad=ActividadDiaria::find($value['id_act']);
+            $actividad->n9leco=$value['n9leco'];
+            $actividad->estado=$value['estado'];
+              if($value['estado']=='2'){
                 $actividad->referencia="Finalizado";
               }
             $actividad->save();
 
             $ordenTrabajo=new OrdenTrabajo();
-            $res=$ordenTrabajo->where('id_act',$value->id_act);
-            if(!is_null($value->observacion)){
-              $res->observacion=$value->observacion;
+            $res=$ordenTrabajo->where('id_act','=',$value['id_act'])->first();
+            if(!is_null($value['observacion'])){
+              $res->observacion=$value['observacion'];
             }else{
               $res->observacion="Sin novedad";
             }
             $res->estado=1;
-            $res->foto=$value->foto;
+            $res->foto=$value['foto'];
             $res->save();
 
-            $tecnico=Tecnico::find($value->id_tecn);
+            $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();
         }
