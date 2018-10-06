@@ -8,7 +8,7 @@
           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Distribuir Actividades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Actividades Por Técnicos</a>
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Actividades Diarias</a>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
@@ -36,12 +36,71 @@
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">
                 <div class="card-header">
-                  Featured
+                  Reporte Actividades Diarias
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <div class="row col-lg-12">
+                    <div class="col-lg-1">
+                        <label for="">Fecha:</label>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <input class="form-control" id="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">
+                      </div>
+                    </div>
+                    <div class="col-lg-3">
+                      <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="row" *ngIf="view_table">
+                          <button class="btn btn-success btn-xs">Exportar a Excel</button>
+                        </div>
+                      <div class="table-responsive" style="font-size: 11px;">
+                          <table class="table table-striped" *ngIf="view_table">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>N9CONO</th>
+                                  <!--<th>N9COCU</th>-->
+                                  <th>N9COSE</th>
+                                  <th>N9CORU</th>
+                                  <th>N9MECO</th>
+                                  <th>N9LECO</th>
+                                  <th>N9COD</th>
+                                  <th>N9NOMB</th>
+                                  <th>N9REFE</th>
+                                  <th>CUSECU</th>
+                                  <th>CUCOON</th>
+                                 <!--<th>REFERENCIA</th>-->
+                                  <th>ESTADO</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let orden of ordenes | async ; let i=index">
+                                  <td>{{i+1}}</td>
+                                  <td>{{orden.n9cono}}</td>
+                                  <!--<td>{{orden.n9cocu}}</td>-->
+                                  <td>{{orden.n9cose}}</td>
+                                  <td>{{orden.n9coru}}</td>
+                                  <td>{{orden.n9meco}}</td>
+                                  <td>{{orden.n9leco}}</td>
+                                  <td>{{orden.n9cod}}</td>
+                                  <td>{{orden.n9nomb}}</td>
+                                  <td>{{orden.n9refe}}</td>
+                                  <td>{{orden.cusecu}}</td>
+                                  <td>{{orden.cucoon}}</td>
+                                  <!--<td>{{orden.referencia}}</td>-->
+                                  <td *ngIf="orden.estado==0"><span class="text-danger">PENDIENTE</span> </td>
+                                  <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
+                                  <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
+                                </tr>
+                              </tbody>
+                              
+                            </table>
+                      </div>
+                  </div>  
+                
                 </div>
               </div>
         </div>

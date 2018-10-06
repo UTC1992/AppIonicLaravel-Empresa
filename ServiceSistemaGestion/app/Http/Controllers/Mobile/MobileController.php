@@ -36,7 +36,7 @@ class MobileController extends Controller
           $con++;
             $actividad=ActividadDiaria::find($value->id_act);
             $actividad->n9leco=$value->n9leco;
-            $actividad->estado=$value->estado
+            $actividad->estado=2;
               if($value->estado==2){
                 $actividad->referencia="Finalizado";
               }
@@ -52,6 +52,10 @@ class MobileController extends Controller
             $res->estado=1;
             $res->foto=$value->foto;
             $res->save();
+
+            $tecnico=Tecnico::find($value->id_tecn);
+            $tecnico->asignado=0;
+            $tecnico->save();
         }
         if($con>0){
           return response()->json(true);
@@ -79,6 +83,10 @@ class MobileController extends Controller
         return response()->json("Data Empty");
       }
   }
+
+
+
+
 
 
 

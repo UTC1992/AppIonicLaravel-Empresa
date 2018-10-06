@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TecnicoService {
-  baseUrl="http://192.168.100.187:8080/ServiceSistemaGestion/public/api/angular";
+  baseUrl="http://192.168.100.217:8080/ServiceSistemaGestion/public/api/angular";
   constructor(private http:Http) { }
 
   //metodo obtiene todos los tecnicos del servidor
@@ -47,5 +47,9 @@ export class TecnicoService {
   // obtiene detalle de actidades por tecnico
   getActivitiesByTecnico(id):Observable<any>{
     return this.http.get(this.baseUrl+"/actividades-tecnico/"+id).pipe(map((e:Response)=> e.json()));
+  }
+
+  terminarProcesoAvtividades(id){
+    return this.http.get(this.baseUrl+"/finalizar/"+id).pipe(map((e:Response)=> e.json()));
   }
 }

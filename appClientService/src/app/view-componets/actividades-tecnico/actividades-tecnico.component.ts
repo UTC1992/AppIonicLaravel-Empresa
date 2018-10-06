@@ -92,4 +92,18 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   }
 
+  ValidarActividadesTecnico(id){
+    var result =this.tecnicoService.terminarProcesoAvtividades(id);
+    result.subscribe(
+      msj=>{
+        if(msj){
+          alert("Proceso finalizado");
+          this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
+        }else{
+          alert("Error");
+        }
+      }
+    );
+  }
+
 }
