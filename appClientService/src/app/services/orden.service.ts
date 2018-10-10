@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OrdenService {
-  baseUrl='http://192.168.100.217:8080/ServiceSistemaGestion/public/api/angular';
+  baseUrl='http://192.168.100.227:8080/ServiceSistemaGestion/public/api/angular';
   constructor(private http:Http) { }
 
   getOrdenes():Observable<Orden[]>{
@@ -19,8 +19,8 @@ export class OrdenService {
       return this.http.post(this.baseUrl+"/ordenes",file).pipe(map((e:Response)=> e.json()));
   }
 
-  getActivitiesToDay(fecha):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/actividades-fecha/"+fecha).pipe(map((e:Response)=> e.json()));
+  getActivitiesToDay(fecha,tecnico,actividad,estado):Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/actividades-fecha/"+fecha+"/"+tecnico+"/"+actividad+"/"+estado).pipe(map((e:Response)=> e.json()));
   }
 
   

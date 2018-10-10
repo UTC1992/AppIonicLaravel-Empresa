@@ -79,4 +79,25 @@ class ActividadDiaria extends Model
     ->select('*')
     ->get();
   }
+
+  public function getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado){
+    return $colmena = DB::table('tbl_actividaddiaria as T0')
+          ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
+          ->select('T0.*')
+          ->where('T0.created_at','like','%'.$fecha.'%')
+          ->where(function($query) use($id_tecnico){
+            if($id_tecnico!="empty")
+            $query->where('T1.id_tecn',$id_tecnico);
+          })
+          ->where(function($query) use($actividad){
+            if($actividad!="empty")
+            $query->where('T0.n9cono','like','%'.$actividad.'%');
+          })
+          ->where(function($query) use($estado){
+            if($estado!="empty")
+            $query->where('T0.estado',$estado);
+          })
+          ->orderByRaw('T0.id_act desc')
+          ->get();
+  }
 }

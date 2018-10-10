@@ -48,14 +48,57 @@
                         <input class="form-control" id="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">
                       </div>
                     </div>
+                    <div class="col-lg-1">
+                      <label for="">Técnico:</label>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <select  class="form-control" id="tecnicos_select">
+                          <option value="empty">......Seleccione......</option>
+                          <option *ngFor="let tecnico of tecnicos | async" value="{{tecnico.id_tecn}}" >{{tecnico.nombres}} {{tecnico.apellidos}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-1">
+                      <label for="">Actividades:</label>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <select  class="form-control" id="actividades_select">
+                          <option value="empty">......Seleccione......</option>
+                          <option value="10" >Notificaciones</option> 
+                          <option value="40" >Cortes</option>
+                          <option value="30" >Reconecciones</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-1">
+                      <label for="">Estado:</label>
+                    </div>
+                    <div class="col-lg-3">
+                      <div class="form-group">
+                        <select  class="form-control" id="estado_select">
+                          <option value="empty">......Seleccione......</option>
+                          <option value="1" >Asignado</option>
+                          <option value="0" >Sin Asignar</option>
+                          <option value="2" >Terminadas</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
                     <div class="col-lg-3">
                       <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
                     </div>
                   </div>
+                  <br>
+                  <div class="row pull-right" *ngIf="view_table">
+                      <div class="col-lg-3">
+                        <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
+                      </div>
+                    </div>
                   <div class="row">
-                      <div class="row" *ngIf="view_table">
-                          <button class="btn btn-success btn-xs">Exportar a Excel</button>
-                        </div>
+                      
                       <div class="table-responsive" style="font-size: 11px;">
                           <table class="table table-striped" *ngIf="view_table">
                               <thead>
@@ -91,13 +134,16 @@
                                   <td>{{orden.cusecu}}</td>
                                   <td>{{orden.cucoon}}</td>
                                   <!--<td>{{orden.referencia}}</td>-->
-                                  <td *ngIf="orden.estado==0"><span class="text-danger">PENDIENTE</span> </td>
+                                  <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
                                   <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
                                   <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
                                 </tr>
                               </tbody>
                               
                             </table>
+                            <div class="alert alert-danger" *ngIf="view_data_empty">
+                              <p>No hay datos para mostrar</p>
+                            </div>
                       </div>
                   </div>  
                 

@@ -40,10 +40,10 @@ class ActividadDiariaController extends Controller
       }
     }
 
-    public function getActivitiesToDay($fecha){
+    public function getActivitiesToDay($fecha,$id_tecnico,$actividad,$estado){
       try {
         $actividades=new ActividadDiaria();
-        $result=$actividades->where('created_at','like','%'.$fecha.'%')->get();
+        $result=$actividades->getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado);
         return response()->json($result);
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);

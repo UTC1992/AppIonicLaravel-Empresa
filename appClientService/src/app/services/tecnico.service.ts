@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TecnicoService {
-  baseUrl="http://192.168.100.217:8080/ServiceSistemaGestion/public/api/angular";
+  baseUrl="http://192.168.100.227:8080/ServiceSistemaGestion/public/api/angular";
   constructor(private http:Http) { }
 
   //metodo obtiene todos los tecnicos del servidor

@@ -28,7 +28,7 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
     Route::get('actividades-tecnico/{id_tecn}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
-    Route::get('actividades-fecha/{created_at}','Angular\ActividadDiariaController@getActivitiesToDay');
+    Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
 });
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){

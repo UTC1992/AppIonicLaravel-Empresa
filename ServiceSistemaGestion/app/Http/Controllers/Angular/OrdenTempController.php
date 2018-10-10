@@ -68,7 +68,9 @@ class OrdenTempController extends Controller
               $actividad->n9meco= $value->n9meco;
               $actividad->n9seri= $value->n9seri;
               $actividad->n9feco= $value->n9feco;
-              $actividad->n9leco= $value->n9leco;
+              if($value->n9leco!="0"){
+                $actividad->n9leco= $value->n9leco;
+              }
               $actividad->n9manp= $value->n9manp;
               $actividad->n9cocl= $value->n9cocl;
               $actividad->n9nomb= $value->n9nomb;
