@@ -105,16 +105,16 @@ class TecnicoController extends Controller
       if(count($array_id_tecnicos)>0){
         $likeValue="";
         $actividad="";
-        if($tipo=="10"){
-          $likeValue="10%";
+        if($tipo=="010"){
+          $likeValue="010%";
           $actividad="Notificación";
         }
-        if($tipo=="30"){
-          $likeValue="30%";
+        if($tipo=="030"){
+          $likeValue="030%";
           $actividad="Corte";
         }
-        if($tipo=="40"){
-          $likeValue="40%";
+        if($tipo=="040"){
+          $likeValue="040%";
           $actividad="Reconexión";
         }
         $contador=0;
