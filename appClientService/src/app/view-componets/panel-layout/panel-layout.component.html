@@ -1,154 +1,165 @@
+
 <br>
 <div class="container">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Subir Archivo</a>
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Subir archivo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Distribuir Actividades</a>
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Distribuir actividades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Actividades Diarias</a>
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Consultar actividades</a>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <br>
           <div class="card">
                 
             <div class="card-body">
-				<app-add-csv></app-add-csv>
-				<app-table-client></app-table-client>
+      				<app-add-csv>
+                
+              </app-add-csv>
+      				<app-table-client>
+                
+              </app-table-client>
             </div>
           </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            
-              <!--Form insert tecnico-->
+           <br> 
+          <!--Form insert tecnico-->
           <div class="card">
             <div class="card-body">
-				<app-actividades-tecnico></app-actividades-tecnico>
-			  </div>
+      				<app-actividades-tecnico>
+                
+              </app-actividades-tecnico>
+			       </div>
           </div>
-
-        
-        <!--end  forms tecnico-->
+          <!--end  forms tecnico-->
         </div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <br>
             <div class="card">
-                <div class="card-header">
-                  Reporte Actividades Diarias
-                </div>
-                <div class="card-body">
-                  <div class="row col-lg-12">
-                    <div class="col-lg-1">
-                        <label for="">Fecha:</label>
-                    </div>
-                    <div class="col-lg-3">
-                      <div class="form-group">
-                        <input class="form-control" id="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">
-                      </div>
-                    </div>
-                    <div class="col-lg-1">
-                      <label for="">Técnico:</label>
-                    </div>
-                    <div class="col-lg-3">
-                      <div class="form-group">
-                        <select  class="form-control" id="tecnicos_select">
-                          <option value="empty">......Seleccione......</option>
-                          <option *ngFor="let tecnico of tecnicos | async" value="{{tecnico.id_tecn}}" >{{tecnico.nombres}} {{tecnico.apellidos}}</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg-1">
-                      <label for="">Actividades:</label>
-                    </div>
-                    <div class="col-lg-3">
-                      <div class="form-group">
-                        <select  class="form-control" id="actividades_select">
-                          <option value="empty">......Seleccione......</option>
-                          <option value="10" >Notificaciones</option> 
-                          <option value="40" >Cortes</option>
-                          <option value="30" >Reconecciones</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-lg-1">
-                      <label for="">Estado:</label>
-                    </div>
-                    <div class="col-lg-3">
-                      <div class="form-group">
-                        <select  class="form-control" id="estado_select">
-                          <option value="empty">......Seleccione......</option>
-                          <option value="1" >Asignado</option>
-                          <option value="0" >Sin Asignar</option>
-                          <option value="2" >Terminadas</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-3">
-                      <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="row pull-right" *ngIf="view_table">
-                      <div class="col-lg-3">
-                        <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
-                      </div>
-                    </div>
-                  <div class="row">
-                      
-                      <div class="table-responsive" style="font-size: 11px;">
-                          <table class="table table-striped" *ngIf="view_table">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>N9CONO</th>
-                                  <!--<th>N9COCU</th>-->
-                                  <th>N9COSE</th>
-                                  <th>N9CORU</th>
-                                  <th>N9MECO</th>
-                                  <th>N9LECO</th>
-                                  <th>N9COD</th>
-                                  <th>N9NOMB</th>
-                                  <th>N9REFE</th>
-                                  <th>CUSECU</th>
-                                  <th>CUCOON</th>
-                                 <!--<th>REFERENCIA</th>-->
-                                  <th>ESTADO</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let orden of ordenes | async ; let i=index">
-                                  <td>{{i+1}}</td>
-                                  <td>{{orden.n9cono}}</td>
-                                  <!--<td>{{orden.n9cocu}}</td>-->
-                                  <td>{{orden.n9cose}}</td>
-                                  <td>{{orden.n9coru}}</td>
-                                  <td>{{orden.n9meco}}</td>
-                                  <td>{{orden.n9leco}}</td>
-                                  <td>{{orden.n9cod}}</td>
-                                  <td>{{orden.n9nomb}}</td>
-                                  <td>{{orden.n9refe}}</td>
-                                  <td>{{orden.cusecu}}</td>
-                                  <td>{{orden.cucoon}}</td>
-                                  <!--<td>{{orden.referencia}}</td>-->
-                                  <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
-                                  <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
-                                  <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
-                                </tr>
-                              </tbody>
-                              
-                            </table>
-                            <div class="alert alert-danger" *ngIf="view_data_empty">
-                              <p>No hay datos para mostrar</p>
-                            </div>
-                      </div>
-                  </div>  
+              <div class="card-body">
                 
+                <div class="d-flex justify-content-center">
+                    <h4 class="">Reporte de actividades</h4>
                 </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="">Fecha:</label>
+                          <input class="form-control" id="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="">Técnico:</label>
+                          <select  class="form-control" id="tecnicos_select">
+                            <option value="empty">Seleccione</option>
+                            <option *ngFor="let tecnico of tecnicos | async" value="{{tecnico.id_tecn}}" >{{tecnico.nombres}} {{tecnico.apellidos}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="">Actividades:</label>
+                          <select  class="form-control" id="actividades_select">
+                            <option value="empty">Seleccione</option>
+                            <option value="10" >Notificaciones</option> 
+                            <option value="40" >Cortes</option>
+                            <option value="30" >Reconecciones</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="form-group">
+                          <label for="">Estado:</label>
+                          <select  class="form-control" id="estado_select">
+                            <option value="empty">Seleccione</option>
+                            <option value="1" >Asignado</option>
+                            <option value="0" >Sin Asignar</option>
+                            <option value="2" >Terminadas</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-2">
+                        <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
+                      </div>
+                      <div class="col-lg-2">
+                          <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
+                      </div>
+                    </div>
+                    
+                     
+                  </div>
+                </div>
+                <br>
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <h4 class="">Actividades</h4>
+                        </div>
+                        <div class="row">
+                          <div class="table-responsive">
+                              <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;" 
+                              *ngIf="view_table">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>N9CONO</th>
+                                      <!--<th>N9COCU</th>-->
+                                      <th>N9COSE</th>
+                                      <th>N9CORU</th>
+                                      <th>N9MECO</th>
+                                      <th>N9LECO</th>
+                                      <th>N9COD</th>
+                                      <th>N9NOMB</th>
+                                      <th>N9REFE</th>
+                                      <th>CUSECU</th>
+                                      <th>CUCOON</th>
+                                     <!--<th>REFERENCIA</th>-->
+                                      <th>ESTADO</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr *ngFor="let orden of ordenes | async ; let i=index">
+                                      <td>{{i+1}}</td>
+                                      <td>{{orden.n9cono}}</td>
+                                      <!--<td>{{orden.n9cocu}}</td>-->
+                                      <td>{{orden.n9cose}}</td>
+                                      <td>{{orden.n9coru}}</td>
+                                      <td>{{orden.n9meco}}</td>
+                                      <td>{{orden.n9leco}}</td>
+                                      <td>{{orden.n9cod}}</td>
+                                      <td>{{orden.n9nomb}}</td>
+                                      <td>{{orden.n9refe}}</td>
+                                      <td>{{orden.cusecu}}</td>
+                                      <td>{{orden.cucoon}}</td>
+                                      <!--<td>{{orden.referencia}}</td>-->
+                                      <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
+                                      <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
+                                      <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
+                                    </tr>
+                                  </tbody>
+                              </table>
+                              <div class="alert alert-danger" *ngIf="view_data_empty">
+                                <p>No hay datos para mostrar</p>
+                              </div>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
               </div>
+            </div>
+              
         </div>
       </div>
 </div>

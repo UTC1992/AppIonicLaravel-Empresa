@@ -1,11 +1,26 @@
-<div class="loading" *ngIf="loading">
-    <span class="text-danger">Subiendo Archivo.....</span>
+
+<div class="d-flex justify-content-center">
+    <h4 class="">Ruta diaria</h4>
 </div>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label class="col-lg-3 col-md-3" for="avatar">Seleccione un archivo</label>
-    <input type="file" id="archivo"  name="archivo" (change)="onFileChange($event)" #fileInput>
-    
-  </div>
-  <button type="submit" [disabled]="form.invalid || loading" class="btn btn-success">Subir Archivo <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading2"></i></button>
-</form>
+<br>
+<div class="card">
+    <div class="card-body">
+    	<div class="row">
+    		<div class="col d-flex justify-content-center">
+    			<form [formGroup]="form" (ngSubmit)="onSubmit()">
+				  <div class="form-group">
+				    <input type="file" class="btn btn-info" id="archivo"  name="archivo" (change)="onFileChange($event)" #fileInput>
+				    
+				  </div>
+				  <button type="submit" [disabled]="form.invalid || loading" class="btn btn-success">Subir Archivo <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading2"></i></button>
+				</form>
+    		</div>
+    	</div>
+    	<div class="row">
+		    <div class="col loading d-flex justify-content-center" *ngIf="loading">
+		        <img src="assets/img/cargando.gif">
+		    </div>    
+		</div>
+		
+	</div>
+</div>

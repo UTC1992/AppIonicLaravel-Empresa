@@ -53,7 +53,7 @@
 <div class="container">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Actividades</a>
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Gestión de técnicos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Gestionar técnico</a>
@@ -61,9 +61,10 @@
         <li class="nav-item">
           <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Reportes</a>
         </li>
-      </ul>
+    </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <br>
           <div class="card">
                 
              <!--Form insert tecnico-->
@@ -73,7 +74,7 @@
                     <div class="card">
                         <div class="card-header" id="headingTwo">
                           <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="btn btn-info collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 Crear Nuevo Tenico
                             </button>
                           </h5>
@@ -83,52 +84,57 @@
                               <app-form-tecnico></app-form-tecnico>
                           </div>
                         </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-center">
+                          <h5 class="">Técnicos</h5>
                       </div>
+                      <table class="table table-bordered table-condensed table-striped table-sm"style="font-family: calibri; font-size: 12pt;">
+                          <thead>
+                            <tr>
+                              <th scope="col">Id</th>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Apellidos</th>
+                              <th scope="col">Cédula</th>
+                              <th scope="col">Telefono</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Estado</th>
+                              <th scope="col">Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let tecnico of tecnicos | async">
+                              <td>{{tecnico.id_tecn}}</td>
+                              <td>{{tecnico.nombres}}</td>
+                              <td>{{tecnico.apellidos}}</td>
+                              <td>{{tecnico.cedula}}</td>
+                              <td>{{tecnico.telefono}}</td>
+                              <td>{{tecnico.email}}</td>
+                              <td>{{tecnico.estado}}</td>
+                              <td>
+                                  <button type="button" (click)="open(tecnico.id_tecn)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" style="margin-right: 5px;">
+                                    Editar    
+                                  </button>
+                                  <button type="button" class="btn btn-danger btn-xs" (click)="deleteTecnico(tecnico.id_tecn)">Eliminar</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                    </div>
                   </div>
                   
-                    <hr>
-                    <p>Técnicos</p>
-                    <table class="table table-sm">
-                        <thead>
-                          <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellidos</th>
-                            <th scope="col">Cédula</th>
-                            <th scope="col">Telefono</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let tecnico of tecnicos | async">
-                            <td>{{tecnico.id_tecn}}</td>
-                            <td>{{tecnico.nombres}}</td>
-                            <td>{{tecnico.apellidos}}</td>
-                            <td>{{tecnico.cedula}}</td>
-                            <td>{{tecnico.telefono}}</td>
-                            <td>{{tecnico.email}}</td>
-                            <td>{{tecnico.estado}}</td>
-                            <td>
-                                <button type="button" (click)="open(tecnico.id_tecn)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                                  Editar    
-                                </button>
-                                <button type="button" class="btn btn-danger btn-xs" (click)="deleteTecnico(tecnico.id_tecn)">Eliminar</button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
               </div>
-            </div>
+          </div>
   
           
           <!--end  forms tecnico-->z
           </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            
-             djdjdj
+          
         </div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">

@@ -1,23 +1,23 @@
 <form [formGroup]="form_tecnico" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="nombres">Nombre</label>
-        <input type="text" class="form-control"  id="nombres" placeholder="" formControlName="nombres">
+        <input type="text" class="form-control"  id="nombres" placeholder="" formControlName="nombres" required="">
     </div>
     <div class="form-group">
         <label for="apellidos">Apellido</label>
-        <input type="text" class="form-control"    id="apellidos" placeholder="" formControlName="apellidos">
+        <input type="text" class="form-control"    id="apellidos" placeholder="" formControlName="apellidos" required="">
     </div>
     <div class="form-group">
         <label for="cedula">Cedula</label>
-        <input type="text" class="form-control"    id="cedula" placeholder="" formControlName="cedula">
+        <input type="text" class="form-control"    id="cedula" placeholder="" formControlName="cedula" required="">
     </div>
     <div class="form-group">
         <label for="telefono">Telefono</label>
-        <input type="text" class="form-control"   id="telefono" placeholder="" formControlName="telefono">
+        <input type="text" class="form-control"   id="telefono" placeholder="" formControlName="telefono" required="">
     </div>
     <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" class="form-control"    id="email" placeholder="" formControlName="email">
+        <input type="email" class="form-control"    id="email" placeholder="" formControlName="email" required="">
         <input type="hidden" class="form-control"    id="estado" placeholder="" value="1" formControlName="estado">
     </div>
   <button type="submit" [disabled]="form_tecnico.invalid || loading" class="btn btn-success">Crear Técnico <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i></button>

@@ -1,4 +1,5 @@
-<h5 class="card-title"> Actividades</h5>
+
+
 <div class="row">
     <!-- Modal -->
     <div class="modal fade" id="DetalleTareasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -13,11 +14,13 @@
             <div class="modal-body">
                 
               <!--tabla detalle actividades-->
-              <div class="table-responsive" style="font-size: 11px;">
-                    <table class="table table-sm" *ngIf="view_table">
+              <div class="table-responsive" style="font-size: 10pt;">
+                    <table class="table table-bordered table-condensed table-striped table-sm" 
+                         style="font-family: calibri; font-size: 10pt;" 
+                         *ngIf="view_table">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>N°</th>
                                 <!--<th>ID Actividad</th>-->
                                 <th>Fecha</th>
                                 <!--<th>N9CONO</th>-->
@@ -62,8 +65,10 @@
                                 <!--<td>{{actividades.observacion}}</td>-->
                             </tr>
                         </tbody>
-                        <pagination-controls (pageChange)="p = $event" class="text-danger"></pagination-controls>
                     </table>
+                    <div class="form-group">
+                        <pagination-controls (pageChange)="p = $event" class="text-danger"></pagination-controls>    
+                    </div>
               </div>
               <!--fin tabla detalles-->
           </div>
@@ -76,7 +81,100 @@
         </div>
     </div>
 </div>
+
+
+<div class="d-flex justify-content-center">
+    <h4 class="">Asignación de actividades</h4>
+</div>
+<br>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col">
+                <div class="form-group">
+                    <label>Actividad:</label>
+                    <select class="form-control" name="canton">
+                        <option value="">Seleccionar</option>
+                        <option value="010">Notificación</option>
+                        <option value="030">Corte</option>
+                        <option value="040">Reconexión</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label>Cantón:</label>
+                    <select class="form-control" name="canton">
+                        <option value="">Seleccionar</option>
+                        <option value="1">Latacunga</option>
+                        <option value="2">Salcedo</option>
+                        <option value="3">Saquisilí</option>
+                        <option value="4">Pujilí</option>
+                        <option value="5">Pangau</option>
+                        <option value="6">La Mana</option>
+                        <option value="7">Sigchos</option>
+                    </select>
+                    <label># 3 cantones</label>    
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="form-group">
+                    <label>Sectores:</label>
+                    <select class="form-control" name="canton">
+                        <option value="">Seleccionar</option>
+                        <option value="">ALF</option>
+                        <option value="">JMO</option>
+                        <option value="">IFR</option>
+                        <option value="">JMR</option>
+                    </select>
+                    <label># 150 actividades</label>   
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="form-group">
+                    <label>Cantidad:</label>
+                    <input class="form-control" type="number" name="" value="" placeholder="#">   
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="row">
+            <div class="col loading" *ngIf="loading">
+                <img src="assets/img/cargando.gif">
+            </div>    
+        </div>
+        
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <h5 class="">Técnicos sin asignar</h5>    
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
+                <div class="form-inline">
+                    <input value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
+                    <label for="cbox2"> {{ tecnico.nombres}}</label>      
+                </div>
+            </div> 
+               
+        </div>
+
+    </div>
+
     <div class="row">
+        <div class="col d-flex justify-content-center form-group">
+          <button class="btn btn-warning" (click)="buildTask()" >Asignar actividades</button>  
+        </div>    
+    </div>
+</div>
+
+    <!--<div class="row">
         <div class="col">
             <button  class="btn btn-primary" (click)="buildTask(10)">NOTIFICACIONES</button>
         </div>
@@ -87,50 +185,50 @@
             <button  class="btn btn-danger" (click)="buildTask(30)">CORTES</button>
         </div>
     </div>
-    <div class="loading" *ngIf="loading">
-        <span class="text-danger">
-            Asignando actividades, por favor espere....
-        </span>
+    -->
+<br>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center">
+            <h5 class="">Técnicos asignados</h5> 
+        </div>
+        <br>
+        <div class="row lert">
+            <table class="table table-bordered table-condensed table-striped table-sm" 
+                         style="font-family: calibri; font-size: 12pt;">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Técnico</th>
+                        <th>Sector</th>
+                        <th># Actividades</th>
+                        <th>Tipo actividad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="">
+                        <td>{{j+1}}</td>
+                        <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
+                        <td>ALF</td>
+                        <td>{{tecnico_tareas.cantidad}}</td>
+                        <td>{{tecnico_tareas.tipo}}</td>
+                        <td>
+                            <button type="button"  (click)="verDetalleActividades(tecnico_tareas.id_tecn)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
+                                Ver Detalle    
+                              </button>
+                              <!--
+                              <button class="btn btn-success" (click)="ValidarActividadesTecnico(tecnico_tareas.id_tecn)">
+                                  Validar
+                              </button>-->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>  
+        </div>
     </div>
-    <hr>
-    <p class="card-text">Técnicos Sin Asignar</p>
-    <div class="row">
-        <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
-            <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef > <label for="cbox2">{{tecnico.nombres}}</label>  
-        </div>   
-    </div>
-    <hr>
-    <p class="card-text">Técnicos Asignados</p>
-    <div class="row lert">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tecnico</th>
-                    <th>Número Actividades</th>
-                    <th>Tipo Actividad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="">
-                    <td>{{j+1}}</td>
-                    <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
-                    <td>{{tecnico_tareas.cantidad}}</td>
-                    <td>{{tecnico_tareas.tipo}}</td>
-                    <td>
-                        <button type="button"  (click)="verDetalleActividades(tecnico_tareas.id_tecn)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
-                            Ver Detalle    
-                          </button>
-                          <!--
-                          <button class="btn btn-success" (click)="ValidarActividadesTecnico(tecnico_tareas.id_tecn)">
-                              Validar
-                          </button>-->
-                    </td>
-                </tr>
-            </tbody>
-        </table>  
-    </div>
+</div>
+
 
     
     
