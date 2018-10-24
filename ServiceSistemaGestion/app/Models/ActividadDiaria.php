@@ -64,7 +64,7 @@ class ActividadDiaria extends Model
   ];
 
   public function getDataActividadesTecnico($id){
-    return $colmena = DB::table('tbl_actividaddiaria as T0')
+    return $actividad = DB::table('tbl_actividaddiaria as T0')
           ->join('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
           ->select('T0.latitud','T0.longitud','T1.fecha','T1.id_tecn','T0.id_act','T0.n9cono','T0.n9cocu','T0.n9cose','T0.n9coru','T0.n9plve','T0.n9vaca','T0.n9meco','T0.n9leco','T0.n9cocl','T0.n9nomb','T0.n9refe','T0.cusecu','T0.cucoon','T0.cucooe','T1.estado','T1.tipo_actividad','T1.observacion')
           ->where('T1.id_tecn',$id)
@@ -75,13 +75,13 @@ class ActividadDiaria extends Model
   }
 
   public function getViewActivities(){
-    return $colmena=DB::table('Actividades_tecnico')
+    return $actividad=DB::table('Actividades_tecnico')
     ->select('*')
     ->get();
   }
 
   public function getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado){
-    return $colmena = DB::table('tbl_actividaddiaria as T0')
+    return $actividad2 = DB::table('tbl_actividaddiaria as T0')
           ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
           ->select('T0.*')
           ->where('T0.created_at','like','%'.$fecha.'%')
@@ -100,4 +100,37 @@ class ActividadDiaria extends Model
           ->orderByRaw('T0.id_act desc')
           ->get();
   }
+  //obtener cantores actividades por tipo
+  public function getCantonstByActivityType($tipo_actividad){
+    return $actividad = DB::table('tbl_actividaddiaria as T0')
+          ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
+          ->select('T0.n9coag as canton')
+          ->where('T0.estado',0)
+          ->where('T0.n9cono','like','%'.$tipo_actividad.'%')
+          ->groupBy('T0.n9coag')
+          ->get();
+  }
+  // obtener actividades
+  public function getSectorsByActivities($tipo_actividad,$canton){
+    return $actividad = DB::table('tbl_actividaddiaria as T0')
+          ->select('T0.n9cose as sector')
+          ->where('T0.estado',0)
+          ->where('T0.n9cono','like','%'.$tipo_actividad.'%')
+          ->where('T0.n9coag',$canton)
+          ->groupBy('T0.n9cose')
+          ->get();
+  }
+
+  // function actividades by sectores
+  public function getActivitiesBySectors($tipo_actividad,$canton,$sector){
+    return $actividad = DB::table('tbl_actividaddiaria as T0')
+          ->select('T0.*')
+          ->where('T0.estado',0)
+          ->where('T0.n9cono','like','%'.$tipo_actividad.'%')
+          ->where('T0.n9coag',$canton)
+          ->where('T0.n9cose',$sector)
+          ->get();
+  }
+
+
 }

@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OrdenService {
-  baseUrl='http://192.168.100.227:8080/ServiceSistemaGestion/public/api/angular';
+  baseUrl='http://192.168.100.4:8080/ServiceSistemaGestion/public/api/angular';
   constructor(private http:Http) { }
 
   getOrdenes():Observable<Orden[]>{
@@ -21,6 +21,17 @@ export class OrdenService {
 
   getActivitiesToDay(fecha,tecnico,actividad,estado):Observable<Orden[]>{
     return this.http.get(this.baseUrl+"/actividades-fecha/"+fecha+"/"+tecnico+"/"+actividad+"/"+estado).pipe(map((e:Response)=> e.json()));
+  }
+  getCantones(tipo):Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/cantones/"+tipo).pipe(map((e:Response)=> e.json()));
+  }
+  // obtiene sectores desde servicio .. parametro canton type: get
+  getSectoresService(tipo,canton):Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/sectores/"+tipo+"/"+canton).pipe(map((e:Response)=> e.json()));
+  }
+  //obtiene cantidad de actividades 
+  getActivitiesCount(tipo,canton,sector):Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/cantidad-actividades/"+tipo+"/"+canton+"/"+sector).pipe(map((e:Response)=> e.json()));
   }
 
   

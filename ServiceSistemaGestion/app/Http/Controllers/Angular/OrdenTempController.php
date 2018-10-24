@@ -59,9 +59,9 @@ class OrdenTempController extends Controller
               $actividad->n9cose= $value->n9cose;
               $actividad->n9coru= $value->n9coru;
               $actividad->n9seru= $value->n9seru;
-              $actividad->n9vano= $value->n9vano;
+              $actividad->n9vano= str_replace('.',',',$value->n9vano);
               $actividad->n9plve= $value->n9plve;
-              $actividad->n9vaca= $value->n9vaca;
+              $actividad->n9vaca= str_replace('.',',',$value->n9vaca);
               $actividad->n9esta= $value->n9esta;
               $actividad->n9cocn= $value->n9cocn;
               $actividad->n9fech= $value->n9fech;
@@ -88,8 +88,8 @@ class OrdenTempController extends Controller
               $actividad->n9ckd2= $value->n9ckd2;
               $actividad->cusecu= $value->cusecu;
               $actividad->cupost= $value->cupost;
-              $actividad->cucoon= $value->cucoon;
-              $actividad->cucooe= $value->cucooe;
+              $actividad->cucoon= str_replace('.',',',$value->cucoon);
+              $actividad->cucooe= str_replace('.',',',$value->cucooe);
               $actividad->cuclas= $value->cuclas;
               $actividad->cuesta= $value->cuesta;
               $actividad->cutari= $value->cutari;

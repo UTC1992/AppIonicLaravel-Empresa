@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TecnicoService {
-  baseUrl="http://192.168.100.227:8080/ServiceSistemaGestion/public/api/angular";
+  baseUrl="http://192.168.100.4:8080/ServiceSistemaGestion/public/api/angular";
   constructor(private http:Http) { }
 
   //metodo obtiene todos los tecnicos del servidor
@@ -36,8 +36,8 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/delete-tecnico/"+id).pipe(map((e:Response)=> e.json()));
   }
   //metodo obtien tecnico por tarea 
-  buildTecnicoByTask(tipo,cadena):Observable<any>{
-    return this.http.get(this.baseUrl+"/build-task/"+tipo+"/"+cadena).pipe(map((e:Response)=> e.json()));
+  buildTecnicoByTask(id_actividad,id_tecnico,tipo,cantidad):Observable<any>{
+    return this.http.get(this.baseUrl+"/build-task/"+id_actividad+"/"+id_tecnico+"/"+tipo+"/"+cantidad).pipe(map((e:Response)=> e.json()));
   }
 
   // obtener resumen todas las actividades asignadas por tecnico
@@ -51,5 +51,9 @@ export class TecnicoService {
 
   terminarProcesoAvtividades(id){
     return this.http.get(this.baseUrl+"/finalizar/"+id).pipe(map((e:Response)=> e.json()));
+  }
+  //cambiar estado de tecnico 
+  changeStateTecnico(id){
+    return this.http.get(this.baseUrl+"/cambiar-estado/"+id).pipe(map((e:Response)=> e.json()));
   }
 }

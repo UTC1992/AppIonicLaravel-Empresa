@@ -49,4 +49,49 @@ class ActividadDiariaController extends Controller
         return response()->json("Error: ".$e);
       }
     }
+    //obtener cantones de distribucion
+    function getCantonesActividades($type){
+      try {
+        $actividades=new ActividadDiaria();
+        $result=$actividades->getCantonstByActivityType($type);
+        if($result){
+          return response()->json($result);
+        }else{
+          return response()->json(false);
+        }
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+      }
+    }
+    // obtener sectores de canton
+    public function getSectores($tipo_actividad,$canton){
+      try {
+        $actividad=new ActividadDiaria();
+        $result=$actividad->getSectorsByActivities($tipo_actividad,$canton);
+        if($result){
+          return response()->json($result);
+        }else{
+          return response()->json(false);
+        }
+
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+      }
+
+    }
+    // obtener cantidad de Actividades_tecnico
+    public function getActivitiesBySectors($tipo_actividad,$canton,$sector){
+      try{
+          $actividad=new ActividadDiaria();
+          $result=$actividad->getActivitiesBySectors($tipo_actividad,$canton,$sector);
+          if($result){
+            return response()->json($result);
+          }else{
+            return response()->json(false);
+          }
+      }catch (\Exception $e){
+        return response()->json("Error: ".$e);
+      }
+    }
+
 }

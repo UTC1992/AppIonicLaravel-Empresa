@@ -1,8 +1,12 @@
 import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { TecnicoService } from '../../services/tecnico.service';
+import { OrdenService } from '../../services/orden.service';
 import { Tecnico } from '../../models/tecnico';
-import {FormBuilder} from "@angular/forms";
+import { Orden } from '../../models/orden';
+import { TecnicoDistribucion } from '../../models/tecnico-distribucion';
 import { Observable } from 'rxjs';
+import { Type } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-actividades-tecnico',
@@ -20,11 +24,26 @@ export class ActividadesTecnicoComponent implements OnInit {
   key: string = 'name'; //set default
   reverse: boolean = false;
   p: number = 1;
+  cantones: Observable<Orden[]>;
+  sectores:Observable<Orden[]>;
+  cantones_exists:boolean;
+  num_cantones:number=0;
+  sectores_exists:boolean;
+  num_sectores:number=0;
+  num_actividades:number=0;
+  cantidad_exists:boolean;
+  cantidad:Observable<Orden[]>
+
+  objTecnicoDistribucion:TecnicoDistribucion;
+
 
   @ViewChild('inputRef') inputRef: ElementRef;
-  constructor(private tecnicoService:TecnicoService) {
+  constructor(private tecnicoService:TecnicoService, private ordenServices:OrdenService) {
     this.loading=false;
     this.view_table=false;
+    this.cantones_exists=false;
+    this.sectores_exists=false;
+    this.cantidad_exists=false;
    }
 
   ngOnInit() {
@@ -37,47 +56,6 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.reverse = !this.reverse;
   }
 
-    //distribuir actividades tecnico
-  buildTask(tipo){
-    
-    var cadena="";  
-    var mensaje="";
-    var cont=0;
-    var result = document.getElementsByClassName("tec");
-    for(var i=0; i < result.length; i++){ 
-      if(<HTMLInputElement>result[i]['checked']){
-        var id_tecn =result[i].getAttribute("id");
-        cadena+=id_tecn+"&&";  
-        cont++;
-      }    
-    }
-    if(cont>0){
-      this.loading=true;
-      if(cadena!=""){
-        cadena=cadena.substring(0,cadena.length-2);         
-      }
-  
-      this.tecnicoService.buildTecnicoByTask(tipo,cadena).subscribe(
-          msj=>{
-            mensaje=msj;
-            console.log("mensaje servidor: "+mensaje);
-            if(mensaje){
-                alert("Actividades asignadas correctamente");
-                this.loading=false;
-                this.reloadComponent();
-            }else if(!mensaje){
-              this.loading=false;
-              alert("La actividad ya fue asignada o no existe actividad que asignar");
-            }else if(mensaje=="1"){
-              this.loading=false;
-              alert("Ocurrio un error");
-            }
-          }  
-        );  
-    }else{
-      alert("Seleccione al menos un técnico");
-    }  
-  }
   // recargar componentes
   reloadComponent(){
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
@@ -92,18 +70,213 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   }
 
-  ValidarActividadesTecnico(id){
-    var result =this.tecnicoService.terminarProcesoAvtividades(id);
-    result.subscribe(
+  AsignarActividades(id){
+    this.tecnicoService.changeStateTecnico(id).subscribe(
       msj=>{
         if(msj){
-          alert("Proceso finalizado");
-          this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
-        }else{
-          alert("Error");
+          alert("Técnico habilitado correctamente");
+          this.reloadComponent();
         }
       }
     );
   }
 
+  getTypeActivities($event){
+    let valor=$event.target.value;
+    this.cantones=this.ordenServices.getCantones(valor);
+    if(valor=="empty"){
+      this.cantones_exists=false;
+      this.sectores_exists=false;
+      this.cantidad_exists=false;
+    }else{
+      this.cantones.subscribe(
+        result=>{
+          this.cantones_exists=true;
+          this.num_cantones=result.length;
+          console.log(result);
+        }
+      );
+    }  
+  }
+
+  // obtiene sectores desde el servicio
+  getSectors($event){
+    let valor=$event.target.value;
+    var result = document.getElementsByName("actividad");
+    var actividad=<HTMLInputElement>result[0]["value"];
+    this.sectores=this.ordenServices.getSectoresService(actividad,valor);
+    if(valor=="empty"){
+      this.sectores_exists=false;
+    }else{
+      this.sectores.subscribe(
+        result=>{
+          this.sectores_exists=true;
+          this.num_sectores=result.length;
+          console.log(result);
+        }
+      );
+    }
+  }
+// obtiene sectores desde el servicio
+getCantidadSectores($event){
+  let sector=$event.target.value;
+ // alert(sector);
+  var result = document.getElementsByName("actividad");
+  var actividad=<HTMLInputElement>result[0]["value"];
+  //alert(actividad);
+  var res = document.getElementsByName("canton");
+  var canton=<HTMLInputElement>res[0]["value"];
+  //alert(canton);
+  this.cantidad=this.ordenServices.getActivitiesCount(actividad,canton,sector);
+  if(sector=="empty"){
+    //this.cantidad_exists=false;
+    this.num_actividades=0;
+
+  }else{
+    
+    this.cantidad.subscribe(
+      resultado=>{
+        this.cantidad_exists=true;
+        this.num_actividades=resultado.length;
+        
+        //console.log("actividades: "+resultado[0]['id_act']);
+      }
+    );
+    
+    //console.log("actividades: "+this.cantidad);
+  }
+}
+
+    //distribuir actividades tecnico
+    buildTask(){
+      
+      var cont_array_tecn=0;
+      var array_tecnicos:String[]=[];
+      var array_actividades:String[]=[];
+      var cont=0;
+      var cont_tecnicos=0;
+      var result = document.getElementsByClassName("tec");
+    for(var i=0; i < result.length; i++){ 
+      if(<HTMLInputElement>result[i]['checked']){
+        var id_tecn =result[i].getAttribute("id");
+        array_tecnicos[cont_array_tecn]=id_tecn;
+        cont_tecnicos++;
+        cont_array_tecn++;
+      }    
+    }
+    
+  
+    var re= document.getElementsByName("actividad");
+    var actividad=<HTMLInputElement>re[0]["value"];
+    if(cont_tecnicos<=0){
+      alert("Seleccione almenos un tecnico");
+      return;
+    }
+    if(!this.cantones_exists){
+      alert("Seleccione un cantón");
+      return;
+    }
+    if(!this.sectores_exists){
+      alert("Seleccione un sector");
+      return;
+    }
+    if(!this.cantidad_exists){
+      alert("NO ha seccionado actividades");
+      return;
+    }
+
+    var cant=document.getElementsByName("cantidad_actividades");
+    var cantidad_actividades=<HTMLInputElement>cant[0]["value"];
+    
+    this.cantidad.subscribe(
+      msj=>{
+        //alert(msj.length);
+        if(msj.length<=0){
+          alert("seleccione actividades a distribuir");
+          return;
+        }
+      this.loading=true;
+       msj.forEach(element => {
+         array_actividades[cont]=element["id_act"];
+         cont++;
+       });
+       this.tecnicoService.buildTecnicoByTask(array_actividades,array_tecnicos,actividad,cantidad_actividades).subscribe(
+         result=>{
+            if(result){
+              this.loading=false;
+              this.reloadComponent();
+              this.cantones_exists=false;
+              this.sectores_exists=false;
+              this.cantidad_exists=false;
+            }else{
+              alert("No se asigno las tareas  ");
+            }
+            
+         }
+       );
+      }
+    );
+    //
+    /*
+      var re= document.getElementsByName("actividad");
+      var actividad=<HTMLInputElement>re[0]["value"];
+        
+          this.cantidad.subscribe(
+            resul=>{
+              //alert(resul.length);
+              this.loading=true;
+              var cantidad_distribucion=resul.length/result.length;
+              var cn=Math.round(cantidad_distribucion);
+              //alert(Math.round(cantidad_distribucion));
+              resul.forEach(element => {
+                if(<HTMLInputElement>result[cont]['checked']){
+                  var id_tecn =result[cont].getAttribute("id");
+                  this.tecnicoService.buildTecnicoByTask(element["id_act"],id_tecn,actividad).subscribe(
+                    msj=>{
+                      
+                    }
+                  );
+                }
+                cont_for++;
+                if(cont_for==cn){
+                  cont++;
+                }
+              });
+              
+
+            }
+          );
+            
+      
+     
+      
+      
+      /*
+      if(cont>0){ 
+        this.loading=true;
+        if(cadena!=""){
+          cadena=cadena.substring(0,cadena.length-2);         
+        }
+    
+        this.tecnicoService.buildTecnicoByTask(tipo,cadena).subscribe(
+            msj=>{
+              mensaje=msj;
+              console.log("mensaje servidor: "+mensaje);
+              if(mensaje){
+                  alert("Actividades asignadas correctamente");
+                  this.loading=false;
+                  this.reloadComponent();
+              }else if(!mensaje){
+                this.loading=false;
+                alert("La actividad ya fue asignada o no existe actividad que asignar");
+              }else if(mensaje=="1"){
+                this.loading=false;
+                alert("Ocurrio un error");
+              }
+            }  
+          );  
+      }else{
+        alert("Seleccione al menos un técnico");
+      }  */
+    }
 }

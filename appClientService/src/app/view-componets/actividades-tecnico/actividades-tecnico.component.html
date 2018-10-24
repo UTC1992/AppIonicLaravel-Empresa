@@ -94,50 +94,41 @@
             <div class="col">
                 <div class="form-group">
                     <label>Actividad:</label>
-                    <select class="form-control" name="canton">
-                        <option value="">Seleccionar</option>
-                        <option value="010">Notificación</option>
-                        <option value="030">Corte</option>
-                        <option value="040">Reconexión</option>
+                    <select class="form-control" name="actividad" (change)="getTypeActivities($event)">
+                        <option value="empty">Seleccionar</option>
+                        <option value="10">Notificación</option>
+                        <option value="30">Corte</option>
+                        <option value="40">Reconexión</option>
                     </select>
                 </div>
             </div>
 
             <div class="col">
-                <div class="form-group">
+                <div class="form-group" *ngIf="cantones_exists">
                     <label>Cantón:</label>
-                    <select class="form-control" name="canton">
-                        <option value="">Seleccionar</option>
-                        <option value="1">Latacunga</option>
-                        <option value="2">Salcedo</option>
-                        <option value="3">Saquisilí</option>
-                        <option value="4">Pujilí</option>
-                        <option value="5">Pangau</option>
-                        <option value="6">La Mana</option>
-                        <option value="7">Sigchos</option>
+                    <select class="form-control" name="canton" (change)="getSectors($event)">
+                        <option value="empty">Seleccionar</option>
+                        <option *ngFor="let canton of cantones | async" value="{{canton.canton}}" >{{canton.canton}}</option>
                     </select>
-                    <label># 3 cantones</label>    
+                    <label># {{num_cantones}} Cantones Encontrados</label>    
                 </div>
             </div>
             
             <div class="col">
-                <div class="form-group">
+                <div class="form-group" *ngIf="sectores_exists">
                     <label>Sectores:</label>
-                    <select class="form-control" name="canton">
-                        <option value="">Seleccionar</option>
-                        <option value="">ALF</option>
-                        <option value="">JMO</option>
-                        <option value="">IFR</option>
-                        <option value="">JMR</option>
+                    <select class="form-control" name="sector" (change)="getCantidadSectores($event)">
+                        <option value="empty">Seleccionar</option>
+                        <option *ngFor="let sector of sectores | async" value="{{sector.sector}}">{{sector.sector}}</option>
                     </select>
-                    <label># 150 actividades</label>   
+                    <label># {{num_sectores}} Sectores</label>   
                 </div>
             </div>
             
             <div class="col">
-                <div class="form-group">
+                <div class="form-group" *ngIf="cantidad_exists">
                     <label>Cantidad:</label>
-                    <input class="form-control" type="number" name="" value="" placeholder="#">   
+                    <input class="form-control" type="number" name="cantidad_actividades" value="{{num_actividades}}" placeholder="0">   
                 </div>
             </div>
 
@@ -158,7 +149,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
                 <div class="form-inline">
-                    <input value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
+                    <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
                     <label for="cbox2"> {{ tecnico.nombres}}</label>      
                 </div>
             </div> 
@@ -210,17 +201,17 @@
                     <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="">
                         <td>{{j+1}}</td>
                         <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
-                        <td>ALF</td>
+                        <td>{{tecnico_tareas.n9cose}}</td>
                         <td>{{tecnico_tareas.cantidad}}</td>
                         <td>{{tecnico_tareas.tipo}}</td>
                         <td>
                             <button type="button"  (click)="verDetalleActividades(tecnico_tareas.id_tecn)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
                                 Ver Detalle    
                               </button>
-                              <!--
-                              <button class="btn btn-success" (click)="ValidarActividadesTecnico(tecnico_tareas.id_tecn)">
-                                  Validar
-                              </button>-->
+                              
+                              <button class="btn btn-warning btn-xs" (click)="AsignarActividades(tecnico_tareas.id_tecn)">
+                                  Volver Asignar
+                              </button>
                         </td>
                     </tr>
                 </tbody>

@@ -43,7 +43,6 @@ class MobileController extends Controller
                 $actividad->referencia="Finalizado";
               }
             $actividad->save();
-
             $ordenTrabajo=new OrdenTrabajo();
             $res=$ordenTrabajo->where('id_act','=',$value['id_act'])->first();
             if(!is_null($value['observacion'])){
@@ -54,7 +53,6 @@ class MobileController extends Controller
             $res->estado=1;
             $res->foto=$value['foto'];
             $res->save();
-
             $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();

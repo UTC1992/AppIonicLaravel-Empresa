@@ -41,10 +41,29 @@ class TecnicoController extends Controller
      */
     public function store(Request $request)
     {
-        $input=$request->all();
+      try {
+        
         $tecnico=new Tecnico();
-        $res=$tecnico->create($input);
-        return response()->json($res);
+        $tecnico->nombres=$request->nombres;
+        $tecnico->apellidos=$request->nombres;
+        $tecnico->cedula=$request->cedula;
+        $tecnico->telefono=$request->telefono;
+        $tecnico->email=$request->email;
+        $tecnico->estado=$request->estado;
+        $tecnico->asignado=0;
+        $tecnico->borrado=0;
+        $tecnico->save();
+        if($tecnico){
+          return response()->json(true);
+        }else{
+          return response()->json(false);
+        }
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+      }
+
+
+
     }
 
     /**
@@ -100,70 +119,83 @@ class TecnicoController extends Controller
       return response()->json($tecnico);
     }
 
-    public function buildTaskTecnicos($tipo,$cadena){
-      $array_id_tecnicos=explode('&&',$cadena);
-      if(count($array_id_tecnicos)>0){
-        $likeValue="";
-        $actividad="";
-        if($tipo=="010"){
-          $likeValue="010%";
-          $actividad="Notificación";
-        }
-        if($tipo=="030"){
-          $likeValue="030%";
-          $actividad="Corte";
-        }
-        if($tipo=="040"){
-          $likeValue="040%";
-          $actividad="Reconexión";
-        }
+    public function buildTaskTecnicos($array_id_act,$array_id_tecnico,$tipo_actividad,$cantidad){
+      try {
+        $cont=0;
         $contador=0;
-        $num=new ActividadDiaria();
-        $num_total_actividades=$num->where('estado',0)->where('n9cono','like',''.$likeValue.'')->count();
-        $num_act_by_tec=$num_total_actividades/count($array_id_tecnicos);
-            $i=0;
-            $orden=new ActividadDiaria();
-            $result=$orden->where('estado',0)->where('n9cono','like',''.$likeValue.'')->get();
-            if(count($result)>0){
-              foreach ($result as $key => $value) {
+        $array_actividades=explode(',',$array_id_act);
+        $array_tecnicos=explode(',',$array_id_tecnico);
+        $cantidad_distribuir=ceil($cantidad/count($array_tecnicos));
+        for ($i=0; $i <$cantidad; $i++) {
+          //ingresa  orden trabajo
+          $ordenTrabajo=new OrdenTrabajo();
+          $ordenTrabajo->id_tecn=$array_tecnicos[$cont];
+          $ordenTrabajo->id_act=$array_actividades[$i];
+          $ordenTrabajo->estado=0;
+          $ordenTrabajo->fecha=date('Y-m-d');
+          $ordenTrabajo->observacion="Orden de trabajo asignado";
+          $ordenTrabajo->tipo_actividad=$tipo_actividad;
+          $ordenTrabajo->save();
+          // actualiza actividad diaria asignado
+          $ordenProc=ActividadDiaria::find($array_actividades[$i]);
+          $ordenProc->estado=1;
+          $ordenProc->referencia="Asignado";
+          $ordenProc->save();
+          $contador++;
+          if($contador==$cantidad_distribuir){
+            $cont++;
+            $contador=0;
+          }
+        }
+        // asigna técnico
+        for ($j=0; $j < count($array_tecnicos); $j++) {
+          $tecnico=Tecnico::find($array_tecnicos[$j]);
+          $tecnico->asignado=1;
+          $tecnico->save();
+        }
 
-                $ordenTrabajo=new OrdenTrabajo();
-                $ordenTrabajo->id_tecn=$array_id_tecnicos[$i];
-                $ordenTrabajo->id_act=$value->id_act;
-                $ordenTrabajo->estado=0;
-                $ordenTrabajo->fecha=date('Y-m-d');
-                $ordenTrabajo->observacion="Orden de trabajo pendiente ".$actividad;
-                $ordenTrabajo->tipo_actividad=$tipo;
-                $ordenTrabajo->save();
+        return response()->json(true);
 
-                $ordenProc=ActividadDiaria::find($value->id_act);
-                $ordenProc->estado=1;
-                $ordenProc->referencia="Asignado";
-                $ordenProc->save();
-                if($contador==ceil($num_act_by_tec)){
-                  $i++;
-                  $contador=0;
-                }
-                $contador++;
-              }
+        /*
+        //ingresa  orden trabajo
+        $ordenTrabajo=new OrdenTrabajo();
+        $ordenTrabajo->id_tecn=$id_tecnico;
+        $ordenTrabajo->id_act=$id_act;
+        $ordenTrabajo->estado=0;
+        $ordenTrabajo->fecha=date('Y-m-d');
+        $ordenTrabajo->observacion="Orden de trabajo asignado pendiente";
+        $ordenTrabajo->tipo_actividad=$tipo;
+        $ordenTrabajo->save();
+        // actualiza actividad diaria asignado
+        $ordenProc=ActividadDiaria::find($id_act);
+        $ordenProc->estado=1;
+        $ordenProc->referencia="Asignado";
+        $ordenProc->save();
+        // asigna técnico
+        $tecnico=Tecnico::find($id_tecnico);
+        $tecnico->asignado=1;
+        $tecnico->save();
+      return response()->json(true);*/
 
-              for ($x=0; $x < count($array_id_tecnicos); $x++) {
-                  $tecnico=Tecnico::find($array_id_tecnicos[$x]);
-                  $tecnico->asignado=1;
-                  $tecnico->save();
-              }
-              return response()->json(true);
-            }else{
-              return response()->json(false);
-            }
-
-
-      }else{
-        return response()->json("1");
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
       }
 
     }
-    
+    // asignar nueva tarea Tecnico
+    public function changeStateTecnico($id){
+      try {
+        $tecnico=Tecnico::find($id);
+        $tecnico->asignado=0;
+        $tecnico->save();
+        if($tecnico){
+          return response()->json(true);
+        }
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+      }
+
+    }
     /**
      * Update the specified resource in storage.
      *

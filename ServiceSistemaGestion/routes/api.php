@@ -23,12 +23,16 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::get('delete-tecnico/{id_tecnico}','Angular\TecnicoController@delete');
     Route::get('get-tecnico/{id_tecnico}','Angular\TecnicoController@getTecnicoById');
     Route::post('update-tecnico','Angular\TecnicoController@editTecnicoAngular');
-    Route::get('build-task/{tipo}/{id_tecnico}','Angular\TecnicoController@buildTaskTecnicos');
+    Route::get('build-task/{id_act}/{id_tecnico}/{tipo}/{cantidad}','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
     Route::get('actividades-tecnico/{id_tecn}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
     Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
+    Route::get('cantones/{type}','Angular\ActividadDiariaController@getCantonesActividades');
+    Route::get('sectores/{actividad}/{canton}','Angular\ActividadDiariaController@getSectores');
+    Route::get('cantidad-actividades/{actividad}/{canton}/{sector}','Angular\ActividadDiariaController@getActivitiesBySectors');
+    Route::get('cambiar-estado/{id}','Angular\TecnicoController@changeStateTecnico');
 });
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){
