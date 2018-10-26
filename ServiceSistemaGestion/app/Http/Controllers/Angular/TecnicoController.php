@@ -42,7 +42,7 @@ class TecnicoController extends Controller
     public function store(Request $request)
     {
       try {
-        
+
         $tecnico=new Tecnico();
         $tecnico->nombres=$request->nombres;
         $tecnico->apellidos=$request->nombres;
@@ -121,6 +121,9 @@ class TecnicoController extends Controller
 
     public function buildTaskTecnicos($array_id_act,$array_id_tecnico,$tipo_actividad,$cantidad){
       try {
+        if($cantidad<=0 || $cantidad==null){
+          return response()->json(1);
+        }
         $cont=0;
         $contador=0;
         $array_actividades=explode(',',$array_id_act);

@@ -62,7 +62,7 @@ class ActividadDiaria extends Model
   protected $hidden = [
     'remember_token'
   ];
-
+  
   public function getDataActividadesTecnico($id){
     return $actividad = DB::table('tbl_actividaddiaria as T0')
           ->join('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')

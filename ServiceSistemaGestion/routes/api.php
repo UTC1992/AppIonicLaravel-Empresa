@@ -33,6 +33,8 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::get('sectores/{actividad}/{canton}','Angular\ActividadDiariaController@getSectores');
     Route::get('cantidad-actividades/{actividad}/{canton}/{sector}','Angular\ActividadDiariaController@getActivitiesBySectors');
     Route::get('cambiar-estado/{id}','Angular\TecnicoController@changeStateTecnico');
+    Route::get('validar-rec','Angular\ActividadDiariaController@validarActividadesManuales');
+    Route::get('cont-rec','Angular\ActividadDiariaController@getRecManualesSinProcesar');
 });
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){

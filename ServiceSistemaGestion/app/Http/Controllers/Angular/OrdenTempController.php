@@ -24,6 +24,7 @@ class OrdenTempController extends Controller
     return response()->json($result);
   }
 
+
   /**
    * Show the form for creating a new resource.
    *

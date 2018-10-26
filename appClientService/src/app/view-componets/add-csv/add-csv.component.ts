@@ -1,6 +1,7 @@
 import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
 import { OrdenService } from '../../services/orden.service';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-csv',
@@ -11,11 +12,14 @@ export class AddCsvComponent implements OnInit {
   form: FormGroup;
   loading2: boolean = false;
   public loading:boolean;
+  resultValida:Observable<any>;
+  public validaReconexiones:boolean;
 
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(private ordenService:OrdenService,private fb: FormBuilder) {
     this.createForm();
     this.loading=false;
+    this.validaReconexiones=false;
    }
 
   ngOnInit() {
@@ -59,6 +63,7 @@ export class AddCsvComponent implements OnInit {
     .subscribe(
       msj=>{
         if(msj){
+          this.loading = false;
           alert("Archivo subido correctamente");
           this.clearFile();
           location.reload();
@@ -74,6 +79,21 @@ export class AddCsvComponent implements OnInit {
     this.fileInput.nativeElement.value = '';
   }
 
+  validarRecManuales(){
+    this.loading = true;
+    this.resultValida=this.ordenService.validarReconexionesManuales();
+    this.resultValida.subscribe(
+      msj=>{
+        if(msj){
+          this.loading = false;
+          alert("Proceso Realizado Correctamente");
+          location.reload();
+        }else{
+          alert(msj);
+        }
+      }
+    );
+  }
 
   
 

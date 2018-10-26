@@ -12,10 +12,16 @@
 				    <input type="file" class="btn btn-info" id="archivo"  name="archivo" (change)="onFileChange($event)" #fileInput>
 				    
 				  </div>
+
 				  <button type="submit" [disabled]="form.invalid || loading" class="btn btn-success">Subir Archivo <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading2"></i></button>
+
 				</form>
-    		</div>
-    	</div>
+			</div>
+			
+		</div>
+		<div class="row">
+			<button type="button"  (click)="validarRecManuales()" class="btn btn-warning">Procesar Reconexiones Manuales<i class="fa fa-spinner fa-spin fa-fw" ></i></button>
+		</div>
     	<div class="row">
 		    <div class="col loading d-flex justify-content-center" *ngIf="loading">
 		        <img src="assets/img/cargando.gif">
