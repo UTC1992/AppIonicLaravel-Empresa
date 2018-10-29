@@ -8,7 +8,7 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OrdenService {
-  baseUrl='http://192.168.100.8:8080/ServiceSistemaGestion/public/api/angular';
+  baseUrl='http://192.168.100.20:8080/ServiceSistemaGestion/public/api/angular';
   constructor(private http:Http) { }
 
   getOrdenes():Observable<Orden[]>{
@@ -41,7 +41,14 @@ export class OrdenService {
   getRecManualesSinProcesar():Observable<any>{
     return this.http.get(this.baseUrl+"/cont-rec").pipe(map((e:Response)=> e.json()));
   }
-
+  //consolidar actividades diarias
+  consolidarActividades(date):Observable<any>{
+    return this.http.get(this.baseUrl+"/consolidar-actividades/"+date).pipe(map((e:Response)=> e.json()));
+  }
+  //obtner actividades consolidadas por fecha: paremeter date
+  obtenerCosolidadosDelDia(date):Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/actividades-consolidadas/"+date).pipe(map((e:Response)=> e.json()));
+  }
 
   
 }

@@ -35,6 +35,8 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::get('cambiar-estado/{id}','Angular\TecnicoController@changeStateTecnico');
     Route::get('validar-rec','Angular\ActividadDiariaController@validarActividadesManuales');
     Route::get('cont-rec','Angular\ActividadDiariaController@getRecManualesSinProcesar');
+    Route::get('consolidar-actividades/{created_at}','Angular\ActividadDiariaController@consolidarActividadesDiarias');
+    Route::get('actividades-consolidadas/{created_at}','Angular\ActividadDiariaController@getActividadesByDate');
 });
 
 Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){

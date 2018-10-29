@@ -103,7 +103,7 @@ class OrdenTempController extends Controller
                 $actividad->longitud=$coordenadas["lon"];
               }
 
-              $actividad->id_emp=1;
+              $actividad->id_emp=2;
               $actividad->save();
 
           }

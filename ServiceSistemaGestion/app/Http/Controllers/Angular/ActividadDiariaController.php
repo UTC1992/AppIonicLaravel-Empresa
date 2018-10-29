@@ -142,4 +142,35 @@ class ActividadDiariaController extends Controller
       }
     }
 
+  // consolidar actividades diarias
+  public function consolidarActividadesDiarias($date){
+    try {
+      $actividad= new ActividadDiaria();
+      $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->get();
+      foreach ($result as $key => $value) {
+        if($value->estado==0){
+          $act=ActividadDiaria::find($value->id_act);
+          $act->estado=3;
+          $act->referencia="Consolidado sin realizar";
+          $act->save();
+        }
+      }
+      return response()->json(true);
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
+  }
+
+  // obtdener actividades consolidadas
+  public function getActividadesByDate($date){
+    try {
+      $actividad=new ActividadDiaria();
+      $result=$actividad->where('created_at','like','%'.$date.'%')->where('estado','!=',0)->get();
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
+  }
+
+
 }

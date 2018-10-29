@@ -15,14 +15,20 @@ import { Observable } from 'rxjs';
 
 export class PanelLayoutComponent implements OnInit {
     
+  loading:boolean;
+  exportable:boolean;
   ordenes:Observable<Orden[]>; 
   public view_table:boolean;
   tecnicos:Observable<Tecnico[]>;
   public view_data_empty:boolean;
+  ordenesConsolidados:Observable<Orden[]>;
+
   constructor(private ordenService:OrdenService, private tecnicoService:TecnicoService,private excelService:ExcelServiceService) 
   {
     this.view_table=false;
     this.view_data_empty=false;
+    this.loading=false;
+    this.exportable=false;
    }
 
   ngOnInit() {  
@@ -63,6 +69,39 @@ export class PanelLayoutComponent implements OnInit {
         }
       );
       
+  }
+  //consolidar actividades diarias
+  consolodarActividades(){
+    var date = document.getElementsByName("fecha")[0]["value"];
+    if(date!=""){
+      this.loading=true;
+      this.ordenService.consolidarActividades(date).subscribe(
+        result=>{
+          if(result){
+            this.exportable=true;
+            alert("Actividades Consolidadas Correctamente");
+          }else{
+            alert(result);
+          }
+        }
+      );
+    }else{
+      alert("Seleccione una fecha");
+      return;
+    }
+
+    
+  }
+
+  //exportar excel 
+  exportarConsolidado(){
+    var date = document.getElementsByName("fecha")[0]["value"];
+    var nombre_consolidado=date+"Consolidado"
+    this.ordenService.obtenerCosolidadosDelDia(date).subscribe(
+      result=>{
+        this.excelService.exportAsExcelFile(result,nombre_consolidado);
+      }
+    );
   }
 
 
