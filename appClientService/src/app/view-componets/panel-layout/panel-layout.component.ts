@@ -79,6 +79,7 @@ export class PanelLayoutComponent implements OnInit {
         result=>{
           if(result){
             this.exportable=true;
+            this.loading=false;
             alert("Actividades Consolidadas Correctamente");
           }else{
             alert(result);

@@ -13,6 +13,7 @@ import { TableClientComponent } from './view-componets/table-client/table-client
 import { AddCsvComponent } from './view-componets/add-csv/add-csv.component';
 import { OrdenService } from './services/orden.service';
 import { TecnicoService } from './services/tecnico.service';
+import { LoginService } from './services/login.service';
 import { DistribucionComponent } from './view-componets/distribucion/distribucion.component';
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
@@ -22,18 +23,32 @@ import { FormTecnicoComponent } from './view-componets/form-tecnico/form-tecnico
 import { ActividadesTecnicoComponent } from './view-componets/actividades-tecnico/actividades-tecnico.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
-import {NgxPaginationModule} from 'ngx-pagination'; 
+import {NgxPaginationModule} from 'ngx-pagination';
+import { LoginComponent } from './view-componets/login/login.component';
+import { DasboardComponent } from './view-componets/dasboard/dasboard.component';
+import { FooterComponent } from './view-componets/footer/footer.component'; 
+import {LoginGuard} from './login.guard';
+import {NoLoginGuard} from './no-login.guard';
 
 const appRoutes: Routes = [
   { path: '',
-    component:WelcomeComponent,
-    pathMatch: 'full'
+    component:LoginComponent,
+    pathMatch: 'full',
+    canActivate:[NoLoginGuard]
+   
+  },
+  { path: 'login',
+    component:LoginComponent,
+    canActivate:[NoLoginGuard]
+    
   },
   { path: 'panel-layout',
-    component:PanelLayoutComponent
+    component:PanelLayoutComponent,
+    canActivate:[LoginGuard]
   },
   { path: 'distribucion',
-    component:DistribucionComponent
+    component:DistribucionComponent,
+    canActivate:[LoginGuard]
   },
   {
     path: 'admin',
@@ -41,7 +56,18 @@ const appRoutes: Routes = [
   },
   {
     path:'tecnicos',
-    component:TecnicosComponent
+    component:TecnicosComponent,
+    canActivate:[LoginGuard]
+  },
+  {
+    path:'dashboard',
+    component:DasboardComponent,
+    canActivate:[LoginGuard]
+  },
+  {
+    path:'nav',
+    component:NavClientComponent,
+    canActivate:[LoginGuard]
   }
 ];
 
@@ -58,6 +84,9 @@ const appRoutes: Routes = [
     TecnicosComponent,
     FormTecnicoComponent,
     ActividadesTecnicoComponent,
+    LoginComponent,
+    DasboardComponent,
+    FooterComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),
@@ -80,7 +109,7 @@ const appRoutes: Routes = [
     Ng2OrderModule,
     NgxPaginationModule
   ],
-  providers: [OrdenService,TecnicoService],
+  providers: [OrdenService,TecnicoService,LoginService,LoginGuard,NoLoginGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

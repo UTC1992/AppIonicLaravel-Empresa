@@ -5,7 +5,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto" *ngIf="isLogin" >
       <li routerLinkActive="active">
         <a class="nav-link"  [routerLink]="['/panel-layout']">Actividad diaria <span class="sr-only">(current)</span></a>
       </li>
@@ -24,5 +24,22 @@
         </div>
       </li>
     </ul>
+    <form class="form-inline my-2 my-lg-0" *ngIf="isLogin">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{nombre_usuario}}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                <a class="dropdown-item" (click)="CerrarSesion()">Cerrar Sesión</a>
+                <div class="dropdown-divider"></div>
+               
+              </div>
+            </li>
+      </ul>
+        
+     
+    </form>
   </div>
 </nav>

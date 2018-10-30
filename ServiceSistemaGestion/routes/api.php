@@ -16,8 +16,11 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('usuarioAutenticado','AuthApi\SecurityController@getUserData');
+
 //rutas de servicio cliente angular
-Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
+Route::group(['prefix' => 'angular'], function(){
     Route::resource('ordenes','Angular\OrdenTempController');
     Route::resource('tecnicos','Angular\TecnicoController');
     Route::get('delete-tecnico/{id_tecnico}','Angular\TecnicoController@delete');
@@ -39,7 +42,7 @@ Route::group(['prefix' => 'angular', 'middleware' => 'cors'], function(){
     Route::get('actividades-consolidadas/{created_at}','Angular\ActividadDiariaController@getActividadesByDate');
 });
 
-Route::group(['prefix' => 'mobile', 'middleware' => 'cors'], function(){
+Route::group(['prefix' => 'mobile'], function(){
     Route::get('get-data/{cedula}','Mobile\MobileController@getTechnicalData');
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');

@@ -12,6 +12,10 @@ use App\Models\OrdenTrabajo;
 
 class ActividadDiariaController extends Controller
 {
+  public function __construct(){
+    $this->middleware('auth:api');
+  }
+  
     public function getActivitadesTecnico(){
       $actividades=new ActividadDiaria();
       $result=$actividades->getViewActivities();

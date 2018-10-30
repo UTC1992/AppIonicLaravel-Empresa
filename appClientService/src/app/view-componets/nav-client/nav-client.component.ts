@@ -7,9 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavClientComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+  isLogin:boolean;
+  nombre_usuario:string;
+  constructor() { 
+    this.isLogin=false;
+    if(localStorage.getItem("nombre")){
+      this.isLogin=true;
+      this.nombre_usuario=localStorage.getItem("nombre");
+    }
   }
 
+  ngOnInit() {
+    
+  }
+  CerrarSesion(){
+    localStorage.removeItem("nombre");
+    localStorage.removeItem("token");
+    localStorage.removeItem("token_type");
+    location.reload();
+  }
 }
