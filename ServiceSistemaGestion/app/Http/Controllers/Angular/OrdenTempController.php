@@ -100,11 +100,25 @@ class OrdenTempController extends Controller
               $actividad->estado= false;
               $actividad->created_at=date('Y-m-d H:i:s');
               $actividad->referencia="sin asignar";
-              $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
-              if($coordenadas!=false){
-                $actividad->latitud=$coordenadas["lat"];
-                $actividad->longitud=$coordenadas["lon"];
+              if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
+                $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
+                if($coordenadas!=false){
+                  $latitud=round($coordenadas["lat"],7);
+                  $longitud=round($coordenadas["lon"],6);
+                  if($this->validarCoordenada($latitud) && $this->validarCoordenada($longitud)){
+                    $actividad->latitud=$latitud;
+                    $actividad->longitud=$longitud;
+                  }else{
+                    $actividad->latitud=0;
+                    $actividad->longitud=0;
+                  }
+                }
+              }else{
+                $actividad->latitud=0;
+                $actividad->longitud=0;
               }
+
+
 
               $actividad->id_emp=2;
               $actividad->save();
@@ -132,6 +146,11 @@ class OrdenTempController extends Controller
 
   }
 
+//funcion validar longitud y  latitud
+public function validarCoordenada($coordenada){
+  $res=preg_match('/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?);[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/', $coordenada);
+  return $res;
+}
 
   //funciones para convertir cordenas utm en geograficas
 
