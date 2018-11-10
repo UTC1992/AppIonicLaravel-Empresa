@@ -40,8 +40,8 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/delete-tecnico/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   //metodo obtien tecnico por tarea 
-  buildTecnicoByTask(id_actividad,id_tecnico,tipo,cantidad):Observable<any>{
-    return this.http.get(this.baseUrl+"/build-task/"+id_actividad+"/"+id_tecnico+"/"+tipo+"/"+cantidad,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  buildTecnicoByTask(dataBuild:object):Observable<any>{
+    return this.http.post(this.baseUrl+"/build-task/",dataBuild,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
   // obtener resumen todas las actividades asignadas por tecnico

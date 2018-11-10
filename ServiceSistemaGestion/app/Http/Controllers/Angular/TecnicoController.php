@@ -122,17 +122,17 @@ class TecnicoController extends Controller
       return response()->json($tecnico);
     }
 
-    public function buildTaskTecnicos($array_id_act,$array_id_tecnico,$tipo_actividad,$cantidad){
+    public function buildTaskTecnicos(Request $request){
       try {
-        if($cantidad<=0 || $cantidad==null){
+        if($request->cantidad_actividades<=0 || $request->cantidad_actividades==null){
           return response()->json(1);
         }
         $cont=0;
         $contador=0;
-        $array_actividades=explode(',',$array_id_act);
-        $array_tecnicos=explode(',',$array_id_tecnico);
-        $cantidad_distribuir=ceil($cantidad/count($array_tecnicos));
-        for ($i=0; $i <$cantidad; $i++) {
+        $array_actividades=$request->array_actividades;
+        $array_tecnicos=$request->array_tecnicos;
+        $cantidad_distribuir=ceil($request->cantidad_actividades/count($array_tecnicos));
+        for ($i=0; $i <$request->cantidad_actividades; $i++) {
           //ingresa  orden trabajo
           $ordenTrabajo=new OrdenTrabajo();
           $ordenTrabajo->id_tecn=$array_tecnicos[$cont];
@@ -140,7 +140,7 @@ class TecnicoController extends Controller
           $ordenTrabajo->estado=0;
           $ordenTrabajo->fecha=date('Y-m-d');
           $ordenTrabajo->observacion="Orden de trabajo asignado";
-          $ordenTrabajo->tipo_actividad=$tipo_actividad;
+          $ordenTrabajo->tipo_actividad=$request->actividad;
           $ordenTrabajo->save();
           // actualiza actividad diaria asignado
           $ordenProc=ActividadDiaria::find($array_actividades[$i]);
@@ -161,27 +161,6 @@ class TecnicoController extends Controller
         }
 
         return response()->json(true);
-
-        /*
-        //ingresa  orden trabajo
-        $ordenTrabajo=new OrdenTrabajo();
-        $ordenTrabajo->id_tecn=$id_tecnico;
-        $ordenTrabajo->id_act=$id_act;
-        $ordenTrabajo->estado=0;
-        $ordenTrabajo->fecha=date('Y-m-d');
-        $ordenTrabajo->observacion="Orden de trabajo asignado pendiente";
-        $ordenTrabajo->tipo_actividad=$tipo;
-        $ordenTrabajo->save();
-        // actualiza actividad diaria asignado
-        $ordenProc=ActividadDiaria::find($id_act);
-        $ordenProc->estado=1;
-        $ordenProc->referencia="Asignado";
-        $ordenProc->save();
-        // asigna técnico
-        $tecnico=Tecnico::find($id_tecnico);
-        $tecnico->asignado=1;
-        $tecnico->save();
-      return response()->json(true);*/
 
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);

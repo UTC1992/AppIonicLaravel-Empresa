@@ -206,7 +206,13 @@ getCantidadSectores($event){
          array_actividades[cont]=element["id_act"];
          cont++;
        });
-       this.tecnicoService.buildTecnicoByTask(array_actividades,array_tecnicos,actividad,cantidad_actividades).subscribe(
+	   let dataBuild={
+        'array_actividades':array_actividades,
+        'array_tecnicos':array_tecnicos,
+        'actividad':actividad,
+        'cantidad_actividades':cantidad_actividades
+      }
+       this.tecnicoService.buildTecnicoByTask(dataBuild).subscribe(
          result=>{
             if(result){
               this.loading=false;

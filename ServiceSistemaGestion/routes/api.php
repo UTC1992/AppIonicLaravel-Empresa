@@ -26,7 +26,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('delete-tecnico/{id_tecnico}','Angular\TecnicoController@delete');
     Route::get('get-tecnico/{id_tecnico}','Angular\TecnicoController@getTecnicoById');
     Route::post('update-tecnico','Angular\TecnicoController@editTecnicoAngular');
-    Route::get('build-task/{id_act}/{id_tecnico}/{tipo}/{cantidad}','Angular\TecnicoController@buildTaskTecnicos');
+    Route::post('build-task','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
     Route::get('actividades-tecnico/{id_tecn}','Angular\ActividadDiariaController@getActivitiesTecnico');
