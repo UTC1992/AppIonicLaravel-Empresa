@@ -1,5 +1,4 @@
 
-
 <div class="row">
     <!-- Modal -->
     <div class="modal fade" id="DetalleTareasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -118,14 +117,15 @@
             
             <div class="col">
                 <div class="form-group" *ngIf="sectores_exists">
-                    <label>Sectores:</label>
-                    <select class="form-control" name="sector" (change)="getCantidadSectores($event)">
-                        <option value="empty">Seleccionar</option>
-                        <option *ngFor="let sector of sectores | async" value="{{sector.sector}}">{{sector.sector}}</option>
-                    </select>
-                    <label># {{num_sectores}} Sectores</label>   
+                    <label>Sectores:</label><br>
+                    <ss-multiselect-dropdown [options]="myOptions" [(ngModel)]="optionsModel" (ngModelChange)="onChange($event)"></ss-multiselect-dropdown>
+                    <br><label># {{num_sectores}} Sectores Encontrados</label>   
                 </div>
+
+                
             </div>
+
+           
             
             <div class="col">
                 <div class="form-group" *ngIf="cantidad_exists">

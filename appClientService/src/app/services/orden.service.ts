@@ -29,12 +29,12 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/cantones/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // obtiene sectores desde servicio .. parametro canton type: get
-  getSectoresService(tipo,canton):Observable<Orden[]>{
+  getSectoresService(tipo,canton):Observable<any[]>{
     return this.http.get(this.baseUrl+"/sectores/"+tipo+"/"+canton,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   //obtiene cantidad de actividades 
-  getActivitiesCount(tipo,canton,sector):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/cantidad-actividades/"+tipo+"/"+canton+"/"+sector,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  getActivitiesCountSec(datos:object):Observable<Orden[]>{
+    return this.http.post(this.baseUrl+"/cantidad-post",datos,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // actualizar reconexiones manuales
   validarReconexionesManuales():Observable<any>{

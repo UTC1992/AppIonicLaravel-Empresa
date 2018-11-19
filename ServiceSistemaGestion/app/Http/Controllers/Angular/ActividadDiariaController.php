@@ -15,7 +15,7 @@ class ActividadDiariaController extends Controller
   public function __construct(){
     $this->middleware('auth:api');
   }
-  
+
     public function getActivitadesTecnico(){
       $actividades=new ActividadDiaria();
       $result=$actividades->getViewActivities();
@@ -90,6 +90,20 @@ class ActividadDiariaController extends Controller
       try{
           $actividad=new ActividadDiaria();
           $result=$actividad->getActivitiesBySectors($tipo_actividad,$canton,$sector);
+          if($result){
+            return response()->json($result);
+          }else{
+            return response()->json(false);
+          }
+      }catch (\Exception $e){
+        return response()->json("Error: ".$e);
+      }
+    }
+    // obtener cantidad de Actividades_tecnico post
+    public function getActivitiesBySectorsPost(Request $request){
+      try{
+          $actividad=new ActividadDiaria();
+          $result=$actividad->getActivitiesBySectorsPost($request->actividad,$request->canton,$request->sector);
           if($result){
             return response()->json($result);
           }else{

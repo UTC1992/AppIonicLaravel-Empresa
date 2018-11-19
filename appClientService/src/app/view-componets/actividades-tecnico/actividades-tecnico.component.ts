@@ -7,7 +7,9 @@ import { TecnicoDistribucion } from '../../models/tecnico-distribucion';
 import { Observable } from 'rxjs';
 import { Type } from '@angular/compiler';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-
+import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
+import { Sector } from 'src/app/models/sector';
+import { SectorList } from 'src/app/models/sector-list';
 
 @Component({
   selector: 'app-actividades-tecnico',
@@ -15,6 +17,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./actividades-tecnico.component.css']
 })
 export class ActividadesTecnicoComponent implements OnInit {
+  optionsModel: number[];
+  myOptions: IMultiSelectOption[]; 
   countryForm: FormGroup;
   tecnicos:Observable<Tecnico[]>; 
   public loading: boolean;
@@ -26,7 +30,7 @@ export class ActividadesTecnicoComponent implements OnInit {
   reverse: boolean = false;
   p: number = 1;
   cantones: Observable<Orden[]>;
-  sectores:Observable<Orden[]>;
+  sectores:Observable<any[]>;
   cantones_exists:boolean;
   num_cantones:number=0;
   sectores_exists:boolean;
@@ -48,12 +52,15 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.sectores_exists=false;
     this.cantidad_exists=false;
     this.createForm();
+    this.myOptions=[];
    }
-
+  
   ngOnInit() {
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
     this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
     this.countActivities();
+    
+    
   }
   //contar total cantidades por asignar
   countActivities(){
@@ -118,6 +125,9 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   // obtiene sectores desde el servicio
   getSectors($event){
+    //alert("sectortes");
+    
+   
     let valor=$event.target.value;
     var result = document.getElementsByName("actividad");
     var actividad=<HTMLInputElement>result[0]["value"];
@@ -127,25 +137,40 @@ export class ActividadesTecnicoComponent implements OnInit {
     }else{
       this.sectores.subscribe(
         result=>{
+          this.optionsModel=[];
+          this.myOptions=[];
           this.sectores_exists=true;
           this.num_sectores=result.length;
+          result.forEach(element => {
+            var sector=new Sector();
+            sector.id=element.sector;
+            sector.name=element.sector;
+            this.myOptions.push(sector);
+          });
           console.log(result);
         }
       );
     }
   }
-// obtiene sectores desde el servicio
-getCantidadSectores($event){
-  let sector=$event.target.value;
- // alert(sector);
+  
+  
+// camptura sectores
+onChange() {
+  console.log(this.optionsModel);
   var result = document.getElementsByName("actividad");
   var actividad=<HTMLInputElement>result[0]["value"];
   //alert(actividad);
   var res = document.getElementsByName("canton");
   var canton=<HTMLInputElement>res[0]["value"];
   //alert(canton);
-  this.cantidad=this.ordenServices.getActivitiesCount(actividad,canton,sector);
-  if(sector=="empty"){
+  
+  let data={
+    'actividad':actividad,
+    'canton':canton,
+    'sector':this.optionsModel,
+  };
+  this.cantidad=this.ordenServices.getActivitiesCountSec(data);
+  if(this.optionsModel.length<=0){
     //this.cantidad_exists=false;
     this.num_actividades=0;
 
@@ -156,14 +181,13 @@ getCantidadSectores($event){
         this.cantidad_exists=true;
         this.num_actividades=resultado.length;
         
-        //console.log("actividades: "+resultado[0]['id_act']);
       }
     );
     
     //console.log("actividades: "+this.cantidad);
   }
+  
 }
-
     //distribuir actividades tecnico
     buildTask(){
       this.ordenServices.getRecManualesSinProcesar().subscribe(
@@ -175,7 +199,7 @@ getCantidadSectores($event){
             var re= document.getElementsByName("actividad");
     var actividad=<HTMLInputElement>re[0]["value"];
     if(cont_tecnicos<=0){
-      alert("Seleccione almenos un tecnico");
+      alert("Seleccione al menos un técnico");
       return;
     }
     if(!this.cantones_exists){
@@ -206,7 +230,8 @@ getCantidadSectores($event){
          array_actividades[cont]=element["id_act"];
          cont++;
        });
-	   let dataBuild={
+
+       let dataBuild={
         'array_actividades':array_actividades,
         'array_tecnicos':array_tecnicos,
         'actividad':actividad,
@@ -215,6 +240,7 @@ getCantidadSectores($event){
        this.tecnicoService.buildTecnicoByTask(dataBuild).subscribe(
          result=>{
             if(result){
+              //console.log("rtesult - server "+result);
               this.loading=false;
               this.reloadComponent();
               this.cantones_exists=false;

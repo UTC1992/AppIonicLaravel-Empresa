@@ -35,6 +35,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('cantones/{type}','Angular\ActividadDiariaController@getCantonesActividades');
     Route::get('sectores/{actividad}/{canton}','Angular\ActividadDiariaController@getSectores');
     Route::get('cantidad-actividades/{actividad}/{canton}/{sector}','Angular\ActividadDiariaController@getActivitiesBySectors');
+    Route::post('cantidad-post','Angular\ActividadDiariaController@getActivitiesBySectorsPost');
     Route::get('cambiar-estado/{id}','Angular\TecnicoController@changeStateTecnico');
     Route::get('validar-rec','Angular\ActividadDiariaController@validarActividadesManuales');
     Route::get('cont-rec','Angular\ActividadDiariaController@getRecManualesSinProcesar');

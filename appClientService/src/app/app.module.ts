@@ -29,6 +29,7 @@ import { DasboardComponent } from './view-componets/dasboard/dasboard.component'
 import { FooterComponent } from './view-componets/footer/footer.component'; 
 import {LoginGuard} from './login.guard';
 import {NoLoginGuard} from './no-login.guard';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 const appRoutes: Routes = [
   { path: '',
@@ -107,7 +108,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     Ng2SearchPipeModule,
     Ng2OrderModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MultiselectDropdownModule
   ],
   providers: [OrdenService,TecnicoService,LoginService,LoginGuard,NoLoginGuard],
   bootstrap: [AppComponent]

@@ -62,7 +62,7 @@ class ActividadDiaria extends Model
   protected $hidden = [
     'remember_token'
   ];
-  
+
   public function getDataActividadesTecnico($id){
     return $actividad = DB::table('tbl_actividaddiaria as T0')
           ->join('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
@@ -129,6 +129,16 @@ class ActividadDiaria extends Model
           ->where('T0.n9cono','like','%'.$tipo_actividad.'%')
           ->where('T0.n9coag',$canton)
           ->where('T0.n9cose',$sector)
+          ->get();
+  }
+  // function actividades by sectores
+  public function getActivitiesBySectorsPost($tipo_actividad,$canton,$sector){
+    return $actividad = DB::table('tbl_actividaddiaria as T0')
+          ->select('T0.*')
+          ->where('T0.estado',0)
+          ->where('T0.n9cono','like','%'.$tipo_actividad.'%')
+          ->where('T0.n9coag',$canton)
+          ->whereIn('T0.n9cose',$sector)
           ->get();
   }
 
