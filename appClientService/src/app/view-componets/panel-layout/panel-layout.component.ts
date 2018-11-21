@@ -14,7 +14,9 @@ import { Observable } from 'rxjs';
 })
 
 export class PanelLayoutComponent implements OnInit {
-    
+  
+  url_export='http://localhost:8000/api/export';
+  fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
   ordenes:Observable<Orden[]>; 
@@ -80,6 +82,7 @@ export class PanelLayoutComponent implements OnInit {
           if(result){
             this.exportable=true;
             this.loading=false;
+			this.fecha_consolidado=date;
             alert("Actividades Consolidadas Correctamente");
           }else{
             alert(result);
@@ -87,6 +90,7 @@ export class PanelLayoutComponent implements OnInit {
         }
       );
     }else{
+	  this.exportable=false; 
       alert("Seleccione una fecha");
       return;
     }
@@ -97,12 +101,11 @@ export class PanelLayoutComponent implements OnInit {
   //exportar excel 
   exportarConsolidado(){
     var date = document.getElementsByName("fecha")[0]["value"];
-    var nombre_consolidado=date+"Consolidado"
-    this.ordenService.obtenerCosolidadosDelDia(date).subscribe(
-      result=>{
-        this.excelService.exportAsExcelFile(result,nombre_consolidado);
-      }
-    );
+    if(date==""){
+      alert('seleccione una fecha');
+      return;
+    }
+    this.url_export=this.url_export+'/'+date;
   }
 
 

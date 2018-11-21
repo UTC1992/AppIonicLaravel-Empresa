@@ -49,3 +49,4 @@ Route::group(['prefix' => 'mobile'], function(){
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');
   });
+Route::get('export/{date}','Angular\ImportController@exportExcelConsolidado');

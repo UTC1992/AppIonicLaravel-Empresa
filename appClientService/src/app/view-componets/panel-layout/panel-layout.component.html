@@ -66,8 +66,9 @@
               <hr>
               <div class="row">
                   <div class="col d-flex justify-content-center form-group">
-                                    
-                      <button *ngIf="exportable" class="btn btn-primary" (click)="exportarConsolidado();">Exportar a excel </button>  
+                       <a *ngIf="exportable"  class="btn btn-primary"  href="{{url_export}}/{{fecha_consolidado}}" download="consolidado">
+                      Descargar Archivo Consolidado
+                      </a> 
                     </div>
               </div>
               <div class="row">
