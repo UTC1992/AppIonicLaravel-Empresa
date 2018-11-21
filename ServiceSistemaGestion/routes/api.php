@@ -41,6 +41,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('cont-rec','Angular\ActividadDiariaController@getRecManualesSinProcesar');
     Route::get('consolidar-actividades/{created_at}','Angular\ActividadDiariaController@consolidarActividadesDiarias');
     Route::get('actividades-consolidadas/{created_at}','Angular\ActividadDiariaController@getActividadesByDate');
+	Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
