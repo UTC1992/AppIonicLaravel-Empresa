@@ -4,6 +4,12 @@
       <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
+              <ngx-spinner
+                bdColor="rgba(51,51,51,0.8)"
+                size="large"
+                color="#fff"
+                type="ball-clip-rotate-multiple">
+              </ngx-spinner>
               <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">Editar Técnico</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -13,31 +19,31 @@
               <!--formulario de edición-->
               <form [formGroup]="form_tecnico_edicion" (ngSubmit)="onSubmitEdit()">
               <div class="modal-body">
-                    
+
                     <div class="form-group">
-                        <label for="nombres">Nombre</label>
+                        <label for="nombres">Nombre:</label>
                         <input type="text" class="form-control"  id="nombres" placeholder="" value="" formControlName="nombres">
                         <input type="hidden" class="form-control"  id="id" placeholder="" value="" formControlName="id">
                     </div>
                     <div class="form-group">
-                        <label for="apellidos">Apellido</label>
+                        <label for="apellidos">Apellido:</label>
                         <input type="text" class="form-control"    id="apellidos" placeholder="" formControlName="apellidos">
                     </div>
                     <div class="form-group">
-                        <label for="cedula">Cedula</label>
+                        <label for="cedula">Cédula:</label>
                         <input type="text" class="form-control"    id="cedula" placeholder="" formControlName="cedula">
                     </div>
                     <div class="form-group">
-                        <label for="telefono">Telefono</label>
+                        <label for="telefono">Teléfono:</label>
                         <input type="text" class="form-control"   id="telefono" placeholder="" formControlName="telefono">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email:</label>
                         <input type="text" class="form-control"    id="email" placeholder="" formControlName="email">
                         <input type="hidden" class="form-control"    id="estado" placeholder="" value="1" formControlName="estado">
                     </div>
-                  
-                
+
+
               </div>
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -55,20 +61,22 @@
         <li class="nav-item">
           <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Gestión de técnicos</a>
         </li>
+        <!--
         <li class="nav-item">
           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Gestionar técnico</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Reportes</a>
         </li>
+        -->
     </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           <br>
           <div class="card">
-                
+
              <!--Form insert tecnico-->
-          <div class="card">
+          
               <div class="card-body">
                   <div id="accordion">
                     <div class="card">
@@ -92,7 +100,8 @@
                       <div class="d-flex justify-content-center">
                           <h5 class="">Técnicos</h5>
                       </div>
-                      <table class="table table-bordered table-condensed table-striped table-sm"style="font-family: calibri; font-size: 12pt;">
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-condensed table-striped table-sm"style="font-family: calibri; font-size: 12pt;">
                           <thead>
                             <tr>
                               <th scope="col">Id</th>
@@ -116,25 +125,26 @@
                               <td>{{tecnico.estado}}</td>
                               <td>
                                   <button type="button" (click)="open(tecnico.id_tecn)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" style="margin-right: 5px;">
-                                    Editar    
+                                    Editar
                                   </button>
                                   <button type="button" class="btn btn-danger btn-xs" (click)="deleteTecnico(tecnico.id_tecn)">Eliminar</button>
                               </td>
                             </tr>
                           </tbody>
-                      </table>
+                      </table>  
+                      </div>
+                      
                     </div>
                   </div>
-                  
+
               </div>
-          </div>
-  
-          
+
+
           <!--end  forms tecnico-->
           </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          
+
         </div>
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div class="card">

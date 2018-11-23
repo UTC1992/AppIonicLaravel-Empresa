@@ -23,7 +23,7 @@ class MobileController extends Controller
         $result=$orden->getDataActividadesTecnico($res[0]['id_tecn']);
         return response()->json($result);
     }else{
-      return response()->json("Técnico no encontrado");
+      return response()->json(false);
     }
 
   }
@@ -37,22 +37,26 @@ class MobileController extends Controller
         foreach ($input as $key => $value) {
           $con++;
             $actividad=ActividadDiaria::find($value['id_act']);
-            $actividad->n9leco=$value['n9leco'];
-            $actividad->estado=$value['estado'];
-              if($value['estado']=='2'){
-                $actividad->referencia="Finalizado";
-              }
+            if($value['estado']=='2'){
+              $actividad->n9leco=$value['n9leco'];
+              $actividad->n9lect=$value['n9leco'];
+              $actividad->estado=$value['estado'];
+              $actividad->referencia="Finalizado";
+              $actividad->n9feco=date('Y')."".date('m')."".date('d');
+              $actividad->n9fecl=date('Y')."".date('m')."".date('d');
+            } else {
+              $actividad->estado=3;
+              $actividad->referencia="No Finalizado";
+            }
             $actividad->save();
+
             $ordenTrabajo=new OrdenTrabajo();
             $res=$ordenTrabajo->where('id_act','=',$value['id_act'])->first();
-            if(!is_null($value['observacion'])){
-              $res->observacion=$value['observacion'];
-            }else{
-              $res->observacion="Sin novedad";
-            }
+            $res->observacion=$value['observacion'];
             $res->estado=1;
             $res->foto=$value['foto'];
             $res->save();
+            
             $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();
@@ -69,21 +73,46 @@ class MobileController extends Controller
 
   }
 
-  //insertar reconexion desde movil
   public function insertReconexionManual(Request $request){
-      $input = $request->all();
-      if(!is_null($input)){
-        $res=ReconexionManual::create($input);
-        if($res){
+    try {
+      if(!is_null($request)){
+        $input=$request->json()->all();
+
+        //obtener cantidad de datos enviados
+        $cantidad = count($input);
+
+        //contador de registros
+        $contador = 0;
+
+        //obteniendo el id del tecnico
+        $tecnico= new Tecnico();
+        $resTecnico = $tecnico->where('cedula','=',$input[$cantidad-1]['cedula'])->first();
+        $idTec = $resTecnico->id_tecn;
+
+        for ($i = 0; $i < $cantidad-1; $i++) 
+        {
+          if($contador < $cantidad-1){
+            $recManual= new ReconexionManual();
+            $recManual->lectura = $input[$i]['lectura'];
+            $recManual->medidor = $input[$i]['medidor'];
+            $recManual->observacion = $input[$i]['observacion'];
+            $recManual->foto = $input[$i]['foto'];
+            $recManual->id_tecn = $idTec;
+            $recManual->estado = 0;
+            $recManual->save();  
+          }
+          $contador++;
+        }
+        if($contador == $cantidad-1){
           return response()->json(true);
-        }else{
-          return response()->json(false);
         }
       }else{
-        return response()->json("Data Empty");
+        return response()->json(false);
       }
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
   }
-
 
 
 

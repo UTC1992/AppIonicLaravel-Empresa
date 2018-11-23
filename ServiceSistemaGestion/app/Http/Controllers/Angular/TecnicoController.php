@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Angular;
 
 use App\Models\Tecnico;
@@ -22,8 +21,9 @@ class TecnicoController extends Controller
      */
     public function index()
     {
-      $result=Tecnico::all();
-      return response()->json($result);
+        $tecnico=new Tecnico();
+        $result= $tecnico->where('estado',1)->where('borrado',0)->get();
+        return response()->json($result);
     }
 
     /**
@@ -48,7 +48,7 @@ class TecnicoController extends Controller
 
         $tecnico=new Tecnico();
         $tecnico->nombres=$request->nombres;
-        $tecnico->apellidos=$request->nombres;
+        $tecnico->apellidos=$request->apellidos;
         $tecnico->cedula=$request->cedula;
         $tecnico->telefono=$request->telefono;
         $tecnico->email=$request->email;
@@ -93,11 +93,15 @@ class TecnicoController extends Controller
 
     public function delete($id_tecnico){
       $tecnico=new Tecnico();
-      $result=$tecnico->where('id_tecn',$id_tecnico)->delete();
-      if($result>0){
-        return response()->json("Borrado");
+      $result=$tecnico->where('id_tecn',$id_tecnico)->first();
+      $result->borrado = 1;
+      $result->estado = 0;
+      $result->save();
+      
+      if($result){
+        return response()->json(true);
       }else{
-          return response()->json("No se borro");
+          return response()->json(false);
       }
 
     }
@@ -167,6 +171,8 @@ class TecnicoController extends Controller
       }
 
     }
+    
+    
     // asignar nueva tarea Tecnico
     public function changeStateTecnico($id){
       try {

@@ -5,6 +5,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-tecnicos',
   templateUrl: './tecnicos.component.html',
@@ -15,7 +17,11 @@ export class TecnicosComponent implements OnInit {
   loading: boolean = false;
   tecn:any;
   tecnicos:Observable<Tecnico[]>; 
-  constructor(private tecnicoService:TecnicoService,private formBuilder: FormBuilder) { 
+  constructor(
+              private tecnicoService:TecnicoService,
+              private formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService
+  ) { 
     this.createForm();
   }
 
@@ -26,12 +32,18 @@ export class TecnicosComponent implements OnInit {
   deleteTecnico(id){
     let res=this.tecnicoService.deleteTecnico(id)
     .subscribe(
-      resp=>console.log(resp),
-      error=>console.log(<any>error)
-    );
+      resp=>{
+        if(resp){
+          console.log(resp);
+          alert('Borrado Correctamente');
+          location.reload();   
+        } else {
+          console.log(resp);
+          alert('No se borro el técnico');
+        }
+      });
     
-    alert('Borrado Correctamente');
-    location.reload();  
+     
   }
   updateTecnico(id){
     alert(id);
@@ -67,6 +79,9 @@ export class TecnicosComponent implements OnInit {
   }
 
   private prepareSave(): any {
+
+
+    console.log("APELLIDOS"+this.form_tecnico_edicion.get('apellidos').value);
     let input = new FormData();
     input.append('id_tecn', this.form_tecnico_edicion.get('id').value);
     input.append('nombres', this.form_tecnico_edicion.get('nombres').value);
@@ -79,8 +94,9 @@ export class TecnicosComponent implements OnInit {
   }
 
   onSubmitEdit(){
+    this.spinner.show();
     const formModel = this.prepareSave();
-    this.loading = true;
+    //this.loading = true;
     this.tecnicoService.updateTecnico(formModel)
     .subscribe(
       file=>console.log(file),
@@ -89,7 +105,8 @@ export class TecnicosComponent implements OnInit {
     
     setTimeout(() => {
       alert('Técnico actualizado correctamente!');
-      this.loading = false;
+      //this.loading = false;
+      this.spinner.hide();
       location.reload();
     }, 1000);
   }

@@ -18,13 +18,16 @@ export class TableClientComponent implements OnInit {
   constructor(private ordenService:OrdenService,private router:Router ) { }
 
   ngOnInit() {
+    
+    this.cargarDatos();
+  }
+
+  cargarDatos(){
     this.ordenes =this.ordenService.getOrdenes();
     this.ordenes.subscribe(
       result=>{
         this.total=result.length;
-      }
-    );
-    
+      });
   }
  
 

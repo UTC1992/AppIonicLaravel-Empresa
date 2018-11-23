@@ -14,14 +14,14 @@
                 
               <!--tabla detalle actividades-->
               <div class="table-responsive" style="font-size: 10pt;">
-                    <table class="table table-bordered table-condensed table-striped table-sm" 
+                    <table class="table table-bordered table-striped table-sm" 
                          style="font-family: calibri; font-size: 10pt;" 
                          *ngIf="view_table">
                         <thead>
                             <tr>
                                 <th>N°</th>
                                 <!--<th>ID Actividad</th>-->
-                                <th>Fecha</th>
+                                <th>FECHA DE ASIGNACIÓN</th>
                                 <!--<th>N9CONO</th>-->
                                 <!--<th>N9COCU</th>-->
                                 <!--<th>N9COSE</th>-->
@@ -31,11 +31,13 @@
                                 <!--<th>N9MECO</th>-->
                                 <!--<th>N9LECO</th>-->
                                 <!--<th>N9COCL</th>-->
+                                <th>N9CONO</th>
+                                <th>N9MECO</th>
                                 <th>N9NOMB</th>
                                 <th>N9REFE</th>
-                                <th>CUSECU</th>
+                                <!--<th>CUSECU</th>
                                 <th>CUCOON</th>
-                                <th>CUCOOE</th>
+                                <th>CUCOOE</th>-->
                                 <th>ESTADO</th>
                                 <!--<th>OBSERVAciÓN</th>-->
                             </tr>
@@ -54,11 +56,13 @@
                                 <!--<td>{{actividades.n9meco}}</td>-->
                                 <!--<td>{{actividades.n9leco}}</td>-->
                                <!-- <td>{{actividades.n9cocl}}</td>-->
+                               <td>{{actividades.n9cono}}</td>
+                               <td>{{actividades.n9meco}}</td>
                                 <td>{{actividades.n9nomb}}</td>
                                 <td>{{actividades.n9refe}}</td>
-                                <td>{{actividades.cusecu}}</td>
+                                <!--<td>{{actividades.cusecu}}</td>
                                 <td>{{actividades.cucoon}}</td>
-                                <td>{{actividades.cucooe}}</td>
+                                <td>{{actividades.cucooe}}</td>-->
                                 <td *ngIf="actividades.estado==0"><span class="text-danger">Pendiente</span> </td>
                                 <td *ngIf="actividades.estado==1"><span class="text-success">Realizado</span> </td>
                                 <!--<td>{{actividades.observacion}}</td>-->
@@ -81,16 +85,43 @@
     </div>
 </div>
 
-
 <div class="d-flex justify-content-center">
     <h4 class="">Asignación de actividades</h4>
 </div>
 <br>
 <div class="card">
+    <ngx-spinner
+      bdColor="rgba(51,51,51,0.8)"
+      size="large"
+      color="#fff"
+      type="ball-clip-rotate-multiple">
+    </ngx-spinner>
     <div class="card-body">
-        <div class="row">
+        
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <a style="text-align: center;" class="nav-link" data-toggle="collapse" data-target="#collapse2" href="#" aria-expanded="true" aria-controls="collapse2">
+                          Necesitas ayuda? Presiona AQUÍ
+                    </a>
+                </div>
 
-            <div class="col">
+                <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <p>Para distribuir las actividades, realice los siguientes pasos:</p>
+                    <p>1.- Seleccione una actividad <strong>"Notificación"</strong>, <strong>"Corte"</strong> o <strong>"Reconexión"</strong></p>
+                    <p>2.- Seleccione un <strong>"Cantón"</strong> y el <strong>"Sector"</strong></p>
+                    <p>3.- Ingrese una cantidad de actividades o deje el valor por defecto</p>
+                    <p>4.- Seleccione uno o varios técnicos</p>
+                    <p>5.- Finalmente presione el botón <strong>"Asignar actividades"</strong></p>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <br>
+    
+        <div class="row">
+            <div class="col col-3">
             <form [formGroup]="countryForm">
                 <div class="form-group">
                     <label>Actividad:</label>
@@ -104,7 +135,7 @@
             </form>
             </div>
 
-            <div class="col">
+            <div class="col col-3">
                 <div class="form-group" *ngIf="cantones_exists">
                     <label>Cantón:</label>
                     <select class="form-control" name="canton" (change)="getSectors($event)">
@@ -115,19 +146,15 @@
                 </div>
             </div>
             
-            <div class="col">
-                <div class="form-group" *ngIf="sectores_exists">
-                    <label>Sectores:</label><br>
+            <div class="col col-3">
+                <div class="" *ngIf="sectores_exists">
+                    <label>Sectores:</label> <br>
                     <ss-multiselect-dropdown [options]="myOptions" [(ngModel)]="optionsModel" (ngModelChange)="onChange($event)"></ss-multiselect-dropdown>
                     <br><label># {{num_sectores}} Sectores Encontrados</label>   
                 </div>
-
-                
             </div>
-
-           
             
-            <div class="col">
+            <div class="col col-3">
                 <div class="form-group" *ngIf="cantidad_exists">
                     <label>Cantidad:</label>
                     <input class="form-control" type="number" name="cantidad_actividades" value="{{num_actividades}}" placeholder="0">   
@@ -137,37 +164,42 @@
         </div>
         
         <div class="row">
-            <div class="col loading" *ngIf="loading">
+            <div class="col loading d-flex justify-content-center" *ngIf="loading">
                 <img src="assets/img/cargando.gif">
             </div>    
         </div>
         
-        <div class="row">
-            <div class="col d-flex justify-content-center">
-                <h5 class="">Técnicos sin asignar</h5>    
+        <div class="card card-body">
+            <div class="row">
+                <div class="col d-flex justify-content-center">
+                    <h5 class="">Técnicos sin asignar</h5>    
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 col-md-6" *ngFor="let tecnico of tecnicos | async">
+                    <div class="form-inline">
+                        <label for="cbox2" style="margin-right: 5px;"> {{ tecnico.nombres}} {{ tecnico.apellidos}}</label>  
+                        <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="row">
-            <div class="col-lg-2 col-md-2" *ngFor="let tecnico of tecnicos | async">
-                <div class="form-inline">
-                    <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
-                    <label for="cbox2"> {{ tecnico.nombres}}</label>      
+        <br>
+        <div class="row">    
+            <div class="col col-lg-6">
+                <div class="alert alert-info">
+                     Total de actividades por asignar:{{Ordenes}}
                 </div>
-            </div> 
-               
+            </div>
+            <div class="col col-lg-3">
+              <button class="btn btn-success" (click)="buildTask()" >Asignar actividades </button>  
+            </div>
         </div>
 
     </div>
 
-    <div class="row">    
-        <div class="col d-flex justify-content-center form-group">
-                <span class="text-danger"> Total de actividades por asignar:{{Ordenes}}</span>
-        </div>
-        <div class="col d-flex justify-content-center form-group">
-          <button class="btn btn-warning" (click)="buildTask()" >Asignar actividades </button>  
-        </div>
-    </div>
+    
     
 </div>
 
@@ -185,14 +217,22 @@
     -->
 <br>
 <div class="card">
+    <ngx-spinner
+      bdColor="rgba(51,51,51,0.8)"
+      size="large"
+      color="#fff"
+      type="ball-clip-rotate-multiple">
+    </ngx-spinner>
     <div class="card-body">
         <div class="d-flex justify-content-center">
             <h5 class="">Técnicos asignados</h5> 
         </div>
         <br>
-        <div class="row lert">
-            <table class="table table-bordered table-condensed table-striped table-sm" 
-                         style="font-family: calibri; font-size: 12pt;">
+        <div class="d-flex justify-content-left">
+            <p>Aquí puede observar información sobre los técnicos y sus actividades:</p> 
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 12pt;">
                 <thead>
                     <tr>
                         <th>N°</th>
@@ -211,13 +251,16 @@
                         <td>{{tecnico_tareas.cantidad}}</td>
                         <td>{{tecnico_tareas.tipo}}</td>
                         <td>
-                            <button type="button"  (click)="verDetalleActividades(tecnico_tareas.id_tecn)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
-                                Ver Detalle    
+                            <button type="button" style="margin-right: 5px;" (click)="verDetalleActividades(tecnico_tareas.id_tecn, tecnico_tareas.tipo)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
+                                Ver detalle    
                               </button>
+                            <button class="btn btn-warning" (click)="AsignarActividades(tecnico_tareas.id_tecn)" style="margin-right: 5px;">
+                                  Asignar de nuevo
+                            </button>
+                            <button class="btn btn-danger" (click)="eliminarAsignacion(tecnico_tareas.id_tecn, tecnico_tareas.n9cose, tecnico_tareas.cantidad)">
+                                  Eliminar asignación
+                            </button>  
                               
-                              <button class="btn btn-warning btn-xs" (click)="AsignarActividades(tecnico_tareas.id_tecn)">
-                                  Volver Asignar
-                              </button>
                         </td>
                     </tr>
                 </tbody>

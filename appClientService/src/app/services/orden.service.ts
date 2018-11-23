@@ -9,7 +9,8 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 })
 export class OrdenService {
   headers=new Headers();
-  baseUrl='http://localhost:8000/api/angular';
+  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
+  baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/angular";
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
@@ -29,7 +30,7 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/cantones/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // obtiene sectores desde servicio .. parametro canton type: get
-  getSectoresService(tipo,canton):Observable<any[]>{
+  getSectoresService(tipo,canton):Observable<Orden[]>{
     return this.http.get(this.baseUrl+"/sectores/"+tipo+"/"+canton,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   //obtiene cantidad de actividades 

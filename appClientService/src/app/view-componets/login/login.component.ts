@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
       let usuario=new Usuario();
       usuario.username=this.username;
       usuario.password=this.password;
-     
+
       this.loginService.autenticarUsuario(usuario).subscribe(
         result=>{
           if(result){
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
                   location.reload();
                 }
               }
-            ); 
+            );
           }
         },
         error=>{

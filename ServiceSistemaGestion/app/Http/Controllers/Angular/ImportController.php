@@ -10,9 +10,9 @@ use Excel;
 class ImportController extends Controller
 {
 
-  public function __construct(){
-    //$this->middleware('auth:api');
-  }
+    public function __construct(){
+        //$this->middleware('auth:api');
+    }
     public function index(){
       return view('import');
     }
@@ -62,12 +62,14 @@ class ImportController extends Controller
         'cuclas',
         'cuesta',
         'cutari')->where('estado','=',3)->where('created_at','like','%'.$date.'%')->get();
-  	    return Excel::create('Consolidado-'.$date, function($excel) use ($data) {
-  			$excel->sheet('mySheet', function($sheet) use ($data)
-  	        {
-  				$sheet->fromArray($data);
-  	        });
-  		})->download($type);
+          return Excel::create(
+                                date('d-m-Y').'_CONSOLIDADO', 
+                                function($excel) use ($data) {
+                    $excel->sheet('mySheet', function($sheet) use ($data){
+                    $sheet->fromArray($data);
+                    });
+            })->download($type);
+
       } catch (\Exception $e) {
         return response()->json($e);
       }

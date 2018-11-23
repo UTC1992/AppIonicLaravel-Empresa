@@ -13,7 +13,8 @@ import { Token } from '../models/token';
 export class LoginService {
 
   headers=new Headers();
-  baseUrl='http://localhost:8000/';
+  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
+  baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/";
   constructor(private http:Http) { 
     
   }
@@ -21,8 +22,8 @@ export class LoginService {
   autenticarUsuario(usuario:Usuario):Observable<Token>{
     let datos={
       'grant_type':'password',
-      'client_id':'3',
-      'client_secret':'Bjtn13nLbxRPqNPRJASpbmufM5PyKAkHoXF7jvpm',
+      'client_id':'2',
+      'client_secret':'nYYr0wL8qCuj29M5mN2D3vanaF98dMRsS52KMcM3',
       'username':usuario.username,
       'password':usuario.password,
       'scope':'*'

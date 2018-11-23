@@ -2,6 +2,8 @@ import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { TecnicoService } from '../../services/tecnico.service';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-form-tecnico',
   templateUrl: './form-tecnico.component.html',
@@ -12,7 +14,10 @@ export class FormTecnicoComponent implements OnInit {
   form_tecnico: FormGroup;
   loading: boolean = false;
  
-  constructor(private formBuilder: FormBuilder, private tecnicoService:TecnicoService) {
+  constructor(private formBuilder: FormBuilder, 
+              private tecnicoService:TecnicoService,
+              private spinner: NgxSpinnerService
+  ) {
     this.createForm();
    }
   
@@ -43,6 +48,7 @@ export class FormTecnicoComponent implements OnInit {
   }
   */
   private prepareSave(): any {
+    console.log("APELLIDOS"+this.form_tecnico.get('apellidos').value);
     let input = new FormData();
     input.append('nombres', this.form_tecnico.get('nombres').value);
     input.append('apellidos', this.form_tecnico.get('apellidos').value);
@@ -53,8 +59,10 @@ export class FormTecnicoComponent implements OnInit {
     return input;
   }
   onSubmit() {
+    this.spinner.show();
     const formModel = this.prepareSave();
-    this.loading = true;
+    //this.loading = true;
+    
     this.tecnicoService.insertTecnico(formModel)
     .subscribe(
       file=>console.log(file),
@@ -63,7 +71,8 @@ export class FormTecnicoComponent implements OnInit {
     
     setTimeout(() => {
       alert('Técnico creado correctamente!');
-      this.loading = false;
+      this.spinner.hide();
+      //this.loading = false;
       //this.clearFile();
       location.reload();
     }, 1000);
@@ -71,8 +80,8 @@ export class FormTecnicoComponent implements OnInit {
   }
 
   clearFile() {
-    this.form_tecnico.get('nombre').setValue(null);
-    this.form_tecnico.get('apellido').setValue(null);
+    this.form_tecnico.get('nombres').setValue(null);
+    this.form_tecnico.get('apellidos').setValue(null);
     this.form_tecnico.get('cedula').setValue(null);
     this.form_tecnico.get('telefono').setValue(null);
     this.form_tecnico.get('email').setValue(null);

@@ -15,16 +15,16 @@ class ActividadDiariaController extends Controller
   public function __construct(){
     $this->middleware('auth:api');
   }
-
+  
     public function getActivitadesTecnico(){
       $actividades=new ActividadDiaria();
       $result=$actividades->getViewActivities();
       return response()->json($result);
     }
 
-    public function getActivitiesTecnico($id_tecnico){
+    public function getActivitiesTecnico($id_tecnico, $tipo){
       $orden=new ActividadDiaria();
-      $result=$orden->getDataActividadesTecnico($id_tecnico);
+      $result=$orden->getDataActividadesTecnico($id_tecnico, $tipo);
       return response()->json($result);
     }
 
@@ -99,6 +99,7 @@ class ActividadDiariaController extends Controller
         return response()->json("Error: ".$e);
       }
     }
+
     // obtener cantidad de Actividades_tecnico post
     public function getActivitiesBySectorsPost(Request $request){
       try{
@@ -113,11 +114,12 @@ class ActividadDiariaController extends Controller
         return response()->json("Error: ".$e);
       }
     }
+
     //actualizar actividades manuales
     public function validarActividadesManuales(){
       try {
         $actividad=new ActividadDiaria();
-        $result=$actividad->where('estado',0)->where('n9cono','like','%40%')->get();
+        $result=$actividad->where('estado',0)->where('n9cono','=','040')->get();
         $reconexion=new ReconexionManual();
         $result_rec=$reconexion->where('estado',0)->get();
         foreach ($result as $key => $value) {
@@ -189,7 +191,17 @@ class ActividadDiariaController extends Controller
       return response()->json("Error: ".$e);
     }
   }
-  //
+
+  public function getDistribucion(){
+    try {
+      $orden=new OrdenTrabajo();
+      $result=$orden->getDataDistribucion();
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    } 
+  }
+
   //exportar exel
   public function exportExcelConsolidado($date){
   $type="xlsx";
@@ -236,19 +248,18 @@ class ActividadDiariaController extends Controller
       'cuclas',
       'cuesta',
       'cutari')->where('estado','=',3)->where('created_at','like','%'.$date.'%')->get();
-	    return Excel::create('itsolutionstuff_example', function($excel) use ($data) {
-			$excel->sheet('mySheet', function($sheet) use ($data)
-	        {
+      return Excel::create('itsolutionstuff_example', function($excel) use ($data) {
+      $excel->sheet('mySheet', function($sheet) use ($data)
+          {
 
-				$sheet->fromArray($data);
+        $sheet->fromArray($data);
 
-	        });
-		})->download($type);
+          });
+    })->download($type);
     } catch (\Exception $e) {
       return response()->json($e);
     }
 
   }
-
 
 }

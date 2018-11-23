@@ -3,26 +3,37 @@ import { OrdenService } from '../../services/orden.service';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable } from 'rxjs';
 
+import { TableClientComponent } from '../table-client/table-client.component';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-add-csv',
   templateUrl: './add-csv.component.html',
   styleUrls: ['./add-csv.component.css']
 })
 export class AddCsvComponent implements OnInit {
+
+  @ViewChild(TableClientComponent) tablaCliente: TableClientComponent;
+
   form: FormGroup;
   loading2: boolean = false;
   public loading:boolean;
+  loadingRecManual: boolean = false;
   resultValida:Observable<any>;
   public validaReconexiones:boolean;
 
   @ViewChild('fileInput') fileInput: ElementRef;
-  constructor(private ordenService:OrdenService,private fb: FormBuilder) {
+  constructor(
+              private ordenService:OrdenService,
+              private fb: FormBuilder,
+              private spinner: NgxSpinnerService) {
     this.createForm();
     this.loading=false;
     this.validaReconexiones=false;
    }
 
   ngOnInit() {
+    this.reloadTableClient();
   }
   //metodo envia file al servidor    
   uploadCsvFile(file){
@@ -32,6 +43,12 @@ export class AddCsvComponent implements OnInit {
       error=>console.log(<any>error)
     );
   }
+
+
+  reloadTableClient(){
+    this.tablaCliente.cargarDatos();
+  }
+
 
   createForm() {
     this.form = this.fb.group({
@@ -45,7 +62,7 @@ export class AddCsvComponent implements OnInit {
       this.form.get('archivo').setValue(file);
     }
   }
-  private prepareSave(): any {
+  prepareSave(): any {
     let input = new FormData();
     input.append('archivo', this.form.get('archivo').value);
     return input;
@@ -56,18 +73,21 @@ export class AddCsvComponent implements OnInit {
       alert("Seleccione un archivo");
       return;
     }
-    this.loading = true;
+    //this.loading = true;
+    this.spinner.show();
     const formModel = this.prepareSave();
-    this.loading2 = true;
+    //this.loading2 = true;
     this.ordenService.addCsvFiles(formModel)
     .subscribe(
       msj=>{
         if(msj){
-          this.loading = false;
+          //this.loading = false;
+          this.spinner.hide();
           alert("Archivo subido correctamente");
           this.clearFile();
-          location.reload();
+          this.reloadTableClient();
         }else{
+          this.spinner.hide();
           alert("Ocurrio un error");
         }
       }
@@ -80,15 +100,18 @@ export class AddCsvComponent implements OnInit {
   }
 
   validarRecManuales(){
-    this.loading = true;
+    //this.loadingRecManual = true;
+    this.spinner.show();
     this.resultValida=this.ordenService.validarReconexionesManuales();
     this.resultValida.subscribe(
       msj=>{
         if(msj){
-          this.loading = false;
+          //this.loadingRecManual = false;
+          this.spinner.hide();
           alert("Proceso Realizado Correctamente");
-          location.reload();
+          this.reloadTableClient();
         }else{
+          this.spinner.hide();
           alert(msj);
         }
       }

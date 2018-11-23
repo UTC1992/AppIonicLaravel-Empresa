@@ -10,7 +10,8 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 export class TecnicoService {
 
   headers=new Headers();
-  baseUrl="http://localhost:8000/api/angular";
+  //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
+  baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/angular";
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
@@ -39,9 +40,10 @@ export class TecnicoService {
   deleteTecnico(id){
     return this.http.get(this.baseUrl+"/delete-tecnico/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
+
   //metodo obtien tecnico por tarea 
   buildTecnicoByTask(dataBuild:object):Observable<any>{
-    return this.http.post(this.baseUrl+"/build-task/",dataBuild,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/build-task",dataBuild,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
   // obtener resumen todas las actividades asignadas por tecnico
@@ -49,8 +51,8 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/actividades-tecnicos",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // obtiene detalle de actidades por tecnico
-  getActivitiesByTecnico(id):Observable<any>{
-    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  getActivitiesByTecnico(id, tipo):Observable<any>{
+    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
   terminarProcesoAvtividades(id){
@@ -60,4 +62,15 @@ export class TecnicoService {
   changeStateTecnico(id){
     return this.http.get(this.baseUrl+"/cambiar-estado/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
+
+  //mostrar detalles de la asignacion de tareas
+  showDistribucion():Observable<any[]>{
+    return this.http.get(this.baseUrl+"/mostrar-distribucion",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
+  //metodo obtien tecnico por tarea 
+  deleteDistribucion(id_tecn,sector, cantidad):Observable<any>{
+    return this.http.get(this.baseUrl+"/delete-distribucion/"+id_tecn+"/"+sector+"/"+cantidad,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
 }

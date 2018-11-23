@@ -1,22 +1,28 @@
+<ngx-spinner
+      bdColor="rgba(51,51,51,0.8)"
+      size="large"
+      color="#fff"
+      type="ball-clip-rotate-multiple">
+    </ngx-spinner>
 <form [formGroup]="form_tecnico" (ngSubmit)="onSubmit()">
     <div class="form-group">
-        <label for="nombres">Nombre</label>
+        <label for="nombres">Nombre:</label>
         <input type="text" class="form-control"  id="nombres" placeholder="" formControlName="nombres" required="">
     </div>
     <div class="form-group">
-        <label for="apellidos">Apellido</label>
+        <label for="apellidos">Apellido:</label>
         <input type="text" class="form-control"    id="apellidos" placeholder="" formControlName="apellidos" required="">
     </div>
     <div class="form-group">
-        <label for="cedula">Cedula</label>
+        <label for="cedula">Cédula:</label>
         <input type="text" class="form-control"    id="cedula" placeholder="" formControlName="cedula" required="">
     </div>
     <div class="form-group">
-        <label for="telefono">Telefono</label>
+        <label for="telefono">Teléfono:</label>
         <input type="text" class="form-control"   id="telefono" placeholder="" formControlName="telefono" required="">
     </div>
     <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Email:</label>
         <input type="email" class="form-control"    id="email" placeholder="" formControlName="email" required="">
         <input type="hidden" class="form-control"    id="estado" placeholder="" value="1" formControlName="estado">
     </div>

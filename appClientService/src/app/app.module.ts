@@ -14,10 +14,9 @@ import { AddCsvComponent } from './view-componets/add-csv/add-csv.component';
 import { OrdenService } from './services/orden.service';
 import { TecnicoService } from './services/tecnico.service';
 import { LoginService } from './services/login.service';
-import { DistribucionComponent } from './view-componets/distribucion/distribucion.component';
+
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
-import { AdminComponent } from './view-componets/admin/admin.component';
 import { TecnicosComponent } from './view-componets/tecnicos/tecnicos.component';
 import { FormTecnicoComponent } from './view-componets/form-tecnico/form-tecnico.component';
 import { ActividadesTecnicoComponent } from './view-componets/actividades-tecnico/actividades-tecnico.component';
@@ -25,15 +24,19 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { LoginComponent } from './view-componets/login/login.component';
-import { DasboardComponent } from './view-componets/dasboard/dasboard.component';
+
 import { FooterComponent } from './view-componets/footer/footer.component'; 
 import {LoginGuard} from './login.guard';
 import {NoLoginGuard} from './no-login.guard';
+
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NotFoundComponent } from './view-componets/not-found/not-found.component';
+
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 const appRoutes: Routes = [
   { path: '',
-    component:LoginComponent,
+    redirectTo: '/login',
     pathMatch: 'full',
     canActivate:[NoLoginGuard]
    
@@ -47,29 +50,20 @@ const appRoutes: Routes = [
     component:PanelLayoutComponent,
     canActivate:[LoginGuard]
   },
-  { path: 'distribucion',
-    component:DistribucionComponent,
-    canActivate:[LoginGuard]
-  },
-  {
-    path: 'admin',
-    component: AdminComponent
-  },
   {
     path:'tecnicos',
     component:TecnicosComponent,
     canActivate:[LoginGuard]
   },
   {
-    path:'dashboard',
-    component:DasboardComponent,
-    canActivate:[LoginGuard]
+    path: 'not-found',
+    component: NotFoundComponent
   },
   {
-    path:'nav',
-    component:NavClientComponent,
-    canActivate:[LoginGuard]
+    path: '**',
+    redirectTo: 'not-found'
   }
+  
 ];
 
 @NgModule({
@@ -79,15 +73,13 @@ const appRoutes: Routes = [
     NavClientComponent,
     TableClientComponent,
     AddCsvComponent,
-    DistribucionComponent,
     WelcomeComponent,
-    AdminComponent,
     TecnicosComponent,
     FormTecnicoComponent,
     ActividadesTecnicoComponent,
     LoginComponent,
-    DasboardComponent,
     FooterComponent,
+    NotFoundComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),
@@ -109,7 +101,8 @@ const appRoutes: Routes = [
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
-    MultiselectDropdownModule
+    NgxSpinnerModule,
+    MultiselectDropdownModule,
   ],
   providers: [OrdenService,TecnicoService,LoginService,LoginGuard,NoLoginGuard],
   bootstrap: [AppComponent]

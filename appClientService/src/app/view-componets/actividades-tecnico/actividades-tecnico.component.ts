@@ -7,9 +7,11 @@ import { TecnicoDistribucion } from '../../models/tecnico-distribucion';
 import { Observable } from 'rxjs';
 import { Type } from '@angular/compiler';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
 import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 import { Sector } from 'src/app/models/sector';
 import { SectorList } from 'src/app/models/sector-list';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-actividades-tecnico',
@@ -18,7 +20,7 @@ import { SectorList } from 'src/app/models/sector-list';
 })
 export class ActividadesTecnicoComponent implements OnInit {
   optionsModel: number[];
-  myOptions: IMultiSelectOption[]; 
+  myOptions: IMultiSelectOption[];
   countryForm: FormGroup;
   tecnicos:Observable<Tecnico[]>; 
   public loading: boolean;
@@ -39,28 +41,31 @@ export class ActividadesTecnicoComponent implements OnInit {
   cantidad_exists:boolean;
   cantidad:Observable<Orden[]>;
   Ordenes:Number;
-  
+  distribucion:Observable<any>;
+  distribucionDelete:Observable<any>;
 
   objTecnicoDistribucion:TecnicoDistribucion;
 
 
   @ViewChild('inputRef') inputRef: ElementRef;
-  constructor(private tecnicoService:TecnicoService, private ordenServices:OrdenService,private fb: FormBuilder) {
+  constructor(private tecnicoService:TecnicoService, 
+              private ordenServices:OrdenService,
+              private fb: FormBuilder,
+              private spinner: NgxSpinnerService) {
     this.loading=false;
     this.view_table=false;
     this.cantones_exists=false;
     this.sectores_exists=false;
     this.cantidad_exists=false;
     this.createForm();
-    this.myOptions=[];
+    this.spinner.show();
    }
-  
+
   ngOnInit() {
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
-    this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
+    this.actividades=this.tecnicoService.showDistribucion();
     this.countActivities();
-    
-    
+    //this.mostrarDistribucion();
   }
   //contar total cantidades por asignar
   countActivities(){
@@ -83,14 +88,31 @@ export class ActividadesTecnicoComponent implements OnInit {
   // recargar componentes
   reloadComponent(){
     this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
-    this.actividades=this.tecnicoService.getAllActivitiesTecnicos();
+    this.actividades=this.tecnicoService.showDistribucion();
+    this.countActivities();
   }
  
   //ver detalle en modal 
-  verDetalleActividades(id) {
+  verDetalleActividades(id, tipo) {
     this.p = 1;
-    this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id);
-    this.view_table=true;
+    switch (tipo) {
+      case "Notificaciones":
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '010');
+        this.view_table=true;
+        break;
+      case "Corte":
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '030');
+        this.view_table=true;
+        break;
+      case "Reconexiones":
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '040');
+        this.view_table=true;
+        break;
+      default:
+        // code...
+        break;
+    }
+    
 
   }
 
@@ -117,7 +139,7 @@ export class ActividadesTecnicoComponent implements OnInit {
         result=>{
           this.cantones_exists=true;
           this.num_cantones=result.length;
-          console.log(result);
+          //console.log(result);
         }
       );
     }  
@@ -125,9 +147,6 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   // obtiene sectores desde el servicio
   getSectors($event){
-    //alert("sectortes");
-    
-   
     let valor=$event.target.value;
     var result = document.getElementsByName("actividad");
     var actividad=<HTMLInputElement>result[0]["value"];
@@ -152,113 +171,141 @@ export class ActividadesTecnicoComponent implements OnInit {
       );
     }
   }
-  
-  
-// camptura sectores
-onChange() {
-  console.log(this.optionsModel);
-  var result = document.getElementsByName("actividad");
-  var actividad=<HTMLInputElement>result[0]["value"];
-  //alert(actividad);
-  var res = document.getElementsByName("canton");
-  var canton=<HTMLInputElement>res[0]["value"];
-  //alert(canton);
-  
-  let data={
-    'actividad':actividad,
-    'canton':canton,
-    'sector':this.optionsModel,
-  };
-  this.cantidad=this.ordenServices.getActivitiesCountSec(data);
-  if(this.optionsModel.length<=0){
-    //this.cantidad_exists=false;
-    this.num_actividades=0;
+  // camptura sectores
+  onChange() {
+    console.log(this.optionsModel);
+    var result = document.getElementsByName("actividad");
+    var actividad=<HTMLInputElement>result[0]["value"];
+    //alert(actividad);
+    var res = document.getElementsByName("canton");
+    var canton=<HTMLInputElement>res[0]["value"];
+    //alert(canton);
+    
+    let data={
+      'actividad':actividad,
+      'canton':canton,
+      'sector':this.optionsModel,
+    };
+    this.cantidad=this.ordenServices.getActivitiesCountSec(data);
+    if(this.optionsModel.length<=0){
+      //this.cantidad_exists=false;
+      this.num_actividades=0;
 
-  }else{
+    }else{
+      
+      this.cantidad.subscribe(
+        resultado=>{
+          this.cantidad_exists=true;
+          this.num_actividades=resultado.length;
+          
+        }
+      );
+      
+      //console.log("actividades: "+this.cantidad);
+    }
     
-    this.cantidad.subscribe(
-      resultado=>{
-        this.cantidad_exists=true;
-        this.num_actividades=resultado.length;
-        
-      }
-    );
-    
-    //console.log("actividades: "+this.cantidad);
   }
-  
-}
+
     //distribuir actividades tecnico
     buildTask(){
+      //console.log("DISTRIBUIR ACTIVIDADES");
+      this.spinner.show();
       this.ordenServices.getRecManualesSinProcesar().subscribe(
         resultado=>{
           if(resultado>0){
             alert("Aun no ha procesado las reconexiones manuales");
+            this.spinner.hide();
             return;
           }else{
             var re= document.getElementsByName("actividad");
-    var actividad=<HTMLInputElement>re[0]["value"];
-    if(cont_tecnicos<=0){
-      alert("Seleccione al menos un técnico");
-      return;
-    }
-    if(!this.cantones_exists){
-      alert("Seleccione un cantón");
-      return;
-    }
-    if(!this.sectores_exists){
-      alert("Seleccione un sector");
-      return;
-    }
-    if(!this.cantidad_exists){
-      alert("NO ha seccionado actividades");
-      return;
-    }
+            var actividad=<HTMLInputElement>re[0]["value"];
+            
+            if(cont_tecnicos<=0){
+              alert("Seleccione almenos un tecnico");
+              this.spinner.hide();
+              return;
+            }
 
-    var cant=document.getElementsByName("cantidad_actividades");
-    var cantidad_actividades=<HTMLInputElement>cant[0]["value"];
-    
-    this.cantidad.subscribe(
-      msj=>{
-        //alert(msj.length);
-        if(msj.length<=0){
-          alert("seleccione actividades a distribuir");
-          return;
-        }
-      this.loading=true;
-       msj.forEach(element => {
-         array_actividades[cont]=element["id_act"];
-         cont++;
-       });
+            if(actividad+"" == "empty"){
+              alert("Seleccione una actividad");
+              this.spinner.hide();
+              return;
+            } else {
+                var re1= document.getElementsByName("canton");
+                var actividad1=<HTMLInputElement>re1[0]["value"];
 
-       let dataBuild={
-        'array_actividades':array_actividades,
-        'array_tecnicos':array_tecnicos,
-        'actividad':actividad,
-        'cantidad_actividades':cantidad_actividades
-      }
-       this.tecnicoService.buildTecnicoByTask(dataBuild).subscribe(
-         result=>{
-            if(result){
-              //console.log("rtesult - server "+result);
-              this.loading=false;
-              this.reloadComponent();
-              this.cantones_exists=false;
-              this.sectores_exists=false;
-              this.cantidad_exists=false;
-              var re= document.getElementsByName("actividad");
-              re[0]["value"]="empty";
-              this.countActivities();
-            }else if(result==1){
-              alert("El  número de actividades no puede ser igual o menor a cero  ");
-            }else{
-              alert("No se asigno las actividades  ");
+                if(actividad1+"" == 'empty'){
+                  alert("Seleccione un cantón");
+                  this.spinner.hide();
+                  return;
+                } else {
+                  
+                  if(this.optionsModel.length<=0){
+                    alert("Seleccione un sector");
+                    this.spinner.hide();
+                    return;
+                  } else {
+                    var re3= document.getElementsByName("cantidad_actividades");
+                    var actividad3=<HTMLInputElement>re3[0]["value"];
+                    
+                    if(Number(actividad3) == 0){
+                      alert("NO ha seccionado el número actividades");
+                      this.spinner.hide();
+                      return;
+                    }
+                  }
+                }
             }
             
-         }
-       );
-      }
-    );
+            var cant=document.getElementsByName("cantidad_actividades");
+            var cantidad_actividades=<HTMLInputElement>cant[0]["value"];
+            
+            this.cantidad.subscribe(
+              msj=>{
+                //alert(msj.length);
+                if(msj.length<=0){
+                  alert("seleccione actividades a distribuir");
+                  this.spinner.hide();
+                  return;
+                }
+              //this.loading=true;
+              //this.spinner.show();
+               msj.forEach(element => {
+                 array_actividades[cont]=element["id_act"];
+                 cont++;
+               });
+
+               let dataBuild={
+                  'array_actividades':array_actividades,
+                  'array_tecnicos':array_tecnicos,
+                  'actividad':actividad,
+                  'cantidad_actividades':cantidad_actividades
+                }
+                
+               this.tecnicoService.buildTecnicoByTask(dataBuild).subscribe(
+                 result=>{
+                    if(result){
+                      this.loading=false;
+                      this.reloadComponent();
+                      this.cantones_exists=false;
+                      this.sectores_exists=false;
+                      this.cantidad_exists=false;
+                      var re= document.getElementsByName("actividad");
+                      re[0]["value"]="empty";
+                      this.countActivities();
+                      this.spinner.hide();
+                    }else if(result==1){
+                      alert("El  número de actividades no puede ser igual o menor a cero  ");
+                      this.spinner.hide();
+                    }else{
+                      alert("No se asigno las actividades  ");
+                      this.spinner.hide();
+                    }
+                    
+                 }
+               );
+              }
+            );
           }    
         }
       );
@@ -277,8 +324,34 @@ onChange() {
         cont_array_tecn++;
       }    
     }
-    
-    
+      
     }
+
+  mostrarDistribucion(){
+    console.log("MOSTRAR LA DISTRIBUCION ===================");
+    this.distribucion = this.tecnicoService.showDistribucion();
+    this.distribucion.subscribe(res =>{
+      console.log(res);
+    });
+  }
+
+  eliminarAsignacion(id_tecn, sector, cantidad){
+    this.spinner.show();
+    //console.log("ELIMINAR LA DISTRIBUCION ===================");
+    this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad);
+    this.distribucionDelete.subscribe(res =>{
+      //console.log(res);
+      if(res == true){
+        //alert("Asignación eliminada correctamente");
+        this.reloadComponent();
+        this.spinner.hide();
+      } else {
+        
+        alert("Error al eliminar la asignación");
+        this.reloadComponent();
+        this.spinner.hide();
+      }
+    });
+  }
 
 }

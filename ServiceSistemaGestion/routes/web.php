@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('otro', function () {
+/*Route::get('otro', function () {
     return view('welcome');
 });
 
@@ -19,11 +19,7 @@ Route::get('/','Angular\ImportController@index')->name('index');
 Route::post('cargar','Angular\ImportController@getExcel2')->name('cargar');
 Route::post('cargar2','Angular\ImportController@getExcel')->name('cargar2');
 Route::get('cargar3','Angular\ImportController@importCsvFile')->name('cargar3');
-
+*/
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');

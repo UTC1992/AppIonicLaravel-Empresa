@@ -1,5 +1,4 @@
-
-
+<app-nav-client></app-nav-client>
 <br>
 <div class="container">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -9,12 +8,15 @@
         <li class="nav-item">
           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Distribuir actividades</a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" id="consolidar-tab" data-toggle="tab" href="#consolidar" role="tab" aria-controls="consolidar" aria-selected="false">Consolidar actividades</a>
+          <a class="nav-link" id="consolidar-tab" data-toggle="tab" href="#consolidar" role="tab" aria-controls="consolidar" aria-selected="false">Consolidados</a>
         </li>
+    <!--
         <li class="nav-item">
-          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Consultar actividades</a>
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Reportes</a>
         </li>
+    -->
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -22,64 +24,98 @@
           <div class="card">
                 
             <div class="card-body">
-      				<app-add-csv>
+              <app-add-csv>
                 
               </app-add-csv>
-      				<app-table-client>
-                
-              </app-table-client>
             </div>
           </div>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-           <br> 
+          <br> 
           <!--Form insert tecnico-->
           <div class="card">
             <div class="card-body">
-      				<app-actividades-tecnico>
-                
+              <app-actividades-tecnico>
+              
               </app-actividades-tecnico>
-			       </div>
+            </div>            
           </div>
+            
           <!--end  forms tecnico-->
         </div>
         <div class="tab-pane fade" id="consolidar" role="tabpanel" aria-labelledby="consolidar-tab">
           <br>
           <div class="card">
-                
+            <ngx-spinner
+              bdColor="rgba(51,51,51,0.8)"
+              size="large"
+              color="#fff"
+              type="ball-clip-rotate-multiple">
+            </ngx-spinner>
             <div class="card-body">
-              <div class="row">
-                <div class="col col-lg-1">
-                  <label for="">Fecha:</label>
+                <div class="d-flex justify-content-center">
+                    <h4 class="">Generar consolidado</h4>
                 </div>
-                  <div class="col col-lg-3 d-flex justify-content-center form-group">         
-                      <input  class="form-control" id="fecha" name="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">   
-                    </div>
-              </div>
-      				<div class="row">
-                <div class="col d-flex justify-content-center form-group">
-                  <button class="btn btn-warning"  (click)="consolodarActividades();">Consolidar Actividades Diarias </button>  
-                </div>
-                
-                
-              </div>
-              <hr>
-              <div class="row">
-                  <div class="col d-flex justify-content-center form-group">
-                       <a *ngIf="exportable"  class="btn btn-primary"  href="{{url_export}}/{{fecha_consolidado}}" download="consolidado">
-                      Descargar Archivo Consolidado
-                      </a> 
-                    </div>
-              </div>
-              <div class="row">
-                <div class="col loading" *ngIf="loading">
-                    <img src="assets/img/cargando.gif">
-                </div>    
-              </div>
+                <br>
+                <div class="card">
+                  <div class="card-body">
 
+                    <div class="accordion" id="accordionExample">
+                      <div class="card">
+                          <div class="card-header" id="headingOne">
+                            <a style="text-align: center;" class="nav-link" data-toggle="collapse" data-target="#collapse3" href="#" aria-expanded="true" aria-controls="collapse3">
+                                Necesitas ayuda? Presiona AQUÍ
+                            </a>
+                          </div>
+
+                          <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body">
+                              <p>Para generar el consolidado, realice los siguientes pasos:</p>
+                              <p>1.- Ingrese la fecha del consolidado que desea generar</p>
+                              <p>2.- Presione el botón <strong>"Consolidar Actividades"</strong></p>
+                              <p>3.- Para obtener el consolidado oprima el botón <strong>"Descargar consolidado"</strong></p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                      <div class="col col-lg-1">
+                        <label for="">Fecha:</label>
+                      </div>
+                        <div class="col col-lg-3 d-flex justify-content-center form-group">         
+                            <input  class="form-control" id="fecha" name="fecha" type="date">   
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col d-flex justify-content-center form-group">
+                        <button class="btn btn-success"  (click)="consolodarActividades();">Consolidar Actividades </button>  
+                      </div>
+                    </div>
+                    <div class="row">
+                        
+                        <!--<div class="col d-flex justify-content-center form-group">
+                          <button *ngIf="exportable" class="btn btn-warning" (click)="exportarConsolidado();">Descargar consolidado </button>  
+                        </div>-->
+                        <div class="col d-flex justify-content-center form-group">
+                           <a *ngIf="exportable"  class="btn btn-warning"  href="{{url_export}}/{{fecha_consolidado}}" download="consolidado">
+                            Descargar consolidado
+                            </a> 
+                        </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col loading d-flex justify-content-center" *ngIf="loading">
+                          <img src="assets/img/cargando.gif">
+                      </div>    
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
+
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <br>
             <div class="card">
@@ -91,11 +127,12 @@
 
                 <div class="card">
                   <div class="card-body">
+
                     <div class="row">
                       <div class="col">
                         <div class="form-group">
                           <label for="">Fecha:</label>
-                          <input class="form-control" id="fecha" type="date" [ngModel] ="dt | date:'yyyy-MM-dd'">
+                          <input class="form-control" id="fecha" type="date">
                         </div>
                       </div>
                       <div class="col">
@@ -130,10 +167,13 @@
                         </div>
                       </div>
                     </div>
+
                     <div class="row">
+                      
                       <div class="col-lg-2">
                         <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
                       </div>
+                    
                       <div class="col-lg-2">
                           <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
                       </div>
@@ -143,64 +183,67 @@
                   </div>
                 </div>
                 <br>
-                    <div class="card">
-                      <div class="card-body">
-                        <div class="d-flex justify-content-center">
-                            <h4 class="">Actividades</h4>
-                        </div>
-                        <div class="row">
-                          <div class="table-responsive">
-                              <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;" 
-                              *ngIf="view_table">
-                                  <thead>
-                                    <tr>
-                                      <th>#</th>
-                                      <th>N9CONO</th>
-                                      <!--<th>N9COCU</th>-->
-                                      <th>N9COSE</th>
-                                      <th>N9CORU</th>
-                                      <th>N9MECO</th>
-                                      <th>N9LECO</th>
-                                      <th>N9COD</th>
-                                      <th>N9NOMB</th>
-                                      <th>N9REFE</th>
-                                      <th>CUSECU</th>
-                                      <th>CUCOON</th>
-                                     <!--<th>REFERENCIA</th>-->
-                                      <th>ESTADO</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let orden of ordenes | async ; let i=index">
-                                      <td>{{i+1}}</td>
-                                      <td>{{orden.n9cono}}</td>
-                                      <!--<td>{{orden.n9cocu}}</td>-->
-                                      <td>{{orden.n9cose}}</td>
-                                      <td>{{orden.n9coru}}</td>
-                                      <td>{{orden.n9meco}}</td>
-                                      <td>{{orden.n9leco}}</td>
-                                      <td>{{orden.n9cod}}</td>
-                                      <td>{{orden.n9nomb}}</td>
-                                      <td>{{orden.n9refe}}</td>
-                                      <td>{{orden.cusecu}}</td>
-                                      <td>{{orden.cucoon}}</td>
-                                      <!--<td>{{orden.referencia}}</td>-->
-                                      <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
-                                      <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
-                                      <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
-                                    </tr>
-                                  </tbody>
-                              </table>
-                              <div class="alert alert-danger" *ngIf="view_data_empty">
-                                <p>No hay datos para mostrar</p>
-                              </div>
-                          </div>
-                        </div> 
-                      </div>
+                
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <h4 class="">Actividades</h4>
                     </div>
+                    <div class="row">
+                      <div class="table-responsive">
+                          <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;" 
+                          *ngIf="view_table">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>N9CONO</th>
+                                  <th>N9COCU</th>
+                                  <th>N9COSE</th>
+                                  <th>N9CORU</th>
+                                  <th>N9MECO</th>
+                                  <th>N9LECO</th>
+                                  <th>N9COD</th>
+                                  <th>N9NOMB</th>
+                                  <th>N9REFE</th>
+                                  <th>CUSECU</th>
+                                  <th>CUCOON</th>
+                                 <th>REFERENCIA</th>
+                                  <th>ESTADO</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let orden of ordenes | async ; let i=index">
+                                  <td>{{i+1}}</td>
+                                  <td>{{orden.n9cono}}</td>
+                                  <td>{{orden.n9cocu}}</td>
+                                  <td>{{orden.n9cose}}</td>
+                                  <td>{{orden.n9coru}}</td>
+                                  <td>{{orden.n9meco}}</td>
+                                  <td>{{orden.n9leco}}</td>
+                                  <td>{{orden.n9cod}}</td>
+                                  <td>{{orden.n9nomb}}</td>
+                                  <td>{{orden.n9refe}}</td>
+                                  <td>{{orden.cusecu}}</td>
+                                  <td>{{orden.cucoon}}</td>
+                                  <td>{{orden.referencia}}</td>
+                                  <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
+                                  <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
+                                  <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
+                                </tr>
+                              </tbody>
+                          </table>
+                          <div class="alert alert-danger" *ngIf="view_data_empty">
+                            <p>No hay datos para mostrar</p>
+                          </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              
               </div>
             </div>
               
         </div>
+
       </div>
 </div>

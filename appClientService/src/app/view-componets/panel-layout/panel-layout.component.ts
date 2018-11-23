@@ -7,6 +7,8 @@ import { ExcelServiceService } from '../../services/excel-service.service';
 import { Tecnico } from '../../models/tecnico';
 import { Observable } from 'rxjs';
 
+import { NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'app-panel-layout',
   templateUrl: './panel-layout.component.html',
@@ -15,7 +17,7 @@ import { Observable } from 'rxjs';
 
 export class PanelLayoutComponent implements OnInit {
   
-  url_export='http://localhost:8000/api/export';
+  url_export='http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/export';
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
@@ -23,14 +25,16 @@ export class PanelLayoutComponent implements OnInit {
   public view_table:boolean;
   tecnicos:Observable<Tecnico[]>;
   public view_data_empty:boolean;
-  ordenesConsolidados:Observable<Orden[]>;
 
-  constructor(private ordenService:OrdenService, private tecnicoService:TecnicoService,private excelService:ExcelServiceService) 
+  fecha = new Date();
+
+  constructor(private ordenService:OrdenService, 
+              private tecnicoService:TecnicoService,
+              private excelService:ExcelServiceService,
+              private spinner: NgxSpinnerService) 
   {
     this.view_table=false;
     this.view_data_empty=false;
-    this.loading=false;
-    this.exportable=false;
    }
 
   ngOnInit() {  
@@ -67,36 +71,59 @@ export class PanelLayoutComponent implements OnInit {
   exportarExcel(){
       this.ordenes.subscribe(
         data=>{
-          this.excelService.exportAsExcelFile(data,'Actividades');
+          console.log(data);
+          let fechaActual = this.fecha.getDate()+"-"+(this.fecha.getMonth() +1)+"-"+this.fecha.getFullYear();
+          this.excelService.exportAsExcelFile(data, fechaActual+'-CONSOLIDADO');
         }
       );
-      
   }
+
   //consolidar actividades diarias
   consolodarActividades(){
     var date = document.getElementsByName("fecha")[0]["value"];
+    //console.log("fecha de consolidado ==> " + date);
     if(date!=""){
-      this.loading=true;
+      this.spinner.show();
+      //this.loading=true;
       this.ordenService.consolidarActividades(date).subscribe(
         result=>{
           if(result){
+            this.fecha_consolidado=date;
             this.exportable=true;
-            this.loading=false;
-			this.fecha_consolidado=date;
+            this.spinner.hide();
+            //this.loading = false;
             alert("Actividades Consolidadas Correctamente");
           }else{
             alert(result);
+            this.spinner.hide();
           }
         }
       );
     }else{
-	  this.exportable=false; 
       alert("Seleccione una fecha");
       return;
     }
-
-    
   }
+
+  //exportar excel 
+  /*exportarConsolidado(){
+  //this.loading=true;
+  this.spinner.show();
+    var date = document.getElementsByName("fecha")[0]["value"]+"";
+    var vector = date.split("-");
+    var nombre_consolidado=vector[2]+"-"+vector[1]+"-"+vector[0]+"_Consolidado"
+    //console.log("fecha de consolidado ==> " + nombre_consolidado);
+    this.ordenService.obtenerCosolidadosDelDia(date).subscribe(
+      result=>{
+        //this.loading = false;
+        this.spinner.hide();
+        this.excelService.exportAsExcelFile(result,nombre_consolidado);
+        document.getElementsByName("fecha")[0]["value"] = "";
+        this.exportable=false;
+      });
+  }
+  */
+
 
   //exportar excel 
   exportarConsolidado(){

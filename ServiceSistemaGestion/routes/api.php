@@ -29,7 +29,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('build-task','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
-    Route::get('actividades-tecnico/{id_tecn}','Angular\ActividadDiariaController@getActivitiesTecnico');
+    Route::get('actividades-tecnico/{id_tecn}/{tipo}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
     Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
     Route::get('cantones/{type}','Angular\ActividadDiariaController@getCantonesActividades');
@@ -41,7 +41,9 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('cont-rec','Angular\ActividadDiariaController@getRecManualesSinProcesar');
     Route::get('consolidar-actividades/{created_at}','Angular\ActividadDiariaController@consolidarActividadesDiarias');
     Route::get('actividades-consolidadas/{created_at}','Angular\ActividadDiariaController@getActividadesByDate');
-	Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
+    Route::get('mostrar-distribucion','Angular\ActividadDiariaController@getDistribucion');
+    Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}','Angular\OrdenTempController@deleteDistribucion');
+    Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -49,4 +51,5 @@ Route::group(['prefix' => 'mobile'], function(){
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');
   });
+
 Route::get('export/{date}','Angular\ImportController@exportExcelConsolidado');
