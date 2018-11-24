@@ -23,17 +23,29 @@ class OrdenTempController extends Controller
    */
   public function index()
   {
+    $ID_EMP=$this->getIdEmpUserAuth();
     $orden=new ActividadDiaria();
-    $result=$orden->where('estado',0)->get();
+    $result=$orden->where('estado',0)->where('id_emp',$ID_EMP)->get();
     return response()->json($result);
   }
 
+  // obtener id empresa de usuario autenticado
+  private function getIdEmpUserAuth(){
+    try {
+      $user_auth = auth()->user();
+      $ID_EMP=$user_auth->id_emp;
+      return $ID_EMP;
+    } catch (\Exception $e) {
+      return response()->json();
+    }
+
+  }
   /**
    * Eliminar una asignacion
    */
   public function deleteDistribucion($id_tecn, $sector, $cantidad)
   {
-    try 
+    try
     {
       $orden=new OrdenTrabajo();
       $result=$orden->where('estado',0)
@@ -47,7 +59,7 @@ class OrdenTempController extends Controller
                           ->where('n9cose','=',$sector)
                           ->first();
         if($resultAct['id_act'] == $value->id_act && $resultAct['n9cose'] == $sector){
-          
+
           $resultAct['estado'] = 0;
           $resultAct['referencia'] = 'sin asignar';
           $resultAct->save();
@@ -101,7 +113,9 @@ class OrdenTempController extends Controller
    */
   public function store(Request $request)
   {
+
     if($request->hasFile('archivo')){
+
       $path = $request->file('archivo')->getRealPath();
       $data = \Excel::load($path)->get();
       if($data->count()){
@@ -174,10 +188,7 @@ class OrdenTempController extends Controller
                 $actividad->latitud=0;
                 $actividad->longitud=0;
               }
-
-
-
-              $actividad->id_emp=1;
+              $actividad->id_emp=$this->getIdEmpUserAuth();;
               $actividad->save();
 
           }

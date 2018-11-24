@@ -17,7 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 export class PanelLayoutComponent implements OnInit {
   
-  url_export='http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/export';
+  url_export='http://localhost:8000/api/export';
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;

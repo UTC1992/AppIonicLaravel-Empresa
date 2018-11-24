@@ -20,7 +20,7 @@ class MobileController extends Controller
     if($tecnico->where('cedula',$cedula)->count()>0){
         $res=$tecnico->where('cedula',$cedula)->get();
         $orden=new ActividadDiaria();
-        $result=$orden->getDataActividadesTecnico($res[0]['id_tecn']);
+        $result=$orden->getDataActividadesTecnico($res[0]['id_tecn'],$res[0]['id_emp']);
         return response()->json($result);
     }else{
       return response()->json(false);
@@ -56,7 +56,7 @@ class MobileController extends Controller
             $res->estado=1;
             $res->foto=$value['foto'];
             $res->save();
-            
+
             $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();
@@ -88,8 +88,9 @@ class MobileController extends Controller
         $tecnico= new Tecnico();
         $resTecnico = $tecnico->where('cedula','=',$input[$cantidad-1]['cedula'])->first();
         $idTec = $resTecnico->id_tecn;
+        $idEmpTec=$resTecnico->id_emp;
 
-        for ($i = 0; $i < $cantidad-1; $i++) 
+        for ($i = 0; $i < $cantidad-1; $i++)
         {
           if($contador < $cantidad-1){
             $recManual= new ReconexionManual();
@@ -99,7 +100,8 @@ class MobileController extends Controller
             $recManual->foto = $input[$i]['foto'];
             $recManual->id_tecn = $idTec;
             $recManual->estado = 0;
-            $recManual->save();  
+            $recManual->id_emp=$idEmpTec;
+            $recManual->save();
           }
           $contador++;
         }

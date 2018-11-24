@@ -22,10 +22,21 @@ class TecnicoController extends Controller
     public function index()
     {
         $tecnico=new Tecnico();
-        $result= $tecnico->where('estado',1)->where('borrado',0)->get();
+        $result= $tecnico->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
         return response()->json($result);
     }
 
+    // obtener id empresa de usuario autenticado
+    private function getIdEmpUserAuth(){
+      try {
+        $user_auth = auth()->user();
+        $ID_EMP=$user_auth->id_emp;
+        return $ID_EMP;
+      } catch (\Exception $e) {
+        return response()->json();
+      }
+
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -55,6 +66,7 @@ class TecnicoController extends Controller
         $tecnico->estado=$request->estado;
         $tecnico->asignado=0;
         $tecnico->borrado=0;
+        $tecnico->id_emp=$this->getIdEmpUserAuth();
         $tecnico->save();
         if($tecnico){
           return response()->json(true);
@@ -87,17 +99,17 @@ class TecnicoController extends Controller
     //tecnicos sin asignar actividades
     public function getTecnicosSinActividades(){
       $tecnico=new Tecnico();
-      $result=$tecnico->where('asignado',0)->get();
+      $result=$tecnico->where('asignado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
       return response()->json($result);
     }
 
     public function delete($id_tecnico){
       $tecnico=new Tecnico();
-      $result=$tecnico->where('id_tecn',$id_tecnico)->first();
+      $result=$tecnico->where('id_tecn',$id_tecnico)->where('id_emp',$this->getIdEmpUserAuth())->first();
       $result->borrado = 1;
       $result->estado = 0;
       $result->save();
-      
+
       if($result){
         return response()->json(true);
       }else{
@@ -171,8 +183,8 @@ class TecnicoController extends Controller
       }
 
     }
-    
-    
+
+
     // asignar nueva tarea Tecnico
     public function changeStateTecnico($id){
       try {

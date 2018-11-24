@@ -15,7 +15,7 @@ class ActividadDiariaController extends Controller
   public function __construct(){
     $this->middleware('auth:api');
   }
-  
+
     public function getActivitadesTecnico(){
       $actividades=new ActividadDiaria();
       $result=$actividades->getViewActivities();
@@ -24,7 +24,7 @@ class ActividadDiariaController extends Controller
 
     public function getActivitiesTecnico($id_tecnico, $tipo){
       $orden=new ActividadDiaria();
-      $result=$orden->getDataActividadesTecnico($id_tecnico, $tipo);
+      $result=$orden->getDataActividadesTecnicoDetalle($id_tecnico, $tipo,$this->getIdEmpUserAuth());
       return response()->json($result);
     }
 
@@ -49,7 +49,7 @@ class ActividadDiariaController extends Controller
     public function getActivitiesToDay($fecha,$id_tecnico,$actividad,$estado){
       try {
         $actividades=new ActividadDiaria();
-        $result=$actividades->getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado);
+        $result=$actividades->getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado,$this->getIdEmpUserAuth());
         return response()->json($result);
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);
@@ -59,7 +59,7 @@ class ActividadDiariaController extends Controller
     function getCantonesActividades($type){
       try {
         $actividades=new ActividadDiaria();
-        $result=$actividades->getCantonstByActivityType($type);
+        $result=$actividades->getCantonstByActivityType($type,$this->getIdEmpUserAuth());
         if($result){
           return response()->json($result);
         }else{
@@ -73,7 +73,7 @@ class ActividadDiariaController extends Controller
     public function getSectores($tipo_actividad,$canton){
       try {
         $actividad=new ActividadDiaria();
-        $result=$actividad->getSectorsByActivities($tipo_actividad,$canton);
+        $result=$actividad->getSectorsByActivities($tipo_actividad,$canton,$this->getIdEmpUserAuth());
         if($result){
           return response()->json($result);
         }else{
@@ -89,7 +89,7 @@ class ActividadDiariaController extends Controller
     public function getActivitiesBySectors($tipo_actividad,$canton,$sector){
       try{
           $actividad=new ActividadDiaria();
-          $result=$actividad->getActivitiesBySectors($tipo_actividad,$canton,$sector);
+          $result=$actividad->getActivitiesBySectors($tipo_actividad,$canton,$sector,$this->getIdEmpUserAuth());
           if($result){
             return response()->json($result);
           }else{
@@ -100,11 +100,11 @@ class ActividadDiariaController extends Controller
       }
     }
 
-    // obtener cantidad de Actividades_tecnico post
+     // obtener cantidad de Actividades_tecnico post
     public function getActivitiesBySectorsPost(Request $request){
       try{
           $actividad=new ActividadDiaria();
-          $result=$actividad->getActivitiesBySectorsPost($request->actividad,$request->canton,$request->sector);
+          $result=$actividad->getActivitiesBySectorsPost($request->actividad,$request->canton,$request->sector,$this->getIdEmpUserAuth());
           if($result){
             return response()->json($result);
           }else{
@@ -119,9 +119,9 @@ class ActividadDiariaController extends Controller
     public function validarActividadesManuales(){
       try {
         $actividad=new ActividadDiaria();
-        $result=$actividad->where('estado',0)->where('n9cono','=','040')->get();
+        $result=$actividad->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('n9cono','=','040')->get();
         $reconexion=new ReconexionManual();
-        $result_rec=$reconexion->where('estado',0)->get();
+        $result_rec=$reconexion->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
         foreach ($result as $key => $value) {
           foreach ($result_rec as $key => $value_rec) {
               if($value->n9meco==$value_rec->medidor){
@@ -154,7 +154,7 @@ class ActividadDiariaController extends Controller
     public function getRecManualesSinProcesar(){
       try {
           $res=new ReconexionManual();
-          $result=$res->where('estado',0)->get();
+          $result=$res->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
           $con=count($result);
           return response()->json($con);
       } catch (\Exception $e) {
@@ -166,7 +166,7 @@ class ActividadDiariaController extends Controller
   public function consolidarActividadesDiarias($date){
     try {
       $actividad= new ActividadDiaria();
-      $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->get();
+      $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
       foreach ($result as $key => $value) {
         if($value->estado==0){
           $act=ActividadDiaria::find($value->id_act);
@@ -185,7 +185,7 @@ class ActividadDiariaController extends Controller
   public function getActividadesByDate($date){
     try {
       $actividad=new ActividadDiaria();
-      $result=$actividad->where('created_at','like','%'.$date.'%')->where('estado','!=',0)->get();
+      $result=$actividad->where('created_at','like','%'.$date.'%')->where('estado','!=',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
       return response()->json($result);
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
@@ -194,70 +194,23 @@ class ActividadDiariaController extends Controller
 
   public function getDistribucion(){
     try {
+      $ID_EMP=$this->getIdEmpUserAuth();
       $orden=new OrdenTrabajo();
-      $result=$orden->getDataDistribucion();
+      $result=$orden->getDataDistribucion($ID_EMP);
       return response()->json($result);
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
-    } 
+    }
   }
 
-  //exportar exel
-  public function exportExcelConsolidado($date){
-  $type="xlsx";
+  // obtener id empresa de usuario autenticado
+  private function getIdEmpUserAuth(){
     try {
-      $res = new ActividadExport();
-      $data=$res->select('n9sepr',
-      'n9cono',
-      'n9cocu',
-      'n9selo',
-      'n9cozo',
-      'n9coag',
-      'n9cose',
-      'n9coru',
-      'n9seru',
-      'n9vano',
-      'n9plve',
-      'n9vaca',
-      'n9esta',
-      'n9cocn',
-      'n9fech',
-      'n9meco',
-      'n9seri',
-      'n9feco',
-      'n9leco',
-      'n9manp',
-      'n9cocl',
-      'n9nomb',
-      'n9cedu',
-      'n9prin',
-      'n9nrpr',
-      'n9refe',
-      'n9tele',
-      'n9medi',
-      'n9fecl',
-      'n9lect',
-      'n9cobs',
-      'n9cob2',
-      'n9ckd1',
-      'n9ckd2',
-      'cusecu',
-      'cupost',
-      'cucoon',
-      'cucooe',
-      'cuclas',
-      'cuesta',
-      'cutari')->where('estado','=',3)->where('created_at','like','%'.$date.'%')->get();
-      return Excel::create('itsolutionstuff_example', function($excel) use ($data) {
-      $excel->sheet('mySheet', function($sheet) use ($data)
-          {
-
-        $sheet->fromArray($data);
-
-          });
-    })->download($type);
+      $user_auth = auth()->user();
+      $ID_EMP=$user_auth->id_emp;
+      return $ID_EMP;
     } catch (\Exception $e) {
-      return response()->json($e);
+      return response()->json();
     }
 
   }
