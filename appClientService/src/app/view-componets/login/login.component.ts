@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../models/usuario';
-import { InjectableAnimationEngine } from '@angular/platform-browser/animations/src/providers';
 import { LoginService } from '../../services/login.service';
-import { Tecnico } from '../../models/tecnico';
 import { Router } from '@angular/router';
-import { Command } from 'protractor';
-import { COMMON_DEPRECATED_I18N_PIPES } from '@angular/common/src/pipes/deprecated';
+
 
 @Component({
   selector: 'app-login',
@@ -44,12 +41,18 @@ export class LoginComponent implements OnInit {
               res=>{
                 if(res){
                   localStorage.setItem("nombre",res.name);
+                  localStorage.setItem("empresa",res.empresa);
+                  localStorage.setItem("email",res.username);
+                  //console.log("respuesta "+res.username);
                   location.reload();
+                }else{
+                  alert("Su cuenta se encuentra bloqueada, comuníquese con soporte técnico");
+                  this.CerrarSesion();
                 }
               }
             );
           }
-        },
+        },  
         error=>{
           if(error){
             alert("Credenciales incorrectas");
@@ -57,4 +60,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    CerrarSesion(){
+      localStorage.removeItem("empresa");
+      localStorage.removeItem("email");
+      localStorage.removeItem("nombre");
+      localStorage.removeItem("token");
+      localStorage.removeItem("token_type");
+      location.reload();
+      }
 }

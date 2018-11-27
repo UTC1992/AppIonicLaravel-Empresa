@@ -15,19 +15,16 @@ class ActividadDiariaController extends Controller
   public function __construct(){
     $this->middleware('auth:api');
   }
-
     public function getActivitadesTecnico(){
       $actividades=new ActividadDiaria();
       $result=$actividades->getViewActivities();
       return response()->json($result);
     }
-
     public function getActivitiesTecnico($id_tecnico, $tipo){
       $orden=new ActividadDiaria();
       $result=$orden->getDataActividadesTecnicoDetalle($id_tecnico, $tipo,$this->getIdEmpUserAuth());
       return response()->json($result);
     }
-
     //validar y completar las actividades del tecnico
     public function validateActivitiesByTecnico($id_tecnico){
       try {

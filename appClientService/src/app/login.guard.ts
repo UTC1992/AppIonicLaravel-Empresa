@@ -12,7 +12,7 @@ export class LoginGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      if(localStorage.getItem('token')===null){
+      if(localStorage.getItem('token')===null && localStorage.getItem('nombre')===null){
         this.route.navigate(['/login']);
         return false;
       }else{

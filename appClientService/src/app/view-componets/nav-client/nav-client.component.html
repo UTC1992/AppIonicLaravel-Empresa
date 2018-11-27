@@ -33,10 +33,9 @@
                   {{nombre_usuario}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
+                <button class="link dropdown-item"  [routerLink]="['/perfil']" >Cuenta</button>
+                <div class="dropdown-divider"></div>
                 <button class="link dropdown-item" (click)="CerrarSesion()" >Cerrar Sesión</button>
-                <!--<div class="dropdown-divider"></div>
-               -->
               </div>
             </li>
       </ul>

@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 
 class MobileController extends Controller
 {
-
 //obtiene data para los tecnicos
   public function getTechnicalData($cedula){
     $tecnico=new Tecnico();
@@ -25,7 +24,6 @@ class MobileController extends Controller
     }else{
       return response()->json(false);
     }
-
   }
 
   //actualiza datos enviados desde aplicativo movil
@@ -70,20 +68,16 @@ class MobileController extends Controller
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
     }
-
   }
 
   public function insertReconexionManual(Request $request){
     try {
       if(!is_null($request)){
         $input=$request->json()->all();
-
         //obtener cantidad de datos enviados
         $cantidad = count($input);
-
         //contador de registros
         $contador = 0;
-
         //obteniendo el id del tecnico
         $tecnico= new Tecnico();
         $resTecnico = $tecnico->where('cedula','=',$input[$cantidad-1]['cedula'])->first();

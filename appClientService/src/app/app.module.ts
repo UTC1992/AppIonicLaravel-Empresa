@@ -33,6 +33,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { NotFoundComponent } from './view-componets/not-found/not-found.component';
 
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import { PerfilComponent } from './view-componets/perfil/perfil.component';
 
 const appRoutes: Routes = [
   { path: '',
@@ -53,6 +54,11 @@ const appRoutes: Routes = [
   {
     path:'tecnicos',
     component:TecnicosComponent,
+    canActivate:[LoginGuard]
+  },
+  {
+    path:'perfil',
+    component:PerfilComponent,
     canActivate:[LoginGuard]
   },
   {
@@ -80,6 +86,7 @@ const appRoutes: Routes = [
     LoginComponent,
     FooterComponent,
     NotFoundComponent,
+    PerfilComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),

@@ -18,6 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('usuarioAutenticado','AuthApi\SecurityController@getUserData');
+Route::post('empresaActiva','AuthApi\SecurityController@validarEmpresaActiva');
+Route::post('editEmpresa','AuthApi\SecurityController@editarEmpresa');
+Route::post('editNombre','AuthApi\SecurityController@editarNombre');
+Route::post('editEmail','AuthApi\SecurityController@editarEmail');
+Route::post('editPassword','AuthApi\SecurityController@editarPassword');
 
 //rutas de servicio cliente angular
 Route::group(['prefix' => 'angular'], function(){

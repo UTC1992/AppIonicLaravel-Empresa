@@ -13,6 +13,7 @@ import { Token } from '../models/token';
 export class LoginService {
 
   headers=new Headers();
+  headers2=new Headers();
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
   //baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/";
   baseUrl='http://localhost:8000/';
@@ -35,5 +36,11 @@ export class LoginService {
   getUserDataAutenticate():Observable<Usuario>{
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
     return this.http.get(this.baseUrl+"api/usuarioAutenticado",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
+  // validar empresa 
+  validarEmpresaActiva():Observable<Usuario>{
+    this.headers2.append('Authorization','Bearer '+localStorage.getItem("token"));
+    return this.http.post(this.baseUrl+"api/empresaActiva",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 }

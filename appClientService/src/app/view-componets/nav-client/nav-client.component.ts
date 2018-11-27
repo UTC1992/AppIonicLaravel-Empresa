@@ -9,11 +9,13 @@ export class NavClientComponent implements OnInit {
 
   isLogin:boolean;
   nombre_usuario:string;
+  empresa:string;
   constructor() { 
     this.isLogin=false;
     if(localStorage.getItem("nombre")){
       this.isLogin=true;
       this.nombre_usuario=localStorage.getItem("nombre");
+      this.empresa=localStorage.getItem("empresa");
     }
   }
 
@@ -21,6 +23,8 @@ export class NavClientComponent implements OnInit {
     
   }
   CerrarSesion(){
+    localStorage.removeItem("empresa");
+    localStorage.removeItem("email");
     localStorage.removeItem("nombre");
     localStorage.removeItem("token");
     localStorage.removeItem("token_type");
