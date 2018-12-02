@@ -99,7 +99,7 @@ class TecnicoController extends Controller
     //tecnicos sin asignar actividades
     public function getTecnicosSinActividades(){
       $tecnico=new Tecnico();
-      $result=$tecnico->where('asignado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
+      $result=$tecnico->where('asignado',0)->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
       return response()->json($result);
     }
 

@@ -3,8 +3,6 @@ import { TecnicoService } from '../../services/tecnico.service';
 import { Tecnico } from '../../models/tecnico';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable } from 'rxjs';
-import { map, filter, catchError, mergeMap } from 'rxjs/operators';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -79,8 +77,6 @@ export class TecnicosComponent implements OnInit {
   }
 
   private prepareSave(): any {
-
-
     console.log("APELLIDOS"+this.form_tecnico_edicion.get('apellidos').value);
     let input = new FormData();
     input.append('id_tecn', this.form_tecnico_edicion.get('id').value);

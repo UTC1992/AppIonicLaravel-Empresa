@@ -99,7 +99,6 @@ class ActividadDiaria extends Model
           ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
           ->select('T0.*')
           ->where('T0.created_at','like','%'.$fecha.'%')
-          ->where('T0.id_emp',$ID_EMP)
           ->where(function($query) use($id_tecnico){
             if($id_tecnico!="empty")
             $query->where('T1.id_tecn',$id_tecnico);
@@ -112,6 +111,7 @@ class ActividadDiaria extends Model
             if($estado!="empty")
             $query->where('T0.estado',$estado);
           })
+          ->where('T0.id_emp',$ID_EMP)
           ->orderByRaw('T0.id_act desc')
           ->get();
   }

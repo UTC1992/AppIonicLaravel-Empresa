@@ -10,6 +10,7 @@ import { Usuario } from '../models/usuario';
 export class PerfilService {
   headers=new Headers();
   baseUrl="http://localhost:8000/api";
+  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }

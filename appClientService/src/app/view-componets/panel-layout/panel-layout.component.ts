@@ -17,7 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 export class PanelLayoutComponent implements OnInit {
   
-  url_export='http://localhost:8000/api/export';
+  url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
@@ -42,12 +42,13 @@ export class PanelLayoutComponent implements OnInit {
   }
 
   verActividaes(){
-    var result = document.getElementById("fecha");
-    var fecha=<HTMLInputElement>result["value"];
+    
+   var  fecha =document.getElementsByName("fecha_informe")[0]["value"]
     var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
     var actividad = <HTMLInputElement>document.getElementById("actividades_select")["value"];
     var estado = <HTMLInputElement>document.getElementById("estado_select")["value"];
-    if(fecha){
+    //alert(fecha);
+    if(fecha!=""){
       
       this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
       this.ordenes.subscribe(
