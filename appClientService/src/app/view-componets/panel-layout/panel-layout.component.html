@@ -8,15 +8,12 @@
         <li class="nav-item">
           <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Distribuir actividades</a>
         </li>
-
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Consultas</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" id="consolidar-tab" data-toggle="tab" href="#consolidar" role="tab" aria-controls="consolidar" aria-selected="false">Consolidados</a>
         </li>
-    
-        <li class="nav-item">
-          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Reportes</a>
-        </li>
-    
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -122,7 +119,7 @@
               <div class="card-body">
                 
                 <div class="d-flex justify-content-center">
-                    <h4 class="">Reporte de actividades</h4>
+                    <h4 class="">Consultas sobre actividades</h4>
                 </div>
 
                 <div class="card">
@@ -132,7 +129,7 @@
                       <div class="col">
                         <div class="form-group">
                           <label for="">Fecha:</label>
-                          <input class="form-control" id="fecha" name="fecha_informe" type="date">
+                          <input class="form-control" id="fechaReporte" type="date">
                         </div>
                       </div>
                       <div class="col">
@@ -174,9 +171,10 @@
                         <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
                       </div>
                     
-                      <div class="col-lg-2">
+                      <!--<div class="col-lg-2">
                           <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
                       </div>
+                    -->
                     </div>
                     
                      
@@ -196,19 +194,15 @@
                               <thead>
                                 <tr>
                                   <th>#</th>
-                                  <th>N9CONO</th>
-                                  <th>N9COCU</th>
-                                  <th>N9COSE</th>
-                                  <th>N9CORU</th>
-                                  <th>N9MECO</th>
-                                  <th>N9LECO</th>
-                                  <th>N9COD</th>
-                                  <th>N9NOMB</th>
-                                  <th>N9REFE</th>
-                                  <th>CUSECU</th>
-                                  <th>CUCOON</th>
-                                 <th>REFERENCIA</th>
-                                  <th>ESTADO</th>
+                                  <th>CÓDIGO ACTIVIDAD</th>
+                                  <th>CUENTA</th>
+                                  <th>SECTOR</th>
+                                  <th>MEDIDOR</th>
+                                  <th>LECTURA</th>
+                                  <th>CLIENTE</th>
+                                  <th>NOVEDADES</th>
+                                  <th>ESTADO ACTIVIDAD</th>
+                                  <th>INFO. ESTADO</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -217,18 +211,18 @@
                                   <td>{{orden.n9cono}}</td>
                                   <td>{{orden.n9cocu}}</td>
                                   <td>{{orden.n9cose}}</td>
-                                  <td>{{orden.n9coru}}</td>
                                   <td>{{orden.n9meco}}</td>
                                   <td>{{orden.n9leco}}</td>
-                                  <td>{{orden.n9cod}}</td>
                                   <td>{{orden.n9nomb}}</td>
-                                  <td>{{orden.n9refe}}</td>
-                                  <td>{{orden.cusecu}}</td>
-                                  <td>{{orden.cucoon}}</td>
-                                  <td>{{orden.referencia}}</td>
+                                  <!--<td>{{orden.n9refe}}</td>-->
+                                  <td>{{orden.observacionFin}}</td>
                                   <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
                                   <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
-                                  <td *ngIf="orden.estado==2"><span class="text-success">REALIZADO</span> </td>
+                                  <td *ngIf="orden.estado==2 && orden.n9cono=='010'" ><span class="text-success">REALIZADO</span></td>
+                                  <td *ngIf="orden.estado==2 && orden.observacionFin=='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040')" ><span class="text-success">REALIZADO</span></td>
+                                  <td *ngIf="orden.estado==2 && orden.observacionFin!='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040')"><span class="text-warning">NO REALIZADO</span></td>
+                                  <td *ngIf="orden.estado==3"><span class="text-warning">NO REALIZADO</span></td>
+                                  <td>{{orden.referencia}}</td>
                                 </tr>
                               </tbody>
                           </table>

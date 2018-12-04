@@ -99,7 +99,8 @@
             <div class="form-group">
               <label for="dateOfBirth">Contraseña</label>
               <div class="input-group">
-                <input id="nombre_empresa" class="form-control"  formControlName="password">
+                <input id="nombre_empresa" class="form-control" type="password"
+                 formControlName="password">
               </div>
             </div>  
         </div>
@@ -129,9 +130,10 @@
                   <th>NOMBRE EMPRESA</th>
                   <td>{{empresa}}</td>
                   <td>
-                      <button type="button" (click)="openModalEmpresa()" class="btn btn-link" data-toggle="modal" data-target="#empresa_modal">
+                      <!--<button type="button" (click)="openModalEmpresa()" class="btn btn-link" data-toggle="modal" data-target="#empresa_modal">
                           Editar
                       </button>
+                    -->
                   </td>
                 </tr>
                 <tr>

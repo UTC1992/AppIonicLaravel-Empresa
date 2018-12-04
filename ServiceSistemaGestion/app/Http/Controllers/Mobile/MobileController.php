@@ -34,8 +34,9 @@ class MobileController extends Controller
         $con=0;
         foreach ($input as $key => $value) {
           $con++;
+            
             $actividad=ActividadDiaria::find($value['id_act']);
-            if($value['estado']=='2'){
+            if($value['estado']=='2' && $value['n9leco']>0){
               $actividad->n9leco=$value['n9leco'];
               $actividad->n9lect=$value['n9leco'];
               $actividad->estado=$value['estado'];
@@ -45,6 +46,10 @@ class MobileController extends Controller
             } else {
               $actividad->estado=3;
               $actividad->referencia="No Finalizado";
+              $actividad->n9leco=0;
+              $actividad->n9lect=0;
+              $actividad->n9feco=0;
+              $actividad->n9fecl=0;
             }
             $actividad->save();
 
