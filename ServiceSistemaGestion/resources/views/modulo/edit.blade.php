@@ -33,7 +33,7 @@
                       </div>
                       <div class="form-group">
                           <label class="control-label col-md-2">Estado:</label>
-                          @if($res->estado === 1)
+                          @if($res->estado == 1)
                               <div class="col-md-8 ">
                                 <div class="form-check form-check-inline">
                                   <input class="form-check-input" checked="true" type="radio" name="estado" id="inlineRadio1" value="1">
@@ -44,7 +44,7 @@
                                   <label class="form-check-label" for="inlineRadio2">Inactivo</label>
                                 </div>
                               </div>
-                          @elseif($res->estado === 0)
+                          @elseif($res->estado == 0)
                               <div class="col-md-8 ">
                                 <div class="form-check form-check-inline">
                                   <input class="form-check-input"  type="radio" name="estado" id="inlineRadio1" value="1">
