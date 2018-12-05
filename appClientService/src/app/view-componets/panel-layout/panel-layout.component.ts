@@ -25,7 +25,7 @@ export class PanelLayoutComponent implements OnInit {
   public view_table:boolean;
   tecnicos:Observable<Tecnico[]>;
   public view_data_empty:boolean;
-
+  id_emp='';
   fecha = new Date();
 
   constructor(private ordenService:OrdenService, 
@@ -88,7 +88,9 @@ export class PanelLayoutComponent implements OnInit {
       this.ordenService.consolidarActividades(date).subscribe(
         result=>{
           if(result){
+            var id_emp2=localStorage.getItem("id_emp");
             this.fecha_consolidado=date;
+            this.id_emp=id_emp2;
             this.exportable=true;
             this.spinner.hide();
             //this.loading = false;
@@ -127,12 +129,18 @@ export class PanelLayoutComponent implements OnInit {
 
   //exportar excel 
   exportarConsolidado(){
+    var id_emp=localStorage.getItem("id_emp");
     var date = document.getElementsByName("fecha")[0]["value"];
     if(date==""){
       alert('seleccione una fecha');
       return;
     }
-    this.url_export=this.url_export+'/'+date;
+    if(id_emp!=""){
+      alert('Ocurrio un error!');
+      return;
+    }
+
+    this.url_export=this.url_export+'/'+date+'/'+id_emp;
   }
 
 

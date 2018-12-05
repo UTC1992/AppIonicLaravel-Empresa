@@ -35,7 +35,7 @@ class User extends Authenticatable
     public function getUserInfo($idUsuario){
       return $actividad = DB::table('users as T0')
             ->join('tbl_empresa as T1','T1.id_emp','=','T0.id_emp')
-            ->select('T0.name','T0.email as username','T1.nombre as empresa')
+            ->select('T0.name','T0.email as username','T1.nombre as empresa','T1.id_emp')
             ->where('T0.id',$idUsuario)
             ->first();
     }
@@ -60,7 +60,7 @@ class User extends Authenticatable
     }
 
     public function updateUser($data=[])
-    {   
+    {
         try {
             $user = User::find($data->id);
             $user->name = $data->name;

@@ -34,7 +34,7 @@ class MobileController extends Controller
         $con=0;
         foreach ($input as $key => $value) {
           $con++;
-            
+
             $actividad=ActividadDiaria::find($value['id_act']);
             if($value['estado']=='2' && $value['n9leco']>0){
               $actividad->n9leco=$value['n9leco'];

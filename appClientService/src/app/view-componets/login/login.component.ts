@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
                   localStorage.setItem("nombre",res.name);
                   localStorage.setItem("empresa",res.empresa);
                   localStorage.setItem("email",res.username);
+                  localStorage.setItem("id_emp",res.id_emp);
                   //console.log("respuesta "+res.username);
                   location.reload();
                 }else{
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit {
       localStorage.removeItem("email");
       localStorage.removeItem("nombre");
       localStorage.removeItem("token");
+      localStorage.removeItem("id_emp");
       localStorage.removeItem("token_type");
       location.reload();
       }

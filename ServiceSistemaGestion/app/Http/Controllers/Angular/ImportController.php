@@ -21,68 +21,7 @@ class ImportController extends Controller
       return view('import');
     }
     // exportar excel consolidado
-    public function exportExcelConsolidado($date){
-   /* $type="xlsx";
-      try {
-        $res = new ActividadDiaria();
-        $data=$res->select('n9sepr',
-        'n9cono',
-        'n9cocu',
-        'n9selo',
-        'n9cozo',
-        'n9coag',
-        'n9cose',
-        'n9coru',
-        'n9seru',
-        'n9vano',
-        'n9plve',
-        'n9vaca',
-        'n9esta',
-        'n9cocn',
-        'n9fech',
-        'n9meco',
-        'n9seri',
-        'n9feco',
-        'n9leco',
-        'n9manp',
-        'n9cocl',
-        'n9nomb',
-        'n9cedu',
-        'n9prin',
-        'n9nrpr',
-        'n9refe',
-        'n9tele',
-        'n9medi',
-        'n9fecl',
-        'n9lect',
-        'n9cobs',
-        'n9cob2',
-        'n9ckd1',
-        'n9ckd2',
-        'cusecu',
-        'cupost',
-        'cucoon',
-        'cucooe',
-        'cuclas',
-        'cuesta',
-        'cutari')->where('estado','=',3)->where('created_at','like','%'.$date.'%')->get();
-            
-            $vector = explode("-",$date);
-            return Excel::create(
-                                $vector[2]."-".$vector[1]."-".$vector[0].'_CONSOLIDADO', 
-                                function($excel) use ($data) {
-                    $excel->sheet('mySheet', function($sheet) use ($data){
-                        
-                        $sheet->fromArray($data);
-                    });
-
-            })->download($type);
-
-      } catch (\Exception $e) {
-        return response()->json($e);
-      }
-      */
-
+    public function exportExcelConsolidado($date,$id_emp){
         $type="xlsx";
         try {
             $res = new ActividadDiaria();
@@ -126,7 +65,7 @@ class ImportController extends Controller
                 'cucooe',
                 'cuclas',
                 'cuesta',
-                'cutari')->where('created_at','like','%'.$date.'%')->get();
+                'cutari')->where('created_at','like','%'.$date.'%')->where('id_emp',$id_emp)->get();
 
             $spreadsheet = new Spreadsheet();
             $spreadsheet->getActiveSheet()->setTitle('CONSOLIDADO');
@@ -152,7 +91,7 @@ class ImportController extends Controller
                         ->setCellValue("S1",'N9LECO')
                         ->setCellValue("T1",'N9MANP')
                         ->setCellValue("U1",'N9COCL')
-                        ->setCellValue("V1",'N9NOMB')     
+                        ->setCellValue("V1",'N9NOMB')
                         ->setCellValue("W1",'N9CEDU')
                         ->setCellValue("X1",'N9PRIN')
                         ->setCellValue("Y1",'N9NRPR')
@@ -174,7 +113,7 @@ class ImportController extends Controller
                         ->setCellValue("AO1",'CUTARI');
             $x= 2;
             foreach($data as $item){
-               
+
                 $spreadsheet->setActiveSheetIndex(0)
                         ->setCellValue("A$x",$item['n9sepr'])
                         ->setCellValue("B$x",$item['n9cono'])
@@ -197,8 +136,8 @@ class ImportController extends Controller
                         ->setCellValue("S$x",$item['n9leco'])
                         ->setCellValue("T$x",$item['n9manp'])
                         ->setCellValue("U$x",$item['n9cocl'])
-                        ->setCellValue("V$x",$item['n9nomb'])     
-                        ->setCellValue("W$x",$item['n9cedu'])   
+                        ->setCellValue("V$x",$item['n9nomb'])
+                        ->setCellValue("W$x",$item['n9cedu'])
                         ->setCellValue("X$x",$item['n9prin'])
                         ->setCellValue("Y$x",$item['n9nrpr'])
                         ->setCellValue("Z$x",$item['n9refe'])
@@ -234,7 +173,7 @@ class ImportController extends Controller
                             \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
                         );
                 $x++;
-                
+
             }
             //nombre del EXCEL descargado
             $vector = explode("-",$date);

@@ -3,4 +3,5 @@ export class Usuario {
         public password;
         public name;
         public empresa;
+        public id_emp;
 }

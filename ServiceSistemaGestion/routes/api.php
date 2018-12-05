@@ -48,7 +48,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('actividades-consolidadas/{created_at}','Angular\ActividadDiariaController@getActividadesByDate');
     Route::get('mostrar-distribucion','Angular\ActividadDiariaController@getDistribucion');
     Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}','Angular\OrdenTempController@deleteDistribucion');
-    Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
+    //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -57,4 +57,4 @@ Route::group(['prefix' => 'mobile'], function(){
     Route::post('update-activities','Mobile\MobileController@updateActivities');
   });
 
-Route::get('export/{date}','Angular\ImportController@exportExcelConsolidado');
+Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');
