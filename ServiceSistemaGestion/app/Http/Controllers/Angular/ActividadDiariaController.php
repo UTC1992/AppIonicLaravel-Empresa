@@ -135,7 +135,7 @@ class ActividadDiariaController extends Controller
                   $ordenTrabajo->id_act=$value->id_act;
                   $ordenTrabajo->estado=1;
                   $ordenTrabajo->fecha=date('Y-m-d');
-                  $ordenTrabajo->observacion="Orden de trabajo finalizado";
+                  $ordenTrabajo->observacion=$value_rec->observacion;
                   $ordenTrabajo->tipo_actividad="40";
                   $ordenTrabajo->save();
               }

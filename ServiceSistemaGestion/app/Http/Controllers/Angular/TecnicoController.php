@@ -155,7 +155,7 @@ class TecnicoController extends Controller
           $ordenTrabajo->id_act=$array_actividades[$i];
           $ordenTrabajo->estado=0;
           $ordenTrabajo->fecha=date('Y-m-d');
-          $ordenTrabajo->observacion="Orden de trabajo asignado";
+          $ordenTrabajo->observacion="";
           $ordenTrabajo->tipo_actividad=$request->actividad;
           $ordenTrabajo->save();
           // actualiza actividad diaria asignado
