@@ -124,6 +124,9 @@ class ActividadDiariaController extends Controller
               if($value->n9meco==$value_rec->medidor){
                   $act=ActividadDiaria::find($value->id_act);
                   $act->n9leco=$value_rec->lectura;
+                  $act->n9lect=$value_rec->lectura;
+                  $act->n9feco=date('Y')."".date('m')."".date('d');
+                  $act->n9fecl=date('Y')."".date('m')."".date('d');
                   $act->estado=2;
                   $act->save();
                   // insertar registro orden trabajo tecnico
