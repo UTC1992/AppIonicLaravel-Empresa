@@ -123,11 +123,15 @@ class ActividadDiariaController extends Controller
           foreach ($result_rec as $key => $value_rec) {
               if($value->n9meco==$value_rec->medidor){
                   $act=ActividadDiaria::find($value->id_act);
-                  $act->n9leco=$value_rec->lectura;
-                  $act->n9lect=$value_rec->lectura;
-                  $act->n9feco=date('Y')."".date('m')."".date('d');
-                  $act->n9fecl=date('Y')."".date('m')."".date('d');
-                  $act->estado=2;
+                  if($value_rec->observacion=='Sin novedad'){
+                    $act->n9leco=$value_rec->lectura;
+                    $act->n9lect=$value_rec->lectura;
+                    $act->n9feco=date('Y')."".date('m')."".date('d');
+                    $act->n9fecl=date('Y')."".date('m')."".date('d');
+                    $act->estado=2;
+                  }else{
+                    $act->estado=3;  
+                  }
                   $act->save();
                   // insertar registro orden trabajo tecnico
                   $ordenTrabajo=new OrdenTrabajo();
