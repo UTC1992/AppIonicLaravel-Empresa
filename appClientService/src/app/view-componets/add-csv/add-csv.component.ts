@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { TableClientComponent } from '../table-client/table-client.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+import {MatDialog, MatDialogConfig} from "@angular/material";
+import { AlertaDeleteComponent } from '../alerta-delete/alerta-delete.component';
+
 @Component({
   selector: 'app-add-csv',
   templateUrl: './add-csv.component.html',
@@ -26,7 +29,9 @@ export class AddCsvComponent implements OnInit {
   constructor(
               private ordenService:OrdenService,
               private fb: FormBuilder,
-              private spinner: NgxSpinnerService) {
+              private spinner: NgxSpinnerService,
+              private dialog: MatDialog,
+              ) {
     this.createForm();
     this.loading=false;
     this.validaReconexiones=false;
@@ -114,26 +119,54 @@ export class AddCsvComponent implements OnInit {
           this.spinner.hide();
           alert(msj);
         }
-      }
-    );
+      });
   }
-// eliminar actividades
-eliminarActividades(){
-  if(localStorage.getItem("token")!=null){
-    this.ordenService.deleteActivities().subscribe(
-      result=>{
-        if(result){
-          console.log(result);
-            alert('Actividadas borradas correctamente!');
-            location.reload();
-        }else{
-          alert('No existen resgistros para borrar');
-        }
-      }
-    );
-  }
-}
-  
 
+  validarBorradoDeActividades(){
+      const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+      title: 'Alerta de ¡Borrado!',
+      description:  'Deseas borrar las actividades subidas el día de hoy,'+
+      ' también se eliminarán las asignaciones realizadas a los tecnicos,'+ 
+                    ' recuerda que el borrado es permanente.'+
+                    ' ¿Deseas realizar está acción?',
+      height: '400px',
+      width: '100px',
+    };
+
+    
+    const dialogRef = this.dialog.open(AlertaDeleteComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+        data => {
+          if(data){
+            //console.log("Datos borrados");
+            this.eliminarActividades();
+          } else {
+            console.log("Cancelar operación de borrado");
+          }
+        });
+  }
+
+  // eliminar actividades
+  eliminarActividades(){
+    if(localStorage.getItem("token")!=null){
+      this.ordenService.deleteActivities().subscribe(
+        result=>{
+          if(result){
+            console.log(result);
+              alert('Actividadas borradas correctamente!');
+              location.reload();
+          }else{
+            alert('No existen resgistros para borrar');
+          }
+        }
+      );
+    }
+  }
 
 }
