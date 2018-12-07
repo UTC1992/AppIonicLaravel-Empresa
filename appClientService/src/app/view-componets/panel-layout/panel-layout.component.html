@@ -201,6 +201,7 @@
                                   <th>MEDIDOR</th>
                                   <th>LECTURA</th>
                                   <th>CLIENTE</th>
+                                  <th>HORA DE REGISTRO</th>
                                   <th>NOVEDADES</th>
                                   <th>ESTADO ACTIVIDAD</th>
                                   <th>INFO. ESTADO</th>
@@ -215,6 +216,7 @@
                                   <td>{{orden.n9meco}}</td>
                                   <td>{{orden.n9leco}}</td>
                                   <td>{{orden.n9nomb}}</td>
+                                  <td class="text-success">{{orden.hora}}</td>
                                   <!--<td>{{orden.n9refe}}</td>-->
                                   <td>{{orden.observacionFin}}</td>
                                   <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>

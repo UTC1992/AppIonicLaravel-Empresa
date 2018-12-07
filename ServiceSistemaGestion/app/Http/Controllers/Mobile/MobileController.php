@@ -58,6 +58,7 @@ class MobileController extends Controller
             $res->observacion=$value['observacion'];
             $res->estado=1;
             $res->foto=$value['foto'];
+            $res->hora=$value['hora'];
             $res->save();
 
             $tecnico=Tecnico::find($value['id_tecn']);
