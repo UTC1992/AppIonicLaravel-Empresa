@@ -218,7 +218,8 @@ class ActividadDiariaController extends Controller
     }
 
   }
-    // eliminar actividades
+
+  // eliminar actividades
   public function eliminarActividades(){
     try {
       $fecha=date('Y-m-d');
@@ -244,6 +245,5 @@ class ActividadDiariaController extends Controller
         return response()->json("Error: ".$e);
     }
   }
-
 
 }

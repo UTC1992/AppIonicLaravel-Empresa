@@ -14,7 +14,6 @@ import { AddCsvComponent } from './view-componets/add-csv/add-csv.component';
 import { OrdenService } from './services/orden.service';
 import { TecnicoService } from './services/tecnico.service';
 import { LoginService } from './services/login.service';
-
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
 import { TecnicosComponent } from './view-componets/tecnicos/tecnicos.component';
@@ -24,16 +23,16 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { LoginComponent } from './view-componets/login/login.component';
-
 import { FooterComponent } from './view-componets/footer/footer.component'; 
 import {LoginGuard} from './login.guard';
 import {NoLoginGuard} from './no-login.guard';
-
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NotFoundComponent } from './view-componets/not-found/not-found.component';
-
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { PerfilComponent } from './view-componets/perfil/perfil.component';
+
+import {MatDialogModule, MatFormFieldModule} from "@angular/material";
+import { AlertaDeleteComponent } from './view-componets/alerta-delete/alerta-delete.component';
 
 const appRoutes: Routes = [
   { path: '',
@@ -87,6 +86,7 @@ const appRoutes: Routes = [
     FooterComponent,
     NotFoundComponent,
     PerfilComponent,
+    AlertaDeleteComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),
@@ -110,8 +110,11 @@ const appRoutes: Routes = [
     NgxPaginationModule,
     NgxSpinnerModule,
     MultiselectDropdownModule,
+    MatDialogModule,
+    MatFormFieldModule
   ],
   providers: [OrdenService,TecnicoService,LoginService,LoginGuard,NoLoginGuard],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AlertaDeleteComponent]
 })
 export class AppModule { }

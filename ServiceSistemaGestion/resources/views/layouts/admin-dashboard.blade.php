@@ -217,7 +217,10 @@ desired effect
                   <a href="{{ route('admin.perfil') }}" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
-                  <a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}"
+                  <a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}">
+                      {{ __('Salir') }}
+                  </a>
+                  <!--<a class="btn btn-default btn-flat" href="{{ route('admin.logout') }}"
                      onclick="event.preventDefault();
                                    document.getElementById('logout-form').submit();">
                       {{ __('Salir') }}
@@ -226,6 +229,7 @@ desired effect
                   <form id="logout-form" action="{{ route('admin.logout') }}" method="post" style="display: none;">
                       @csrf
                   </form>
+                -->
                 </div>
               </li>
             </ul>

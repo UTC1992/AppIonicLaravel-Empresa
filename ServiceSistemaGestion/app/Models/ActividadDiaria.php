@@ -161,7 +161,7 @@ class ActividadDiaria extends Model
           ->whereIn('T0.n9cose',$sector)
           ->get();
   }
-  
+
   // obtiene tecnicos asignados  
   public function obtenerTecnicosAsignadosActividad($ID_EMP, $FECHA){
     return $actividad = DB::table('tbl_tecnico as T0')
