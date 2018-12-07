@@ -14,10 +14,9 @@ export class LoginService {
 
   headers=new Headers();
   headers2=new Headers();
-  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
-  //baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/";
+  baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
   //baseUrl='http://localhost:8000/';
-  baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
+  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
   constructor(private http:Http) { 
     
   }

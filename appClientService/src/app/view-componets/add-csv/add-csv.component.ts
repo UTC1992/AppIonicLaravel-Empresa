@@ -154,6 +154,7 @@ export class AddCsvComponent implements OnInit {
 
   // eliminar actividades
   eliminarActividades(){
+    console.log('ingresando a borrar');
     if(localStorage.getItem("token")!=null){
       this.ordenService.deleteActivities().subscribe(
         result=>{

@@ -10,10 +10,10 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 export class TecnicoService {
 
   headers=new Headers();
-  //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
+  baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
   //baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/angular";
   //baseUrl="http://localhost:8000/api/angular";
-  baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
+  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
