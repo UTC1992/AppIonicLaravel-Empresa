@@ -161,6 +161,30 @@ class ActividadDiaria extends Model
           ->whereIn('T0.n9cose',$sector)
           ->get();
   }
+  
+  // obtiene tecnicos asignados  
+  public function obtenerTecnicosAsignadosActividad($ID_EMP, $FECHA){
+    return $actividad = DB::table('tbl_tecnico as T0')
+          ->join('tbl_ordentrabajo as T1','T1.id_tecn','=','T0.id_tecn')
+          ->join('tbl_actividaddiaria as T2','T2.id_act','=','T1.id_act')
+          ->select('T0.id_tecn')
+          ->where('T2.id_emp',$ID_EMP)
+          ->where('T2.created_at','like','%'.$FECHA.'%')
+          ->groupBy('T0.id_tecn')
+          ->get();
+  }
+
+  // contar registros de tecnicos asignados
+  public function contarTecnicosAsignados($ID_EMP, $FECHA){
+    return $actividad = DB::table('tbl_tecnico as T0')
+          ->join('tbl_ordentrabajo as T1','T1.id_tecn','=','T0.id_tecn')
+          ->join('tbl_actividaddiaria as T2','T2.id_act','=','T1.id_act')
+          ->select('T0.id_tecn')
+          ->where('T2.id_emp',$ID_EMP)
+          ->where('T2.created_at','like','%'.$FECHA.'%')
+          ->groupBy('T0.id_tecn')
+          ->count();;
+  }
 
 
 }

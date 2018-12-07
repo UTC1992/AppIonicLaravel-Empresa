@@ -218,5 +218,32 @@ class ActividadDiariaController extends Controller
     }
 
   }
+    // eliminar actividades
+  public function eliminarActividades(){
+    try {
+      $fecha=date('Y-m-d');
+        $ID_EMP=$this->getIdEmpUserAuth();
+        $actividad=new ActividadDiaria();
+        $cont=$actividad->contarTecnicosAsignados($ID_EMP,$fecha);
+        if($cont>0){
+          $result=$actividad->obtenerTecnicosAsignadosActividad($ID_EMP,$fecha);
+          foreach ($result as $key => $value) {
+              $tecnico=Tecnico::find($value->id_tecn);
+              $tecnico->asignado=0;
+              $tecnico->save();
+          }
+          
+        }
+        $actividad_diaria=new ActividadDiaria();
+        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->delete();
+        if($res>0){
+          return response()->json(true);
+        }
+        return response()->json(false);
+    } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+    }
+  }
+
 
 }

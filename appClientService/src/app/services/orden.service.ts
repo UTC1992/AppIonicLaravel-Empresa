@@ -11,8 +11,8 @@ export class OrdenService {
   headers=new Headers();
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
   //baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/angular";
-  //baseUrl='http://localhost:8000/api/angular';
-  baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
+  baseUrl='http://localhost:8000/api/angular';
+  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
@@ -54,6 +54,10 @@ export class OrdenService {
   //obtner actividades consolidadas por fecha: paremeter date
   obtenerCosolidadosDelDia(date):Observable<Orden[]>{
     return this.http.get(this.baseUrl+"/actividades-consolidadas/"+date,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+  // borrar actividades del dia
+  deleteActivities():Observable<Orden[]>{
+    return this.http.get(this.baseUrl+"/delete-activities",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
   

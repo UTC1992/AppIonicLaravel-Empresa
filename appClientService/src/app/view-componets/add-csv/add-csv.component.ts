@@ -117,7 +117,22 @@ export class AddCsvComponent implements OnInit {
       }
     );
   }
-
+// eliminar actividades
+eliminarActividades(){
+  if(localStorage.getItem("token")!=null){
+    this.ordenService.deleteActivities().subscribe(
+      result=>{
+        if(result){
+          console.log(result);
+            alert('Actividadas borradas correctamente!');
+            location.reload();
+        }else{
+          alert('No existen resgistros para borrar');
+        }
+      }
+    );
+  }
+}
   
 
 

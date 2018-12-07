@@ -111,24 +111,6 @@ export class PanelLayoutComponent implements OnInit {
     }
   }
 
-  //exportar excel 
-  /*exportarConsolidado(){
-  //this.loading=true;
-  this.spinner.show();
-    var date = document.getElementsByName("fecha")[0]["value"]+"";
-    var vector = date.split("-");
-    var nombre_consolidado=vector[2]+"-"+vector[1]+"-"+vector[0]+"_Consolidado"
-    //console.log("fecha de consolidado ==> " + nombre_consolidado);
-    this.ordenService.obtenerCosolidadosDelDia(date).subscribe(
-      result=>{
-        //this.loading = false;
-        this.spinner.hide();
-        this.excelService.exportAsExcelFile(result,nombre_consolidado);
-        document.getElementsByName("fecha")[0]["value"] = "";
-        this.exportable=false;
-      });
-  }
-  */
 
 
   //exportar excel 
@@ -146,6 +128,8 @@ export class PanelLayoutComponent implements OnInit {
 
     this.url_export=this.url_export+'/'+date+'/'+id_emp;
   }
+
+  
 
 
 }
