@@ -9,7 +9,9 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 })
 export class OrdenService {
   headers=new Headers();
-  baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
+  
+  baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
+  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
   //baseUrl='http://localhost:8000/api/angular';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(private http:Http) {

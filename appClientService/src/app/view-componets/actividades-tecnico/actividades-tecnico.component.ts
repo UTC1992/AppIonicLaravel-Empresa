@@ -345,6 +345,7 @@ export class ActividadesTecnicoComponent implements OnInit {
         //alert("Asignación eliminada correctamente");
         this.reloadComponent();
         this.spinner.hide();
+        //location.reload(true);
       } else {
         
         alert("Error al eliminar la asignación");

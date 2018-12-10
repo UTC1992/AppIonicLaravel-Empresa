@@ -11,7 +11,8 @@ export class PerfilService {
   headers=new Headers();
   //baseUrl="http://localhost:8000/api";
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api';
-  baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api';
+  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api';
+  baseUrl='http://pruebas.tiendanaturalecuador.online/api';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
