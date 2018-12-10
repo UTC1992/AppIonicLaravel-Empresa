@@ -233,10 +233,10 @@ class ActividadDiariaController extends Controller
               $tecnico->asignado=0;
               $tecnico->save();
           }
-          
+
         }
         $actividad_diaria=new ActividadDiaria();
-        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->delete();
+        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->delete();
         if($res>0){
           return response()->json(true);
         }
