@@ -223,8 +223,8 @@
                                   <td *ngIf="orden.estado==0"><span class="text-danger">SIN ASIGNAR</span> </td>
                                   <td *ngIf="orden.estado==1"><span class="text-info">ASIGNADO</span> </td>
                                   <td *ngIf="orden.estado==2 && orden.n9cono=='010'" ><span class="text-success">REALIZADO</span></td>
-                                  <td *ngIf="orden.estado==2 && orden.observacionFin=='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040')" ><span class="text-success">REALIZADO</span></td>
-                                  <td *ngIf="orden.estado==2 && orden.observacionFin!='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040')"><span class="text-warning">NO REALIZADO</span></td>
+                                  <td *ngIf="orden.estado==2 && orden.observacionFin=='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040' || orden.n9cono=='050')" ><span class="text-success">REALIZADO</span></td>
+                                  <td *ngIf="orden.estado==2 && orden.observacionFin!='Sin novedad' && (orden.n9cono=='030' || orden.n9cono=='040' || orden.n9cono=='050')"><span class="text-warning">NO REALIZADO</span></td>
                                   <td *ngIf="orden.estado==3"><span class="text-warning">NO REALIZADO</span></td>
                                   <td>{{orden.referencia}}</td>
                                 </tr>
