@@ -343,10 +343,10 @@ export class ActividadesTecnicoComponent implements OnInit {
     });
   }
 
-  eliminarAsignacion(id_tecn, sector, cantidad){
+  eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
     this.spinner.show();
     //console.log("ELIMINAR LA DISTRIBUCION ===================");
-    this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad);
+    this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad, tipoAct);
     this.distribucionDelete.subscribe(res =>{
       //console.log(res);
       if(res == true){

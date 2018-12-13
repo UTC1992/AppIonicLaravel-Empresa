@@ -43,7 +43,7 @@ class OrdenTempController extends Controller
   /**
    * Eliminar una asignacion
    */
-  public function deleteDistribucion($id_tecn, $sector, $cantidad)
+  public function deleteDistribucion($id_tecn, $sector, $cantidad, $tipo)
   {
     try
     {
@@ -58,7 +58,10 @@ class OrdenTempController extends Controller
                           ->where('id_act','=',$value->id_act)
                           ->where('n9cose','=',$sector)
                           ->first();
-        if($resultAct['id_act'] == $value->id_act && $resultAct['n9cose'] == $sector){
+        if($resultAct['id_act'] == $value->id_act 
+          && $resultAct['n9cose'] == $sector
+          && $resultAct['n9cono'] == $tipo
+        ){
 
           $resultAct['estado'] = 0;
           $resultAct['referencia'] = 'sin asignar';
