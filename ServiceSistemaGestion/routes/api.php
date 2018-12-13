@@ -34,7 +34,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('build-task','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
-    Route::get('actividades-tecnico/{id_tecn}/{tipo}','Angular\ActividadDiariaController@getActivitiesTecnico');
+    Route::get('actividades-tecnico/{id_tecn}/{tipo}/{sector}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
     Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
     Route::get('cantones/{type}','Angular\ActividadDiariaController@getCantonesActividades');

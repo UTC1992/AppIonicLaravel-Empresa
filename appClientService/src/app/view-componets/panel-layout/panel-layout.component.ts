@@ -16,9 +16,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 
 export class PanelLayoutComponent implements OnInit {
-  url_export='http://pruebas.tiendanaturalecuador.online/api/export';
+  //url_export='http://pruebas.tiendanaturalecuador.online/api/export';
   //url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
-  //url_export='http://localhost:8000/api/export';
+  url_export='http://localhost:8000/api/export';
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   fecha_consolidado='';
@@ -55,6 +55,7 @@ export class PanelLayoutComponent implements OnInit {
       this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
       this.ordenes.subscribe(
         data=>{
+          console.log(data);
           if(data.length>0){
             this.view_table=true;
             this.view_data_empty=false;

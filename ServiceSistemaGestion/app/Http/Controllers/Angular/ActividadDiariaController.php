@@ -20,9 +20,9 @@ class ActividadDiariaController extends Controller
       $result=$actividades->getViewActivities();
       return response()->json($result);
     }
-    public function getActivitiesTecnico($id_tecnico, $tipo){
+    public function getActivitiesTecnico($id_tecnico, $tipo,$sector){
       $orden=new ActividadDiaria();
-      $result=$orden->getDataActividadesTecnicoDetalle($id_tecnico, $tipo,$this->getIdEmpUserAuth());
+      $result=$orden->getDataActividadesTecnicoDetalle($id_tecnico, $tipo,$sector,$this->getIdEmpUserAuth());
       return response()->json($result);
     }
     //validar y completar las actividades del tecnico
@@ -130,7 +130,7 @@ class ActividadDiariaController extends Controller
                     $act->n9fecl=date('Y')."".date('m')."".date('d');
                     $act->estado=2;
                   }else{
-                    $act->estado=3;  
+                    $act->estado=3;
                   }
                   $act->save();
                   // insertar registro orden trabajo tecnico

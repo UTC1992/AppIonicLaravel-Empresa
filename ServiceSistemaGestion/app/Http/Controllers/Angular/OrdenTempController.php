@@ -79,7 +79,7 @@ class OrdenTempController extends Controller
       $resultStateTecnico=$ordenStateTecnico->where('estado',0)
         ->where('id_tecn','=',$id_tecn)
         ->get();
-      if(count($resultStateTecnico) == 0){
+        if(count($resultStateTecnico) == 0){
         $tecnico = Tecnico::find($id_tecn);
         $tecnico->asignado = 0;
         $tecnico->save();

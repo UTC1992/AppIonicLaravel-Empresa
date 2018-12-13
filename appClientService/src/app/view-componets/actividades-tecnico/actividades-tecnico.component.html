@@ -130,6 +130,7 @@
                         <option value="10">Notificación</option>
                         <option value="30">Corte</option>
                         <option value="40">Reconexión</option>
+                        <option value="50">Retiro de medidor</option>
                     </select>
                 </div>
             </form>
@@ -251,7 +252,7 @@
                         <td>{{tecnico_tareas.cantidad}}</td>
                         <td>{{tecnico_tareas.tipo}}</td>
                         <td>
-                            <button type="button" style="margin-right: 5px;" (click)="verDetalleActividades(tecnico_tareas.id_tecn, tecnico_tareas.tipo)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
+                            <button type="button" style="margin-right: 5px;" (click)="verDetalleActividades(tecnico_tareas.id_tecn, tecnico_tareas.tipo,tecnico_tareas.n9cose)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
                                 Ver detalle    
                               </button>
                             <button class="btn btn-warning" (click)="AsignarActividades(tecnico_tareas.id_tecn)" style="margin-right: 5px;">

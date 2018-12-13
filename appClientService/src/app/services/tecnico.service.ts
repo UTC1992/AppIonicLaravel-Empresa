@@ -10,10 +10,10 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 export class TecnicoService {
 
   headers=new Headers();
-  baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
+  //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
   //baseUrl="http://localhost/AppIonicLaravel-Empresa/ServiceSistemaGestion/public/api/angular";
-  //baseUrl="http://localhost:8000/api/angular";
+  baseUrl="http://localhost:8000/api/angular";
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
@@ -54,8 +54,8 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/actividades-tecnicos",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // obtiene detalle de actidades por tecnico
-  getActivitiesByTecnico(id, tipo):Observable<any>{
-    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  getActivitiesByTecnico(id,tipo,sector):Observable<any>{
+    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo+"/"+sector,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
   terminarProcesoAvtividades(id){

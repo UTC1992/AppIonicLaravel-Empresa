@@ -93,21 +93,29 @@ export class ActividadesTecnicoComponent implements OnInit {
   }
  
   //ver detalle en modal 
-  verDetalleActividades(id, tipo) {
+  verDetalleActividades(id,tipo,sector) {
+    this.actividades_tecncio=null;
     this.p = 1;
     switch (tipo) {
       case "Notificaciones":
-        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '010');
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '010',sector);
+        console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
       case "Corte":
-        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '030');
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '030',sector);
+        console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
       case "Reconexiones":
-        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '040');
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '040',sector);
+        console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
+      case "Retiro de medidor":
+        this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '050',sector);
+        console.log(this.actividades_tecncio);
+        this.view_table=true;
       default:
         // code...
         break;
