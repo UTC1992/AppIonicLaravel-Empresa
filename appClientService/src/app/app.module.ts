@@ -33,6 +33,7 @@ import { PerfilComponent } from './view-componets/perfil/perfil.component';
 
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import { AlertaDeleteComponent } from './view-componets/alerta-delete/alerta-delete.component';
+import { TableRecmanualComponent } from './view-componets/table-recmanual/table-recmanual.component';
 
 const appRoutes: Routes = [
   { path: '',
@@ -87,6 +88,7 @@ const appRoutes: Routes = [
     NotFoundComponent,
     PerfilComponent,
     AlertaDeleteComponent,
+    TableRecmanualComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),

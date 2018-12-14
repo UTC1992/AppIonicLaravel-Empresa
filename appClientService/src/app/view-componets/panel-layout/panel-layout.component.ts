@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
 import { Orden } from '../../models/orden';
 import { InjectableAnimationEngine } from '@angular/platform-browser/animations/src/providers';
 import { OrdenService } from '../../services/orden.service';
@@ -8,6 +8,7 @@ import { Tecnico } from '../../models/tecnico';
 import { Observable } from 'rxjs';
 
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
 
 @Component({
   selector: 'app-panel-layout',
@@ -21,6 +22,8 @@ export class PanelLayoutComponent implements OnInit {
   //url_export='http://localhost:8000/api/export';
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
+  @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
+
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
@@ -45,6 +48,9 @@ export class PanelLayoutComponent implements OnInit {
   }
 
   verActividaes(){
+    //ocultar las reconexiones manuales
+    this.tablaRecManual.ocultarRecManuales();
+
     var result = document.getElementById("fechaReporte");
     var fecha=<HTMLInputElement>result["value"];
     var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
@@ -81,6 +87,7 @@ export class PanelLayoutComponent implements OnInit {
         }
       );
   }
+
 
   //consolidar actividades diarias
   consolodarActividades(){
@@ -145,6 +152,25 @@ export class PanelLayoutComponent implements OnInit {
     }
 
     this.url_export=this.url_export+'/'+date+'/'+id_emp;
+  }
+
+  verRecManual(){
+    var result = document.getElementById("fechaReporte");
+    var fecha=<HTMLInputElement>result["value"];
+    var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
+    if(fecha){
+      let dataRecManual={
+          'fecha':fecha,
+          'id_tecn':tecnico,
+          }
+      this.view_table=false;
+      this.view_data_empty=false;
+      this.tablaRecManual.cargarDatos(dataRecManual);
+      
+    }else{
+      alert("Seleccione una fecha");
+    }
+    
   }
 
 

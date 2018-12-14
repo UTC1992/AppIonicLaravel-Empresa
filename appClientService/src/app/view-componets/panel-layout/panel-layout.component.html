@@ -129,7 +129,7 @@
                       <div class="col">
                         <div class="form-group">
                           <label for="">Fecha:</label>
-                          <input class="form-control" id="fechaReporte" type="date">
+                          <input class="form-control" id="fechaReporte" type="date" value="{{ today | date:'yyyy-MM-dd'}}">
                         </div>
                       </div>
                       <div class="col">
@@ -172,6 +172,10 @@
                       <div class="col-lg-2">
                         <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
                       </div>
+
+                      <div class="col-lg-2">
+                        <button class="btn btn-warning" (click)="verRecManual()">Ver Rec-Manuales</button>
+                      </div>
                     
                       <!--<div class="col-lg-2">
                           <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
@@ -183,16 +187,19 @@
                   </div>
                 </div>
                 <br>
+
+                <app-table-recmanual>
+                        
+                </app-table-recmanual>
                 
-                <div class="card">
+                <div class="card" *ngIf="view_table">
                   <div class="card-body">
                     <div class="d-flex justify-content-center">
                         <h4 class="">Actividades</h4>
                     </div>
                     <div class="row">
                       <div class="table-responsive">
-                          <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;" 
-                          *ngIf="view_table">
+                          <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;">
                               <thead>
                                 <tr>
                                   <th>#</th>
@@ -230,14 +237,19 @@
                                 </tr>
                               </tbody>
                           </table>
-                          <div class="alert alert-danger" *ngIf="view_data_empty">
-                            <p>No hay datos para mostrar</p>
-                          </div>
+                          
                       </div>
                     </div> 
                   </div>
                 </div>
-              
+                
+                <div class="card" *ngIf="view_data_empty">
+                  <br>
+                  <div class="alert alert-danger" >
+                    <p>No hay datos para mostrar</p>
+                  </div>
+                </div>
+
               </div>
             </div>
               

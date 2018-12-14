@@ -60,5 +60,9 @@ export class OrdenService {
   deleteActivities(fecha:object):Observable<Orden[]>{
     return this.http.post(this.baseUrl+"/delete-activities",fecha,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
-  
+    
+  getRecManual(datos:object):Observable<any[]>{
+    return this.http.post(this.baseUrl+"/get-rec-manual",datos,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
 }
