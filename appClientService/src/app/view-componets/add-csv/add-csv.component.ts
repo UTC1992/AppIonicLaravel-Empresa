@@ -18,6 +18,7 @@ export class AddCsvComponent implements OnInit {
 
   @ViewChild(TableClientComponent) tablaCliente: TableClientComponent;
 
+  today:Date;
   form: FormGroup;
   loading2: boolean = false;
   public loading:boolean;
@@ -35,10 +36,14 @@ export class AddCsvComponent implements OnInit {
     this.createForm();
     this.loading=false;
     this.validaReconexiones=false;
+    this.today =new Date();
    }
 
   ngOnInit() {
+
     this.reloadTableClient();
+   
+   
   }
   //metodo envia file al servidor    
   uploadCsvFile(file){
@@ -130,7 +135,7 @@ export class AddCsvComponent implements OnInit {
 
     dialogConfig.data = {
       title: 'Alerta de ¡Borrado!',
-      description:  'Deseas borrar las actividades subidas el día de hoy,'+
+      description:  'Deseas borrar las actividades subidas la fecha seleccionada,'+
       ' también se eliminarán las asignaciones realizadas a los tecnicos,'+ 
                     ' recuerda que el borrado es permanente.'+
                     ' ¿Deseas realizar está acción?',
@@ -154,9 +159,15 @@ export class AddCsvComponent implements OnInit {
 
   // eliminar actividades
   eliminarActividades(){
-    console.log('ingresando a borrar');
+    var fecha = <HTMLInputElement>document.getElementsByName("fecha_borrado")[0]["value"];
+   
+    if(fecha){
+      console.log('ingresando a borrar');
     if(localStorage.getItem("token")!=null){
-      this.ordenService.deleteActivities().subscribe(
+      let data={
+        'fecha':fecha
+      }
+      this.ordenService.deleteActivities(data).subscribe(
         result=>{
           if(result){
             console.log(result);
@@ -168,6 +179,8 @@ export class AddCsvComponent implements OnInit {
         }
       );
     }
+    }
+    
   }
 
 }

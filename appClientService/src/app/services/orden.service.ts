@@ -11,8 +11,8 @@ export class OrdenService {
   headers=new Headers();
   
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
-  baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
-  //baseUrl='http://localhost:8000/api/angular';
+  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
+  baseUrl='http://localhost:8000/api/angular';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(private http:Http) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
@@ -57,8 +57,8 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/actividades-consolidadas/"+date,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   // borrar actividades del dia
-  deleteActivities():Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/delete-activities",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  deleteActivities(fecha:object):Observable<Orden[]>{
+    return this.http.post(this.baseUrl+"/delete-activities",fecha,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
   
 }

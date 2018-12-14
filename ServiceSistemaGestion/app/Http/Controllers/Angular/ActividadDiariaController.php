@@ -220,9 +220,9 @@ class ActividadDiariaController extends Controller
   }
 
   // eliminar actividades
-  public function eliminarActividades(){
+  public function eliminarActividades(Request $request){
     try {
-      $fecha=date('Y-m-d');
+      $fecha=$request->fecha;
         $ID_EMP=$this->getIdEmpUserAuth();
         $actividad=new ActividadDiaria();
         $cont=$actividad->contarTecnicosAsignados($ID_EMP,$fecha);
