@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OrdenTemp;
 use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
+use App\Models\ReconexionManual;
 
 class TecnicoController extends Controller
 {
@@ -219,6 +220,22 @@ class TecnicoController extends Controller
      */
     public function destroy(Tecnico $tecnico)
     {
+
+    }
+	
+	  // obtener reconexiones manuales
+    public function getReconexionesManualesTecnico(Request $request){
+      try {
+          $recManuales=new ReconexionManual();
+          $result=$recManuales->where('id_tecn',$request->id_tecn)->where('created_at','like','%'.$request->fecha.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
+          if(count($result)>0){
+            return response()->json($result);
+          }else{
+            return response()->json(false);
+          }
+      } catch (\Exception $e) {
+        return response()->json("Error:_ ".$e);
+      }
 
     }
 }

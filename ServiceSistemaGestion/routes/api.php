@@ -50,6 +50,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}/{tipo}','Angular\OrdenTempController@deleteDistribucion');
     //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
     Route::post('delete-activities','Angular\ActividadDiariaController@eliminarActividades');
+	Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
