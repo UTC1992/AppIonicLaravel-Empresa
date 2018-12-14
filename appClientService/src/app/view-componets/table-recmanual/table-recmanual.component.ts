@@ -47,6 +47,10 @@ export class TableRecmanualComponent implements OnInit {
 		this.view_tableRecmanual = false;
 	}
 
+	ocultarEmptyRecManuales(){
+		this.view_data_empty_recmanual=false;
+	}
+
 	exportarExcelRecManual(fecha:any){
 	    let datos = Array();
 	    if(this.recmanuales != null && this.view_tableRecmanual==true){

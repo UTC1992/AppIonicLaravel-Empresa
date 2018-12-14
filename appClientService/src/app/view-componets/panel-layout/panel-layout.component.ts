@@ -17,8 +17,8 @@ import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.comp
 })
 
 export class PanelLayoutComponent implements OnInit {
-  //url_export='http://pruebas.tiendanaturalecuador.online/api/export';
-  url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
+  url_export='http://pruebas.tiendanaturalecuador.online/api/export';
+  //url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
   //url_export='http://localhost:8000/api/export';
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
@@ -26,6 +26,7 @@ export class PanelLayoutComponent implements OnInit {
 
   recmanualesExcel: boolean;
 
+  today:Date;
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
@@ -53,8 +54,10 @@ export class PanelLayoutComponent implements OnInit {
   verActividaes(){
     //ocultar las reconexiones manuales
     this.tablaRecManual.ocultarRecManuales();
+    this.tablaRecManual.ocultarEmptyRecManuales();
     //bloquear descarga de recmanual
     this.recmanualesExcel = false;
+
     var result = document.getElementById("fechaReporte");
     var fecha=<HTMLInputElement>result["value"];
     var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
