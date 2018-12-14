@@ -1,0 +1,41 @@
+<div class="card" *ngIf="view_tableRecmanual">
+  <div class="card-body">
+    <div class="d-flex justify-content-center">
+        <h4 class="">Reconexiones manuales</h4>
+    </div>
+    <div class="row">
+      <div class="table-responsive">
+          <table class="table table-bordered table-condensed table-striped table-sm" style="font-family: calibri; font-size: 11pt;">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>MEDIDOR</th>
+                  <th>LECTURA</th>
+                  <th>OBSERVACIÓN</th>
+                  <th>FOTO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rec of recmanuales | async ; let i=index">
+                  <td>{{i+1}}</td>
+                  <td>{{rec.medidor}}</td>
+                  <td>{{rec.lectura}}</td>
+                  <td>{{rec.observacion}}</td>
+                  <td>{{rec.foto}}</td>
+                  
+                </tr>
+              </tbody>
+          </table>
+          <div class="alert alert-danger" *ngIf="view_data_empty">
+            <p>No hay datos para mostrar</p>
+          </div>
+      </div>
+    </div> 
+  </div>
+</div>
+<div class="card" *ngIf="view_data_empty_recmanual">
+  <br>
+  <div class="alert alert-danger" >
+    <p>No hay datos para mostrar</p>
+  </div>
+</div>

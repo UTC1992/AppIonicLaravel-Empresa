@@ -224,6 +224,7 @@ class TecnicoController extends Controller
     }
 	
   // obtener reconexiones manuales
+
     public function getReconexionesManualesTecnico(Request $request){
       try {
           $id_tecn=$request->id_tecn;
