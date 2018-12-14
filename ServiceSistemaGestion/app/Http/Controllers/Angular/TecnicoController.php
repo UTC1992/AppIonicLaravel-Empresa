@@ -223,11 +223,19 @@ class TecnicoController extends Controller
 
     }
 	
-	  // obtener reconexiones manuales
+	    // obtener reconexiones manuales
     public function getReconexionesManualesTecnico(Request $request){
       try {
+          $id_tecn=$request->id_tecn;
+          $fecha=$request->fecha;
           $recManuales=new ReconexionManual();
-          $result=$recManuales->where('id_tecn',$request->id_tecn)->where('created_at','like','%'.$request->fecha.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
+          $result=$recManuales->where(function($query) use($id_tecn){
+            if($id_tecn!="empty")
+              $query->where('id_tecn',$id_tecn);
+          })->where(function($query) use($fecha){
+            if($fecha!="empty")
+              $query->where('created_at','like','%'.$fecha.'%');
+          })->where('id_emp',$this->getIdEmpUserAuth())->get();
           if(count($result)>0){
             return response()->json($result);
           }else{

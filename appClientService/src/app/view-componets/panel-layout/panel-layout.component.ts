@@ -24,6 +24,8 @@ export class PanelLayoutComponent implements OnInit {
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
 
+  recmanualesExcel: boolean;
+
   fecha_consolidado='';
   loading:boolean;
   exportable:boolean;
@@ -45,12 +47,14 @@ export class PanelLayoutComponent implements OnInit {
 
   ngOnInit() {  
     this.tecnicos=this.tecnicoService.getAllTecnicos();
+    this.recmanualesExcel = false;
   }
 
   verActividaes(){
     //ocultar las reconexiones manuales
     this.tablaRecManual.ocultarRecManuales();
-
+    //bloquear descarga de recmanual
+    this.recmanualesExcel = false;
     var result = document.getElementById("fechaReporte");
     var fecha=<HTMLInputElement>result["value"];
     var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
@@ -61,7 +65,7 @@ export class PanelLayoutComponent implements OnInit {
       this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
       this.ordenes.subscribe(
         data=>{
-          console.log(data);
+          //console.log(data);
           if(data.length>0){
             this.view_table=true;
             this.view_data_empty=false;
@@ -78,14 +82,36 @@ export class PanelLayoutComponent implements OnInit {
     }
     
   }
-  exportarExcel(){
+  exportarExcelActividades(){
+    var date = document.getElementById("fechaReporte")["value"]+"";
+    var vector = date.split("-");
+    var fecha=vector[2]+"-"+vector[1]+"-"+vector[0]
+    if(this.ordenes != null && this.view_table==true){
+      let datos = Array();
       this.ordenes.subscribe(
         data=>{
-          console.log(data);
-          let fechaActual = this.fecha.getDate()+"-"+(this.fecha.getMonth() +1)+"-"+this.fecha.getFullYear();
-          this.excelService.exportAsExcelFile(data, fechaActual+'-CONSOLIDADO');
-        }
-      );
+          for (var i = 0; i < data.length; ++i) {
+            datos.push({
+                      Actividad:    data[i]['n9cono'],
+                      Cuenta:       data[i]['n9cocu'],
+                      Sector:       data[i]['n9cose'],
+                      Medidor:      data[i]['n9meco'],
+                      Lectura:      data[i]['n9leco'],
+                      Cliente:      data[i]['n9nomb'],
+                      HoraRegistro: data[i]['hora'],
+                      Novedades:    data[i]['observacionFin'],
+                      Estado:       data[i]['referencia']
+                    });
+          }
+
+          this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
+        });
+    }
+    
+    if(this.recmanualesExcel==true){
+      this.tablaRecManual.exportarExcelRecManual(fecha);
+    }
+      
   }
 
 
@@ -165,6 +191,7 @@ export class PanelLayoutComponent implements OnInit {
           }
       this.view_table=false;
       this.view_data_empty=false;
+      this.recmanualesExcel=true;
       this.tablaRecManual.cargarDatos(dataRecManual);
       
     }else{

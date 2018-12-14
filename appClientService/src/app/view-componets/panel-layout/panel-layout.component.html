@@ -168,22 +168,10 @@
                     </div>
 
                     <div class="row">
-                      
-                      <div class="col-lg-2">
-                        <button class="btn btn-primary" (click)="verActividaes()">Ver Actividades</button>
-                      </div>
-
-                      <div class="col-lg-2">
-                        <button class="btn btn-warning" (click)="verRecManual()">Ver Rec-Manuales</button>
-                      </div>
-                    
-                      <!--<div class="col-lg-2">
-                          <button (click)="exportarExcel()" class="btn btn-success btn-xs">Exportar a Excel</button>
-                      </div>
-                    -->
+                      <button class="btn btn-primary" style="margin-right: 10px;" (click)="verActividaes()">Ver Actividades</button>
+                      <button class="btn btn-warning" style="margin-right: 10px;" (click)="verRecManual()">Ver Rec-Manuales</button>
+                      <button (click)="exportarExcelActividades()" style="margin-right: 10px;" class="btn btn-success">Exportar a Excel</button>
                     </div>
-                    
-                     
                   </div>
                 </div>
                 <br>
@@ -195,7 +183,7 @@
                 <div class="card" *ngIf="view_table">
                   <div class="card-body">
                     <div class="d-flex justify-content-center">
-                        <h4 class="">Actividades</h4>
+                        <h4 class="">Actividades diarias</h4>
                     </div>
                     <div class="row">
                       <div class="table-responsive">

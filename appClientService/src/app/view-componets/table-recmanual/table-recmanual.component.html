@@ -1,7 +1,7 @@
 <div class="card" *ngIf="view_tableRecmanual">
   <div class="card-body">
     <div class="d-flex justify-content-center">
-        <h4 class="">Reconexiones</h4>
+        <h4 class="">Reconexiones manuales</h4>
     </div>
     <div class="row">
       <div class="table-responsive">
@@ -9,16 +9,10 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>CÓDIGO ACTIVIDAD</th>
-                  <th>CUENTA</th>
-                  <th>SECTOR</th>
                   <th>MEDIDOR</th>
                   <th>LECTURA</th>
-                  <th>CLIENTE</th>
-                  <th>HORA DE REGISTRO</th>
-                  <th>NOVEDADES</th>
-                  <th>ESTADO ACTIVIDAD</th>
-                  <th>INFO. ESTADO</th>
+                  <th>OBSERVACIÓN</th>
+                  <th>FOTO</th>
                 </tr>
               </thead>
               <tbody>
@@ -26,6 +20,8 @@
                   <td>{{i+1}}</td>
                   <td>{{rec.medidor}}</td>
                   <td>{{rec.lectura}}</td>
+                  <td>{{rec.observacion}}</td>
+                  <td>{{rec.foto}}</td>
                   
                 </tr>
               </tbody>
@@ -35,5 +31,11 @@
           </div>
       </div>
     </div> 
+  </div>
+</div>
+<div class="card" *ngIf="view_data_empty_recmanual">
+  <br>
+  <div class="alert alert-danger" >
+    <p>No hay datos para mostrar</p>
   </div>
 </div>
