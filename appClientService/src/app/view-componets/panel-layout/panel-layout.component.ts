@@ -95,15 +95,17 @@ export class PanelLayoutComponent implements OnInit {
         data=>{
           for (var i = 0; i < data.length; ++i) {
             datos.push({
-                      Actividad:    data[i]['n9cono'],
-                      Cuenta:       data[i]['n9cocu'],
-                      Sector:       data[i]['n9cose'],
-                      Medidor:      data[i]['n9meco'],
-                      Lectura:      data[i]['n9leco'],
-                      Cliente:      data[i]['n9nomb'],
-                      HoraRegistro: data[i]['hora'],
-                      Novedades:    data[i]['observacionFin'],
-                      Estado:       data[i]['referencia']
+                      ACTIVIDAD:    data[i]['n9cono'],
+                      CUENTA:       data[i]['n9cocu'],
+                      SECTOR:       data[i]['n9cose'],
+                      MEDIDOR:      data[i]['n9meco'],
+                      LECTURA:      data[i]['n9leco'],
+                      CLIENTE:      data[i]['n9nomb'],
+                      HORATAREA:    data[i]['hora'],
+                      NOVEDADES:    data[i]['observacionFin'],
+                      ESTADO:       data[i]['referencia'],
+                      CUCOON:       data[i]['cucoon'],
+                      CUCOOE:       data[i]['cucooe']
                     });
           }
 
