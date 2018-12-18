@@ -58,10 +58,10 @@ export class TableRecmanualComponent implements OnInit {
 	        data=>{
 	          for (var i = 0; i < data.length; ++i) {
 	            datos.push({
-	                      Medidor:      data[i]['medidor'],
-	                      Lectura:      data[i]['lectura'],
-	                      Novedades:    data[i]['observacion'],
-	                      Foto:       data[i]['foto']
+	                      MEDIDOR:      data[i]['medidor'],
+	                      LECTURA:      data[i]['lectura'],
+	                      NOVEDADES:    data[i]['observacion'],
+	                      FOTO:       data[i]['foto']
 	                    });
 	          }
 
