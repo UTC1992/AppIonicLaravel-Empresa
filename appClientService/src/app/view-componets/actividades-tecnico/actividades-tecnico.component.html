@@ -238,6 +238,7 @@
                     <tr>
                         <th>N°</th>
                         <th>Técnico</th>
+                        <th>Cantón</th>
                         <th>Sector</th>
                         <th># Actividades</th>
                         <th>Tipo actividad</th>
@@ -248,6 +249,7 @@
                     <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="">
                         <td>{{j+1}}</td>
                         <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
+                        <td>{{tecnico_tareas.n9coag}}</td>
                         <td>{{tecnico_tareas.n9cose}}</td>
                         <td>{{tecnico_tareas.cantidad}}</td>
                         <td>{{tecnico_tareas.tipo}}</td>

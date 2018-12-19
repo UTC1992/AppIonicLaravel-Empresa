@@ -97,6 +97,7 @@ export class PanelLayoutComponent implements OnInit {
             datos.push({
                       ACTIVIDAD:    data[i]['n9cono'],
                       CUENTA:       data[i]['n9cocu'],
+                      CANTON:       data[i]['n9coag'],
                       SECTOR:       data[i]['n9cose'],
                       MEDIDOR:      data[i]['n9meco'],
                       LECTURA:      data[i]['n9leco'],
