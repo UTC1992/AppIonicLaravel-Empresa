@@ -169,20 +169,28 @@ class ActividadDiariaController extends Controller
   // consolidar actividades diarias
   public function consolidarActividadesDiarias($date){
     try {
-      $actividad= new ActividadDiaria();
-      $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
-      foreach ($result as $key => $value) {
-        if($value->estado==0){
-          $act=ActividadDiaria::find($value->id_act);
-          $act->estado=3;
-          $act->referencia="Consolidado sin realizar";
-          $act->save();
+      $actividad_asignada=new ActividadDiaria();
+      $res=$actividad_asignada->where('estado',1)->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->exists();
+      if($res){
+        return response()->json(false);
+      }else{
+        $actividad= new ActividadDiaria();
+        $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
+        foreach ($result as $key => $value) {
+          if($value->estado==0){
+            $act=ActividadDiaria::find($value->id_act);
+            $act->estado=3;
+            $act->referencia="Consolidado sin realizar";
+            $act->save();
+          }
         }
+        return response()->json(true);
       }
-      return response()->json(true);
+
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
     }
+    
   }
 
   // obtdener actividades consolidadas

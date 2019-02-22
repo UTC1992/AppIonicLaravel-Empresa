@@ -17,9 +17,9 @@ import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.comp
 })
 
 export class PanelLayoutComponent implements OnInit {
-  url_export='http://pruebas.tiendanaturalecuador.online/api/export';
+  //url_export='http://pruebas.tiendanaturalecuador.online/api/export';
   //url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
-  //url_export='http://localhost:8000/api/export';
+  url_export='http://localhost:8000/api/export';
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
@@ -139,7 +139,7 @@ export class PanelLayoutComponent implements OnInit {
             //this.loading = false;
             alert("Actividades Consolidadas Correctamente");
           }else{
-            alert(result);
+            alert("Debe terminar o eliminar todas las asignaciones pendientes para consolidar los datos.");
             this.spinner.hide();
           }
         }
