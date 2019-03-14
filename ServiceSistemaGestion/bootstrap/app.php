@@ -41,6 +41,7 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+//$app->configure('services');
 /*
 |--------------------------------------------------------------------------
 | Return The Application

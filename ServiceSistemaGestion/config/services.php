@@ -36,4 +36,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'lecturas'=>[
+      'base_url'=>env('LECTURAS_SERVICE_BASE_URL'),
+      'secret'=>env('LECTURAS_SERVICE_SECRET'),
+    ],
+
 ];

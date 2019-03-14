@@ -31,9 +31,11 @@ import { NotFoundComponent } from './view-componets/not-found/not-found.componen
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { PerfilComponent } from './view-componets/perfil/perfil.component';
 
+
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import { AlertaDeleteComponent } from './view-componets/alerta-delete/alerta-delete.component';
 import { TableRecmanualComponent } from './view-componets/table-recmanual/table-recmanual.component';
+import { ChatComponent } from './view-componets/chat/chat.component';
 
 const appRoutes: Routes = [
   { path: '',
@@ -49,6 +51,11 @@ const appRoutes: Routes = [
   },
   { path: 'panel-layout',
     component:PanelLayoutComponent,
+    canActivate:[LoginGuard]
+  },
+  {
+    path:'chat',
+    component:ChatComponent,
     canActivate:[LoginGuard]
   },
   {
@@ -70,6 +77,7 @@ const appRoutes: Routes = [
     redirectTo: 'not-found'
   }
   
+  
 ];
 
 @NgModule({
@@ -89,6 +97,7 @@ const appRoutes: Routes = [
     PerfilComponent,
     AlertaDeleteComponent,
     TableRecmanualComponent,
+    ChatComponent,
   ],
   imports: [
     RouterModule.forRoot(appRoutes,{enableTracing: true}),

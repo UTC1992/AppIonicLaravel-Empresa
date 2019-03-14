@@ -55,9 +55,7 @@ export class LoginComponent implements OnInit {
           }
         },  
         error=>{
-          if(error){
-            alert("Credenciales incorrectas");
-          }
+          console.log(error);
         }
       );
     }

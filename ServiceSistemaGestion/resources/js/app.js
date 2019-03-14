@@ -15,7 +15,11 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('panel-component', require('./components/PanelComponent.vue'));
+Vue.component('form-component', require('./components/FormComponent.vue'));
+Vue.component('table-component', require('./components/TableComponent.vue'));
+Vue.component('generate-component', require('./components/GenerateComponent.vue'));
+
 Vue.component(
     'passport-clients',
     require('./components/passport/Clients.vue')

@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('content')
-  
+
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
@@ -58,8 +58,9 @@
                               {{ $item->id_admin }}
                           </td>
                           <td>
-                              <a class="btn btn-info" href="/empresa/edit/{{$item->id_emp}}">Editar</a>
-                              <a class="btn btn-danger" href="/empresa/delete/{{$item->id_emp}}">Eliminar</a>
+                              <a class="btn btn-info btn-xs" href="/empresa/edit/{{$item->id_emp}}">Editar</a>
+                              <a class="btn btn-danger btn-xs" href="/empresa/delete/{{$item->id_emp}}">Eliminar</a>
+                              <a class="btn btn-warning btn-xs" href="/empresa/gestion/{{$item->id_emp}}">Configuración</a>
                           </td>
                       </tr>
                       @endforeach
