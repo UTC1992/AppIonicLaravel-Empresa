@@ -1,15 +1,18 @@
 // Angular
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 //ngx
+import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { MatTableModule, MatToolbarModule, MatButtonModule, 
   MatSidenavModule, MatIconModule, MatListModule, 
-  MatGridListModule, MatCardModule, MatMenuModule } from '@angular/material';
+  MatGridListModule, MatCardModule, MatMenuModule, 
+  MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatTableDataSource } from '@angular/material';
+import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
@@ -36,11 +39,15 @@ import { AlertaDeleteComponent } from './alerta-delete/alerta-delete.component';
 import { TableRecmanualComponent } from './table-recmanual/table-recmanual.component';
 import { ChatComponent } from './chat/chat.component';
 
+//MB bootstrap
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ModalModule.forRoot(),
+    MDBBootstrapModule.forRoot(),
     BaseRoutingModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -65,6 +72,10 @@ import { ChatComponent } from './chat/chat.component';
     MultiselectDropdownModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatExpansionModule,
+    MatTabsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   declarations: [
     InicioComponent,
@@ -83,9 +94,18 @@ import { ChatComponent } from './chat/chat.component';
     ChatComponent,
     
   ],
+  exports: [
+    MDBBootstrapModule,
+  ],
   providers: [
   ],
-  entryComponents: [AlertaDeleteComponent]
+  entryComponents: [
+    AlertaDeleteComponent
+  ],
+  schemas: [
+    NO_ERRORS_SCHEMA, 
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
   
 })
 export class BaseModule { }

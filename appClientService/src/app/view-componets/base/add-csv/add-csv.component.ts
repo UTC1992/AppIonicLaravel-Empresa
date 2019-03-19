@@ -9,6 +9,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import {MatDialog, MatDialogConfig} from "@angular/material";
 import { AlertaDeleteComponent } from '../alerta-delete/alerta-delete.component';
 
+import { NativeDateAdapter, DateAdapter } from "@angular/material";
+
 @Component({
   selector: 'app-add-csv',
   templateUrl: './add-csv.component.html',
@@ -28,11 +30,13 @@ export class AddCsvComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
-              private ordenService:OrdenService,
-              private fb: FormBuilder,
-              private spinner: NgxSpinnerService,
-              private dialog: MatDialog,
-              ) {
+      private ordenService:OrdenService,
+      private fb: FormBuilder,
+      private spinner: NgxSpinnerService,
+      private dialog: MatDialog,
+      private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('es'); 
     this.createForm();
     this.loading=false;
     this.validaReconexiones=false;

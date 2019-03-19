@@ -1,4 +1,4 @@
-
+<br>
 <div class="row">
     <!-- Modal -->
     <div class="modal fade" id="DetalleTareasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -89,15 +89,15 @@
     <h4 class="">Asignación de actividades</h4>
 </div>
 <br>
-<div class="card">
+<div class="card card-body">
     <ngx-spinner
       bdColor="rgba(51,51,51,0.8)"
       size="large"
       color="#fff"
       type="ball-clip-rotate-multiple">
     </ngx-spinner>
-    <div class="card-body">
-        
+    <mat-card-content>
+        <!--
         <div class="accordion" id="accordionExample">
             <div class="card">
                 <div class="card-header" id="headingOne">
@@ -116,8 +116,9 @@
                     <p>5.- Finalmente presione el botón <strong>"Asignar actividades"</strong></p>
                   </div>
                 </div>
-              </div>
+            </div>
         </div>
+        -->
         <br>
     
         <div class="row">
@@ -143,7 +144,7 @@
                         <option value="empty">Seleccionar</option>
                         <option *ngFor="let canton of cantones | async" value="{{canton.canton}}" >{{canton.canton}}</option>
                     </select>
-                    <label># {{num_cantones}} Cantones Encontrados</label>    
+                    <label># {{num_cantones}} Cantones </label>    
                 </div>
             </div>
             
@@ -151,7 +152,7 @@
                 <div class="" *ngIf="sectores_exists">
                     <label>Sectores:</label> <br>
                     <ss-multiselect-dropdown [options]="myOptions" [(ngModel)]="optionsModel" (ngModelChange)="onChange($event)"></ss-multiselect-dropdown>
-                    <br><label># {{num_sectores}} Sectores Encontrados</label>   
+                    <br><label># {{num_sectores}} Sectores </label>   
                 </div>
             </div>
             
@@ -163,45 +164,70 @@
             </div>
 
         </div>
-        
         <div class="row">
-            <div class="col loading d-flex justify-content-center" *ngIf="loading">
-                <img src="assets/img/cargando.gif">
-            </div>    
-        </div>
-        
-        <div class="card card-body">
-            <div class="row">
-                <div class="col d-flex justify-content-center">
-                    <h5 class="">Técnicos sin asignar</h5>    
+            <div class="text-center col col-lg-12">
+                <div class="alert alert-info">
+                        Actividades restantes: {{Ordenes}}
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col-lg-6 col-md-6" *ngFor="let tecnico of tecnicos | async">
-                    <div class="form-inline">
-                        <label for="cbox2" style="margin-right: 5px;"> {{ tecnico.nombres}} {{ tecnico.apellidos}}</label>  
-                        <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
-                    </div>
-                </div>
+            <div class="text-center col col-lg-12">
+                <button class="btn btn-success" (click)="buildTask()" >Asignar actividades </button>  
             </div>
         </div>
         <br>
-        <div class="row">    
-            <div class="col col-lg-6">
-                <div class="alert alert-info">
-                     Total de actividades por asignar:{{Ordenes}}
-                </div>
-            </div>
-            <div class="col col-lg-3">
-              <button class="btn btn-success" (click)="buildTask()" >Asignar actividades </button>  
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <h5 class="">Técnicos sin asignar</h5>    
             </div>
         </div>
-
-    </div>
-
-    
-    
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                Los técnicos restantes son: {{ tecnicos.length }}
+                Oprima para mostralos
+                </mat-expansion-panel-header>
+                <!--<div class="col-lg-6 col-md-6" *ngFor="let tecnico of tecnicos">
+                        <div class="form-inline">
+                            <label for="cbox2" style="margin-right: 5px;"> {{ tecnico.nombres}} {{ tecnico.apellidos}}</label>  
+                            <input class="tec" value="" type="checkbox" id="{{tecnico.id_tecn}}" #inputRef >
+                        </div>
+                    </div>
+                -->
+                <div class="table-responsive">
+                    <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
+                    (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
+                        <div style="width: 600px;">
+                            <mat-list-option *ngFor="let tecnico of tecnicos" [value]="tecnico.id_tecn">
+                                    {{ tecnico.apellidos}} {{ tecnico.nombres}}
+                            </mat-list-option>
+                        </div>
+                    </mat-selection-list>
+                            
+                </div>
+                <!--
+                    <p>Selected:</p>
+                    <ul>
+                    <li *ngFor="let i of tecnico.selectedOptions.selected">
+                        {{ i.value }}
+                    </li>
+                    </ul>
+                    <p>
+                    Options selected: {{tecnico.selectedOptions.selected.length}}
+                    </p>
+                -->
+            
+            </mat-expansion-panel>
+        </mat-accordion>
+            
+        <br>
+        <!--
+        <div class="row">    
+            <div class="text-center col col-lg-12">
+                <button class="btn btn-success" (click)="buildTask()" >Asignar actividades </button>  
+            </div>
+        </div>
+        -->
+    </mat-card-content>
 </div>
 
     <!--<div class="row">
@@ -248,22 +274,29 @@
                 <tbody>
                     <tr *ngFor="let tecnico_tareas of actividades | async; let j=index" class="">
                         <td>{{j+1}}</td>
-                        <td>{{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}</td>
+
+                        <td>
+                            <div style="width: 250px;">
+                                {{tecnico_tareas.nombres}} {{tecnico_tareas.apellidos}}
+                            </div>
+                        </td>
+                        
                         <td>{{tecnico_tareas.n9coag}}</td>
                         <td>{{tecnico_tareas.n9cose}}</td>
                         <td>{{tecnico_tareas.cantidad}}</td>
                         <td>{{tecnico_tareas.tipo}}</td>
                         <td>
-                            <button type="button" style="margin-right: 5px;" (click)="verDetalleActividades(tecnico_tareas.id_tecn, tecnico_tareas.tipo,tecnico_tareas.n9cose)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
-                                Ver detalle    
-                              </button>
-                            <button class="btn btn-warning" (click)="AsignarActividades(tecnico_tareas.id_tecn)" style="margin-right: 5px;">
-                                  Asignar de nuevo
-                            </button>
-                            <button class="btn btn-danger" (click)="eliminarAsignacion(tecnico_tareas.id_tecn, tecnico_tareas.n9cose, tecnico_tareas.cantidad, tecnico_tareas.n9cono)">
-                                  Eliminar asignación
-                            </button>  
-                              
+                            <div style="width: 250px;">
+                                <button type="button" style="margin-right: 5px;" (click)="verDetalleActividades(tecnico_tareas.id_tecn, tecnico_tareas.tipo,tecnico_tareas.n9cose)" class="btn btn-info" data-toggle="modal" data-target="#DetalleTareasModal">
+                                    Detalle    
+                                    </button>
+                                <button class="btn btn-warning" (click)="AsignarActividades(tecnico_tareas.id_tecn)" style="margin-right: 5px;">
+                                        Asignar
+                                </button>
+                                <button class="btn btn-danger" (click)="eliminarAsignacion(tecnico_tareas.id_tecn, tecnico_tareas.n9cose, tecnico_tareas.cantidad, tecnico_tareas.n9cono)">
+                                        Eliminar
+                                </button>  
+                            </div>
                         </td>
                     </tr>
                 </tbody>

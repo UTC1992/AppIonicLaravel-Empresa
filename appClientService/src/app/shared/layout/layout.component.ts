@@ -16,15 +16,21 @@ import { LoginService } from '../../services/login.service';
 export class LayoutComponent {
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches)
-    );
-    
+  .pipe(
+  map(result => result.matches)
+  );
+  
+  usuario: any;
+  
   constructor(
     private breakpointObserver: BreakpointObserver,
     public loginService: LoginService,
     private router:Router
     ) {}
+
+    ngOnInit(): void {
+      this.usuario = localStorage.getItem("nombre");
+    }
 
     logout(): void{
       this.loginService.logout();

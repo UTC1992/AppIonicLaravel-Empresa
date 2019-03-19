@@ -22,7 +22,8 @@ export class ActividadesTecnicoComponent implements OnInit {
   optionsModel: number[];
   myOptions: IMultiSelectOption[];
   countryForm: FormGroup;
-  tecnicos:Observable<Tecnico[]>; 
+  tecnicos:Tecnico[] = [];
+
   public loading: boolean;
   res: Observable<any>;
   actividades:Observable<any[]>;
@@ -46,6 +47,8 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   objTecnicoDistribucion:TecnicoDistribucion;
 
+  tecnicoSeleccionado: string;
+  listTecnicosSeleccionados: any[];
 
   @ViewChild('inputRef') inputRef: ElementRef;
   constructor(private tecnicoService:TecnicoService, 
@@ -61,12 +64,28 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.spinner.show();
    }
 
+   
+
+  onSelection(e, list){
+    this.tecnicoSeleccionado = e.option.value;
+    this.listTecnicosSeleccionados = list;
+    console.log(list[0].value);
+  }
+
   ngOnInit() {
-    this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
+    this.mostrarTecnicos();
     this.actividades=this.tecnicoService.showDistribucion();
     this.countActivities();
     //this.mostrarDistribucion();
   }
+
+  mostrarTecnicos(){
+    this.tecnicoService.getTecnicosSinActividades().subscribe(res =>{
+      //console.log(res);
+      this.tecnicos = res;
+    });
+  }
+
   //contar total cantidades por asignar
   countActivities(){
     this.ordenServices.getOrdenes().subscribe(
@@ -87,7 +106,7 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   // recargar componentes
   reloadComponent(){
-    this.tecnicos =this.tecnicoService.getTecnicosSinActividades();
+    this.mostrarTecnicos();
     this.actividades=this.tecnicoService.showDistribucion();
     this.countActivities();
   }
@@ -323,15 +342,12 @@ export class ActividadesTecnicoComponent implements OnInit {
       var array_actividades:String[]=[];
       var cont=0;
       var cont_tecnicos=0;
-      var result = document.getElementsByClassName("tec");
-    for(var i=0; i < result.length; i++){ 
-      if(<HTMLInputElement>result[i]['checked']){
-        var id_tecn =result[i].getAttribute("id");
-        array_tecnicos[cont_array_tecn]=id_tecn;
-        cont_tecnicos++;
-        cont_array_tecn++;
-      }    
-    }
+      
+      for(var i=0; i < this.listTecnicosSeleccionados.length; i++){ 
+          array_tecnicos[cont_array_tecn]=this.listTecnicosSeleccionados[i].value;
+          cont_tecnicos++;
+          cont_array_tecn++;
+      }
       
     }
 

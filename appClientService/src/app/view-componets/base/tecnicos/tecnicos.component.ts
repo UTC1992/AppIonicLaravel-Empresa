@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { TecnicoService } from '../../../services/tecnico.service';
 import { Tecnico } from '../../../models/tecnico';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import {BsModalRef, BsModalService,  } from 'ngx-bootstrap/modal';
+import {MatTableDataSource} from '@angular/material';
 
 @Component({
   selector: 'app-tecnicos',
@@ -14,17 +16,34 @@ export class TecnicosComponent implements OnInit {
   form_tecnico_edicion: FormGroup;
   loading: boolean = false;
   tecn:any;
-  tecnicos:Observable<Tecnico[]>; 
+  tecnicos:Observable<Tecnico[]>;
+
+  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 'email', 'estado', 'acciones'];
+  dataSource = new MatTableDataSource();
+
   constructor(
-              private tecnicoService:TecnicoService,
-              private formBuilder: FormBuilder,
-              private spinner: NgxSpinnerService
+    private tecnicoService:TecnicoService,
+    private formBuilder: FormBuilder,
+    private spinner: NgxSpinnerService,
+    private modalService: BsModalService,
+    public modalRef: BsModalRef,
   ) { 
     this.createForm();
   }
 
   ngOnInit() {
-    this.tecnicos =this.tecnicoService.getAllTecnicos();
+    this.mostrarTecnicos();
+  }
+
+  mostrarTecnicos(){
+    this.tecnicoService.getAllTecnicos().subscribe(res =>{
+      this.dataSource = new MatTableDataSource(res);
+    });
+    
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   deleteTecnico(id){
@@ -46,9 +65,12 @@ export class TecnicosComponent implements OnInit {
   updateTecnico(id){
     alert(id);
   }
-  open(id) {
+  open(id, template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
     this.tecn=this.tecnicoService.getTecnicoById(id).subscribe(
-      res=>{this.tecn= this.createformEdit(res)}
+      res=>{
+        this.tecn= this.createformEdit(res);
+      }
     );
   }
 

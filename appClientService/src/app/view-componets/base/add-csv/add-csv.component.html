@@ -1,4 +1,4 @@
-
+<br>
 <div class="d-flex justify-content-center">
     <h4 class="">Ruta diaria</h4>
 </div>
@@ -37,7 +37,8 @@
     		<div class="col d-flex justify-content-center">
     			<form [formGroup]="form" (ngSubmit)="onSubmit()">
 				  <div class="form-group">
-				    <input type="file" class="btn btn-info form-control" id="archivo"  name="archivo" (change)="onFileChange($event)" #fileInput >
+						<input type="file" class="btn btn-info form-control" style="height: 45px;" id="archivo"  
+						name="archivo" (change)="onFileChange($event)" #fileInput >
 				  </div>
 				  <div class="form-group">
 				  	<button type="submit" [disabled]="form.invalid || loading" class="btn btn-success">Subir Archivo <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading2"></i></button>
@@ -55,6 +56,13 @@
 						<button type="button"  (click)="validarBorradoDeActividades()" class="btn btn-danger">Borrar ruta<i class="fa fa-spinner fa-spin fa-fw" *ngIf="loadingRecManual"></i></button>
 					</div>
 				</div>
+				<!--
+				<mat-form-field>
+						<input matInput [matDatepicker]="picker" placeholder="Choose a date">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker #picker></mat-datepicker>
+					</mat-form-field>
+				-->
 			</div>
 		</div>
 		
