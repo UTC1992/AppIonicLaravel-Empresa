@@ -47,7 +47,7 @@ export class PanelLayoutComponent implements OnInit {
    }
 
   ngOnInit() {  
-    this.tecnicos=this.tecnicoService.getAllTecnicos();
+    this.tecnicos=this.tecnicoService.getTecnicosCortes();
     this.recmanualesExcel = false;
   }
 

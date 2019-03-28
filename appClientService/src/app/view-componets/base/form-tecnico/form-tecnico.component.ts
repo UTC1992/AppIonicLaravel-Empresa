@@ -36,7 +36,8 @@ export class FormTecnicoComponent implements OnInit {
       cedula: ['', Validators.required],
       telefono: ['', Validators.required],
       email: ['', Validators.required],
-      estado:['1', Validators.required]
+      estado:['1', Validators.required],
+      actividad:['',Validators.required]
     });
   }
   /*
@@ -55,6 +56,7 @@ export class FormTecnicoComponent implements OnInit {
     input.append('cedula', this.form_tecnico.get('cedula').value);
     input.append('telefono', this.form_tecnico.get('telefono').value);
     input.append('email', this.form_tecnico.get('email').value);
+    input.append('actividad', this.form_tecnico.get('actividad').value);
     input.append('estado', this.form_tecnico.get('estado').value);
     return input;
   }
@@ -65,17 +67,19 @@ export class FormTecnicoComponent implements OnInit {
     
     this.tecnicoService.insertTecnico(formModel)
     .subscribe(
-      file=>console.log(file),
-      error=>console.log(<any>error)
+      file=>{
+        if(file){
+          alert('Técnico creado correctamente!');
+          this.spinner.hide();
+          location.reload();
+        }else{
+          alert('Cédula repetida !');
+          this.spinner.hide();
+        }
+      }
+
     );
-    
-    setTimeout(() => {
-      alert('Técnico creado correctamente!');
-      this.spinner.hide();
-      //this.loading = false;
-      //this.clearFile();
-      location.reload();
-    }, 1000);
+
    
   }
 
@@ -85,6 +89,7 @@ export class FormTecnicoComponent implements OnInit {
     this.form_tecnico.get('cedula').setValue(null);
     this.form_tecnico.get('telefono').setValue(null);
     this.form_tecnico.get('email').setValue(null);
+    this.form_tecnico.get('actividad').setValue(null);
   }
   
 }

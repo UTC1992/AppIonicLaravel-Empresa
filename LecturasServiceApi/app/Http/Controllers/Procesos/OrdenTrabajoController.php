@@ -21,7 +21,7 @@ class OrdenTrabajoController extends Controller
     }
 
     // metodo devuelve actividades del dia por idempresa y paginado
-    public function getAllActivitiesByEmpresa(Request $request){
+    public function getAllRutasByEmpresa(Request $request){
       try {
         $tabla="";
         $paginado=(int)$request->paginado;
@@ -47,33 +47,78 @@ class OrdenTrabajoController extends Controller
     }
 
 /**
- * Distribucion de actividades a tecnicos
+ * Distribucion de rutas de lecturas a técnicos de empresa
  */
-    public function distribuirActividades(Request $request){
+    public function distribuirRutas(Request $request){
       try {
-        $tabla="";
-        $campoFiltro=$request->columna;
-        $valorCampoFiltro=$request->valor;
-        $IdTecnico=$request->idTecnico;
+        $idTecnico= $request->idTecnico;
         $idEmpresa=$request->idEmpresa;
-        $configuracion=$this->getConfigCompany($idEmpresa);
-        if(count($configuracion)<=0){
-         return response()->json("error: No existen registros para la empresa con ID: ".$idEmpresa." en la base de datos");
-        }
-          foreach ($configuracion as $key => $value) {
+        $lecturasArray=array();
+        $lecturasArray= $request->lecturas;
+        $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+        $dataInsert=array();
+        $cont=0;
 
-            if($value->key=="table"){
-              $tabla->$value->value;
-            }
-          if($value->key=="column" && $value->value==$campoFiltro){
-            $campoFiltro=$value->value;
+        $ids=array();
+        foreach ($lecturasArray as $key => $value) {
+          $data=array();
+          $data["estado"]=0;
+          $data["id_lectura"]=$value["id"];
+          $data["id_empresa"]=$idEmpresa;
+          $data["id_tecnico"]=$idTecnico;
+          $dataInsert[$cont]=$data;
+
+          $ids[$cont]=$value["id"];
+
+          if($cont>=1000){
+            DB::table('orden_trabajo')->insert($dataInsert);
+
+            DB::table($tablaLecturasCompany)
+                   ->whereIn('id',$ids)
+                   ->update(['estado' => 1]);
+
+            $ids=array();
+            $dataInsert=array();
+            $cont=0;
           }
+          $cont++;
         }
+        if(count($dataInsert)>0){
+          DB::table('orden_trabajo')->insert($dataInsert);
+          DB::table($tablaLecturasCompany)
+                 ->whereIn('id',$ids)
+                 ->update(['estado' => 1]);
+          $dataInsert=array();
+        }
+
+        return response()->json(true);
+
       } catch (\Exception $e) {
         return response()->json("error: ".$e);
       }
     }
 
+
+
+ /**
+  * obtiene nombre de tabla de actividades de la configuración de la empresa
+  */
+     private function getTableCompany($idEmpresa){
+       try {
+         $tabla="";
+         $config = DB::table('configuraciones')->where('idEmpresa', $idEmpresa)->get();
+         foreach ($config as $key => $value) {
+           if($value->key=="table"){
+             $tabla=$value->value;
+             break;
+           }
+         }
+         return $tabla;
+       } catch (\Exception $e) {
+         return response()->json("error: ".$e);
+       }
+
+     }
 
     // buscar en la  base de datos
   private function getAll($tabla, $paginado){
@@ -83,7 +128,6 @@ class OrdenTrabajoController extends Controller
     } catch (\Exception $e) {
         return response()->json("error: ".$e);
     }
-
   }
 
   private function getConfigCompany($idCompany){
@@ -91,12 +135,5 @@ class OrdenTrabajoController extends Controller
     return $config;
   }
 
-  private function getDataFilter($tabla,$campoFiltro,$valorCampoFiltro){
-    try {
-      $actividades = DB::table($tabla)->where($campoFiltro,$valorCampoFiltro)->where('estado',0)->get();
-      return $actividades;
-    } catch (\Exception $e) {
-        return response()->json("error: ".$e);
-    }
-  }
+
 }

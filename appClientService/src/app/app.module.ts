@@ -40,7 +40,7 @@ import { LoginComponent } from './view-componets/login/login.component';
     AppComponent,
     LayoutComponent,
     WelcomeComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     AppRoutingModule,

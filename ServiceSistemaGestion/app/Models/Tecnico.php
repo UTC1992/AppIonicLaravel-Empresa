@@ -17,7 +17,8 @@ class Tecnico extends Model
     'telefono',
     'email',
     'estado',
-    'password'
+    'password',
+    'actividad'
   ];
   protected $hidden = [
     'remember_token'

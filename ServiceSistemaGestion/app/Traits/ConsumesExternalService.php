@@ -24,4 +24,36 @@ trait ConsumesExternalService
 
     return $response->getBody()->getContents();
   }
+
+/**
+ * envia archivos al servicio
+ */
+  public function performRequestFiles($method,$requestUrl,$file,$id){
+    $client= new Client([
+      'base_uri'=>$this->baseUrl,
+    ]);
+
+    if(isset($this->secret)){
+      $headers['Authorization']=$this->secret;
+    }
+
+    $response = $client->request($method, $requestUrl, [
+        'multipart' => [
+            [
+                'name'     => 'id',
+                'contents' => $id,
+            ],
+            [
+                'name'     => 'file',
+                'contents' => fopen($file, 'r')
+            ],
+
+        ],
+        'headers'=>$headers
+        ]);
+
+        return $response->getBody()->getContents();
+  }
+
+
 }

@@ -41,6 +41,7 @@ import { ChatComponent } from './chat/chat.component';
 
 //MB bootstrap
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { LecturasComponent } from './lecturas/lecturas.component';
 
 @NgModule({
   imports: [
@@ -92,6 +93,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     AlertaDeleteComponent,
     TableRecmanualComponent,
     ChatComponent,
+    LecturasComponent,
     
   ],
   exports: [

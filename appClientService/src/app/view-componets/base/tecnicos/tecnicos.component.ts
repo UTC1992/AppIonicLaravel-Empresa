@@ -18,7 +18,7 @@ export class TecnicosComponent implements OnInit {
   tecn:any;
   tecnicos:Observable<Tecnico[]>;
 
-  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 'email', 'estado', 'acciones'];
+  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 'email', 'estado','actividad', 'acciones'];
   dataSource = new MatTableDataSource();
 
   constructor(
@@ -82,6 +82,7 @@ export class TecnicosComponent implements OnInit {
       cedula: ['', Validators.required],
       telefono: ['', Validators.required],
       email: ['', Validators.required],
+      actividad:['',Validators.required],
       estado:['', Validators.required]
     });
   }
@@ -94,6 +95,7 @@ export class TecnicosComponent implements OnInit {
       cedula: [object.cedula, Validators.required],
       telefono: [object.telefono, Validators.required],
       email: [object.email, Validators.required],
+      actividad:[object.actividad,Validators.required],
       estado:['1', Validators.required]
     });
   }
@@ -107,6 +109,7 @@ export class TecnicosComponent implements OnInit {
     input.append('cedula', this.form_tecnico_edicion.get('cedula').value);
     input.append('telefono', this.form_tecnico_edicion.get('telefono').value);
     input.append('email', this.form_tecnico_edicion.get('email').value);
+    input.append('actividad', this.form_tecnico_edicion.get('actividad').value);
     input.append('estado', this.form_tecnico_edicion.get('estado').value);
     return input;
   }

@@ -1,6 +1,7 @@
 export class Tecnico {
 
     id_tecn:string;
+    actividad:string
     nombres:string;
     apellidos:string;
     codigo:string;

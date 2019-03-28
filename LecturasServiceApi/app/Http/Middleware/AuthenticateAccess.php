@@ -21,8 +21,7 @@ class AuthenticateAccess
         return $next($request);
       }
 
-      //abort(response('Unauthorized.', 401));
-    //  App::abort(404, 'message');
+      abort(403, 'No tienes autorización para ingresar.');
       return response('Unauthorized.', 401);
     }
 }

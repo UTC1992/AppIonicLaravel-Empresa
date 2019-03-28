@@ -58,7 +58,7 @@ class OrdenTempController extends Controller
                           ->where('id_act','=',$value->id_act)
                           ->where('n9cose','=',$sector)
                           ->first();
-        if($resultAct['id_act'] == $value->id_act 
+        if($resultAct['id_act'] == $value->id_act
           && $resultAct['n9cose'] == $sector
           && $resultAct['n9cono'] == $tipo
         ){

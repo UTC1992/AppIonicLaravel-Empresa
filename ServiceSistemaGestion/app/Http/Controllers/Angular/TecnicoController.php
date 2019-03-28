@@ -16,16 +16,46 @@ class TecnicoController extends Controller
     $this->middleware('auth:api');
   }
     /**
-     * Display a listing of the resource.
+     * obtiene técnicos de cortes
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+      try {
         $tecnico=new Tecnico();
         $result= $tecnico->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
         return response()->json($result);
+      } catch (\Exception $e) {
+          return response()->json($e);
+      }
     }
+
+    /**
+     * obtener tecnicos de cortes
+     */
+     public function getTecnicosCortes(){
+       try {
+         $tecnico=new Tecnico();
+         $result= $tecnico->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('actividad','cortes')->get();
+         return response()->json($result);
+       } catch (\Exception $e) {
+           return response()->json($e);
+       }
+     }
+
+     /**
+      * obtener tecnicos de lecturas
+      */
+      public function  getTecnicosLecturas(){
+        try {
+          $tecnico=new Tecnico();
+          $result= $tecnico->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('actividad','lecturas')->get();
+          return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+      }
 
     // obtener id empresa de usuario autenticado
     private function getIdEmpUserAuth(){
@@ -57,7 +87,10 @@ class TecnicoController extends Controller
     public function store(Request $request)
     {
       try {
-
+        $exist_cedula= Tecnico::where('id_emp', $this->getIdEmpUserAuth())->where('cedula',$request->cedula)->exists();
+        if($exist_cedula){
+          return response()->json(0);
+        }
         $tecnico=new Tecnico();
         $tecnico->nombres=$request->nombres;
         $tecnico->apellidos=$request->apellidos;
@@ -65,6 +98,7 @@ class TecnicoController extends Controller
         $tecnico->telefono=$request->telefono;
         $tecnico->email=$request->email;
         $tecnico->estado=$request->estado;
+        $tecnico->actividad=$request->actividad;
         $tecnico->asignado=0;
         $tecnico->borrado=0;
         $tecnico->id_emp=$this->getIdEmpUserAuth();
@@ -93,17 +127,25 @@ class TecnicoController extends Controller
 
     }
 
-    /**
-    *
-    */
-
     //tecnicos sin asignar actividades
     public function getTecnicosSinActividades(){
       $tecnico=new Tecnico();
-      $result=$tecnico->where('asignado',0)->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
+      $result=$tecnico->where('asignado',0)->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('actividad','cortes')->get();
       return response()->json($result);
     }
 
+
+
+    //tecnicos sin asignar actividades de lecturas
+    public function getTecnicosSinActividadesLecturas(){
+      $tecnico=new Tecnico();
+      $result=$tecnico->where('asignado',0)->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('actividad','lecturas')->get();
+      return response()->json($result);
+    }
+
+    /**
+     * borrar técnico
+     */
     public function delete($id_tecnico){
       $tecnico=new Tecnico();
       $result=$tecnico->where('id_tecn',$id_tecnico)->where('id_emp',$this->getIdEmpUserAuth())->first();
@@ -116,7 +158,6 @@ class TecnicoController extends Controller
       }else{
           return response()->json(false);
       }
-
     }
     /**
      * Show the form for editing the specified resource.
@@ -222,7 +263,7 @@ class TecnicoController extends Controller
     {
 
     }
-	
+
   // obtener reconexiones manuales
 
     public function getReconexionesManualesTecnico(Request $request){

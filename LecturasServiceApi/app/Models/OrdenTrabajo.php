@@ -11,13 +11,13 @@ class OrdenTrabajo extends Model
 {
 
     protected $table="orden_trabajo";
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'idorden_trabajo';
     protected $fillable = [
         'estado','created_at','updated_at','id_lectura','id_tecnico','id_empresa'
     ];
 
     protected $hidden = [
-        'idorden_trabajo',
+        'idorden_trabajo'
     ];
 
 

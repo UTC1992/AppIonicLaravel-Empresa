@@ -19,6 +19,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { AlertaDeleteComponent } from './alerta-delete/alerta-delete.component';
 import { TableRecmanualComponent } from './table-recmanual/table-recmanual.component';
 import { ChatComponent } from './chat/chat.component';
+import { LecturasComponent } from './lecturas/lecturas.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,11 @@ const routes: Routes = [
       {
         path:'perfil',
         component:PerfilComponent,
+        canActivate:[LoginGuard]
+      },
+      {
+        path:'lecturas',
+        component: LecturasComponent,
         canActivate:[LoginGuard]
       },
       {

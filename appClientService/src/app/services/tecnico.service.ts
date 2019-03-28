@@ -22,6 +22,21 @@ export class TecnicoService {
   getAllTecnicos():Observable<Tecnico[]>{
     return this.http.get(this.baseUrl+"/tecnicos",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
+
+  /**
+   * obtiene tecnicos de cortes
+   */
+  getTecnicosCortes():Observable<Tecnico[]>{
+    return this.http.get(this.baseUrl+"/tecnicos-cortes",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
+  /**
+   * obtiene tecnicos de lecturas
+   */
+  getTecnicosLecturas():Observable<Tecnico[]>{
+    return this.http.get(this.baseUrl+"/tecnicos-lecturas",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
   //metodo tecnicos con actividades
   getTecnicosSinActividades():Observable<Tecnico[]>{
     return this.http.get(this.baseUrl+"/tecnicos-sin-actividades",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
@@ -73,6 +88,16 @@ export class TecnicoService {
   //metodo obtien tecnico por tarea 
   deleteDistribucion(id_tecn,sector, cantidad, tipo):Observable<any>{
     return this.http.get(this.baseUrl+"/delete-distribucion/"+id_tecn+"/"+sector+"/"+cantidad+"/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+  }
+
+  /**
+   * SECCION SERVICIOS DE LECTURAS
+   */
+  /**
+   * obtener técnicos de lecturas
+   */
+  getTecnicosLecturasSinAsignar():Observable<Tecnico[]>{
+    return this.http.get(this.baseUrl+"/tecnicos-sin-lecturas",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
 
 }

@@ -2,11 +2,15 @@ import {Component, OnDestroy} from '@angular/core';
 
 import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {  Modulo } from "../../models/modulo";
+import {PermisosService} from '../../services/permisos.service';
 
 import { LoginService } from '../../services/login.service';
 //import swal from 'sweetalert2';
+
+
 
 @Component({
   selector: 'app-dashboard',
@@ -15,21 +19,39 @@ import { LoginService } from '../../services/login.service';
 })
 export class LayoutComponent {
 
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
   .pipe(
   map(result => result.matches)
   );
-  
+  /** 
+   * atributos de clase
+   */
   usuario: any;
-  
+  modulo:Modulo;
+  modulos:Modulo[]=[];
+ // tecnicos:Observable<Tecnico[]>;
+  //modulos:Observable<Modulo[]>;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public loginService: LoginService,
-    private router:Router
+    private router:Router,
+    private permisosService:PermisosService
     ) {}
 
     ngOnInit(): void {
       this.usuario = localStorage.getItem("nombre");
+      this.permisosService.getModulos().subscribe(
+        result=> {
+          this.modulos=result;
+        }
+      );
+      /*
+      this.modulos=[
+        {nombre:'Cortes',ruta:'/base/inicio'},
+        {nombre:'Tecnicos',ruta:'/base/tecnicos'}
+      ];*/
     }
 
     logout(): void{

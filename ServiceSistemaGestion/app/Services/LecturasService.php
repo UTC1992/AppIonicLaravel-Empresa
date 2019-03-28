@@ -69,7 +69,7 @@ class LecturasService
   /**
    * validar exixtencia de confoguracion
    */
-   public function validarConfiguracion($id){
+  public function validarConfiguracion($id){
      return $this->performRequest('GET',"/configuraciones/validate/{$id}");
    }
 
@@ -77,7 +77,50 @@ class LecturasService
     * borrar tabla de actividdes de la empresa
     */
 
-    public function dropTable($id){
+  public function dropTable($id){
       return $this->performRequest('GET',"/configuraciones/drop/{$id}");
+  }
+
+    /**
+     * upload txt
+     */
+  public function uploadFile($file,$id){
+    return $this->performRequestFiles('POST',"/upload",$file,$id);
+  }
+
+  /**
+   * obtener campos de distribución
+   */
+  public function getFilterFields($data){
+    return $this->performRequest('POST',"/filtros",$data);
+  }
+
+  /**
+   * obtener datos del primer filtro
+   */
+   public function getFirstFilterFields($data){
+     return $this->performRequest('POST',"/data-first",$data);
+   }
+
+   /**
+    * obtener datos de filtro
+    */
+  public function getDataFilter($data){
+     return $this->performRequest('POST',"/data-filter",$data);
+  }
+
+  /**
+   * obtener datos de distribucioin mediante filtros
+   */
+   public function getDataDistributionService($data){
+     return $this->performRequest('POST',"/data",$data);
+   }
+
+   /**
+    * distribuir rutas de trabajo a técnico seleccionado
+    */
+
+    public function distribuirRutaService($data){
+      return $this->performRequest('POST',"/distribuir",$data);
     }
 }

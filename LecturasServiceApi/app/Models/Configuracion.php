@@ -34,8 +34,8 @@ class Configuracion extends Model
             $table->string($value->value)->nullable();;
           }
         }
-        $table->decimal("longitud")->nullable();;
-        $table->decimal("latitud")->nullable();;
+        $table->string("longitud")->nullable();;
+        $table->string("latitud")->nullable();;
         $table->integer("idEmpresa")->nullable();;
         $table->boolean("estado")->nullable();;
         $table->timestamps();

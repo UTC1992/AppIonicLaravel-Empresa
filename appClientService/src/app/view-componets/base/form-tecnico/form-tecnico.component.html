@@ -5,6 +5,15 @@
       type="ball-clip-rotate-multiple">
     </ngx-spinner>
 <form [formGroup]="form_tecnico" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+        <label for="nombres">Actividad Técnico:</label>
+            <select class="form-control" id="actividad" name="actividad" formControlName="actividad" required="">
+            <option value="empty">Seleccionar</option>
+            <option value="cortes">CORTES</option>
+            <option value="lecturas">LECTURAS</option>
+        </select>   
+    </div>
     <div class="form-group">
         <label for="nombres">Nombre:</label>
         <input type="text" class="form-control"  id="nombres" placeholder="" formControlName="nombres" required="">

@@ -24,7 +24,20 @@ $router->get('/configuraciones/drop/{id}','Configuracion\ConfigController@dropTa
 
 $router->post('/configuraciones/crear','Configuracion\ConfigController@createTableLecturasEmpresa');
 $router->post('/actividades','Procesos\OrdenTrabajoController@getAllActivitiesByEmpresa');
-$router->post('/filtro','Procesos\ProcesosController@getColumnFilter');
+$router->post('/filtros','Procesos\ProcesosController@getColumnsFilter');
+$router->post('/data-filter','Procesos\ProcesosController@getDataGroupBy');
+$router->post('/data-first','Procesos\ProcesosController@getDataFirstFilter');
+$router->post('/data','Procesos\ProcesosController@getDataToDistribution');
+
+/**
+ * rutras de orden trabaja distribucion
+ */
+ $router->post('/distribuir','Procesos\OrdenTrabajoController@distribuirRutas');
 
 // rutas de carga
 $router->post('/upload','Procesos\ProcesosController@carga');
+
+/**
+ * rutas de app móvil
+ */
+$router->get('/data-movil/{idEmpresa}/{idTecnico}','Movil\MobileController@index');
