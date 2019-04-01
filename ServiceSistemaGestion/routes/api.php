@@ -16,24 +16,31 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+/**
+ * ruta de gestion usuario y permisos
+ */
 Route::get('usuarioAutenticado','AuthApi\SecurityController@getUserData');
 Route::post('empresaActiva','AuthApi\SecurityController@validarEmpresaActiva');
 Route::post('editEmpresa','AuthApi\SecurityController@editarEmpresa');
 Route::post('editNombre','AuthApi\SecurityController@editarNombre');
 Route::post('editEmail','AuthApi\SecurityController@editarEmail');
 Route::post('editPassword','AuthApi\SecurityController@editarPassword');
+Route::get('modulos','AuthApi\PermisosController@getModulosEmpresa');
+
 
 //rutas de servicio cliente angular
 Route::group(['prefix' => 'angular'], function(){
     Route::resource('ordenes','Angular\OrdenTempController');
     Route::resource('tecnicos','Angular\TecnicoController');
+    Route::get('tecnicos-cortes','Angular\TecnicoController@getTecnicosCortes');
+    Route::get('tecnicos-lecturas','Angular\TecnicoController@getTecnicosLecturas');
     Route::get('delete-tecnico/{id_tecnico}','Angular\TecnicoController@delete');
     Route::get('get-tecnico/{id_tecnico}','Angular\TecnicoController@getTecnicoById');
     Route::post('update-tecnico','Angular\TecnicoController@editTecnicoAngular');
     Route::post('build-task','Angular\TecnicoController@buildTaskTecnicos');
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
+    Route::get('tecnicos-sin-lecturas','Angular\TecnicoController@getTecnicosSinActividadesLecturas');
     Route::get('actividades-tecnico/{id_tecn}/{tipo}/{sector}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
     Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
@@ -50,13 +57,32 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}/{tipo}','Angular\OrdenTempController@deleteDistribucion');
     //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
     Route::post('delete-activities','Angular\ActividadDiariaController@eliminarActividades');
-	Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
+	  Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
+
+    // gateway routes
+    Route::post('upload','Gateway\Lecturas\LecturasController@uploadFile');
+    Route::get('filtros','Gateway\Lecturas\LecturasController@getFilterFiels');
+    Route::get('data-first','Gateway\Lecturas\LecturasController@getFirstFilterFields');
+    Route::post('data','Gateway\Lecturas\LecturasController@getDataFilter');
+    Route::post('data-distribution','Gateway\Lecturas\LecturasController@getDataDistribution');
+    Route::post('distribution','Gateway\Lecturas\LecturasController@distribuirRuta');
+
+
+
 });
 
 Route::group(['prefix' => 'mobile'], function(){
     Route::get('get-data/{cedula}','Mobile\MobileController@getTechnicalData');
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');
+    // gateway routes Mobile
+
+  });
+
+// rutas de movil lecturas
+  Route::group(['middleware' => 'app'], function () {
+      Route::post('login/','Gateway\Lecturas\LecturasAppController@login');
+      Route::get('rutas/{idEmpresa}/{idTecnico}','Gateway\Lecturas\LecturasAppController@index');
   });
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');

@@ -40,7 +40,7 @@ Route::prefix('admin')->group(function(){
   Route::get('/', 'AdminController@index')->name('admin.dashboard');
   Route::get('/login','Auth\AdminLoginController@showLoginForm')->name('admin.login');
   Route::post('/login','Auth\AdminLoginController@login')->name('admin.login.submit');
-  
+
   Route::get('/logout','Auth\AdminLoginController@logout')->name('admin.logout');
 
   //password reset route
@@ -63,6 +63,7 @@ Route::prefix('empresa')->group(function(){
   Route::get('/edit/{id}','Admin\EmpresaController@edit')->name('empresa.editar');
   Route::post('/update','Admin\EmpresaController@updateEmp')->name('empresa.update');
   Route::get('/delete/{id}','Admin\EmpresaController@deleteEmp')->name('empresa.delete');
+  Route::get('gestion/{id}','Admin\EmpresaController@gestion')->name('empresa.gestion');
 });
 
 Route::prefix('modulo')->group(function(){
@@ -91,4 +92,15 @@ Route::prefix('user')->group(function(){
   Route::post('/update','Admin\UserController@updateUser')->name('user.update');
   Route::post('/updatepass','Admin\UserController@updatePassword')->name('user.updatePassword');
   Route::get('/delete/{id}','Admin\UserController@deleteUser')->name('user.delete');
+});
+
+Route::prefix('gestion')->group(function(){
+   //servicios
+  Route::get('/configuracion/{id}', 'Gateway\Lecturas\ConfigController@index');
+  Route::post('/configuracion', 'Gateway\Lecturas\ConfigController@crear');
+  Route::post('/configuracion/update', 'Gateway\Lecturas\ConfigController@update');
+  Route::get('/configuracion/delete/{id}', 'Gateway\Lecturas\ConfigController@destroy');
+  Route::post('/configuracion/create', 'Gateway\Lecturas\ConfigController@crearConfiguracion');
+  Route::get('/configuracion/validate/{id}', 'Gateway\Lecturas\ConfigController@validateTableConfig');
+  Route::get('/configuracion/drop/{id}', 'Gateway\Lecturas\ConfigController@dropTable');
 });

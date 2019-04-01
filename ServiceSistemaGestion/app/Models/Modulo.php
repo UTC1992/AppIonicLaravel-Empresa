@@ -12,9 +12,10 @@ class Modulo extends Model
   	protected $fillable = [
 	    'id_mod',
 	    'nombre',
-	    'estado'
+	    'estado',
+      'ruta',
   	];
-  
+
   	public function guardar($data = [])
     {
         try {
@@ -24,12 +25,12 @@ class Modulo extends Model
                 $modulo->estado = $data->estado;
                 $modulo->save();
                 return true;
-            } else 
+            } else
             {
                 return false;
-            }   
+            }
         } catch (Exception $e) {
-            return false;   
+            return false;
         }
     }
 
@@ -44,7 +45,7 @@ class Modulo extends Model
     }
 
     public function updateModulo($data=[])
-    {	
+    {
     	try {
 	        $modulo = Modulo::find($data->id_mod);
 	        $modulo->nombre = $data->nombre;
@@ -63,5 +64,20 @@ class Modulo extends Model
       	} catch (\Exception $e) {
 	        return $e;
       	}
+    }
+
+    /**
+     * obtener modulos por empresa
+     */
+    public function getModulosEmpresa($id){
+      try {
+        return $actividad = DB::table('tbl_modulo as T0')
+              ->join('tbl_modulo_empresa as T1','T1.id_mod','=','T0.id_mod')
+              ->select('T0.nombre','T0.estado','T0.ruta')
+              ->where('T1.id_emp',$id)
+              ->get();
+      } catch (\Exception $e) {
+        return $e;
+      }
     }
 }

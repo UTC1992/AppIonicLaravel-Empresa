@@ -19,7 +19,7 @@ class EmpresaController extends Controller
 
     protected function validator(array $data)
     {
-        
+
     }
 
     public function index()
@@ -31,7 +31,7 @@ class EmpresaController extends Controller
     }
 
     public function guardar(Request $request)
-    {   
+    {
         if(!is_null($request)){
             $empresa = new Empresa();
             $save = $empresa->guardar($request);
@@ -46,8 +46,8 @@ class EmpresaController extends Controller
         } else {
             return redirect()->action('Admin\EmpresaController@index');
         }
-        
-    }    
+
+    }
 
     public function edit($id = 0)
     {
@@ -69,11 +69,11 @@ class EmpresaController extends Controller
                 $mensaje = "false";
                 return redirect()->action('Admin\EmpresaController@index', compact('mensaje'));
             }
-            
+
         } else {
             return redirect()->action('Admin\EmpresaController@index');
         }
-        
+
     }
 
     public function deleteEmp($id = 0)
@@ -89,5 +89,21 @@ class EmpresaController extends Controller
             return redirect()->action('Admin\EmpresaController@index', compact('mensaje'));
         }
     }
+
+    /**
+     * Gestionar cofiguracion modulo de lecturas index
+     */
+
+
+     public function gestion($idEmpresa){
+       try {
+         $result= Empresa::find($idEmpresa);
+         $data['empresa']=$result;
+         return  view('empresa.gestion',$data);
+       } catch (\Exception $e) {
+         return response()->json("Eror: ".$e);
+       }
+
+     }
 
 }
