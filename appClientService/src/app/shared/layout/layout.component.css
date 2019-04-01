@@ -1,0 +1,45 @@
+.sidenav-container{
+    height: 100%;
+  }
+  
+  .sidenav{
+    width: 230px;
+    background-color: #a29da3;
+  }
+  
+  .mat-toolbar.mat-primary{
+    position: sticky;
+    top: 0;
+  }
+  
+  .example-fill-remaining-space{
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+  }
+
+  .mat-list-item{
+    color: white;
+  }
+
+  .logo{
+    margin-top: 5px;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .mat-divider{
+    background-color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .barraDerecha{
+    background-color: #783384; 
+    color: white;
+  }
+
+  .menuLateral{
+    background-color: #5D0263; color: white;
+  }

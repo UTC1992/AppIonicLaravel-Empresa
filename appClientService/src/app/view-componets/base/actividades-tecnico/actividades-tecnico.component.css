@@ -1,0 +1,4 @@
+mat-list-option[aria-selected="true"] {
+    background: #8A6BB2;
+    color: white;
+  }

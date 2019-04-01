@@ -14,9 +14,9 @@ export class LoginService {
 
   headers=new Headers();
   headers2=new Headers();
-  baseUrl='http://pruebas.tiendanaturalecuador.online/';
+  //baseUrl='http://pruebas.tiendanaturalecuador.online/';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
-  //baseUrl='http://localhost:8000/';
+  baseUrl='http://localhost:8000/';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
   constructor(private http:Http) { 
     
@@ -44,4 +44,15 @@ export class LoginService {
     this.headers2.append('Authorization','Bearer '+localStorage.getItem("token"));
     return this.http.post(this.baseUrl+"api/empresaActiva",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
   }
+
+logout(){
+    localStorage.removeItem("empresa");
+    localStorage.removeItem("email");
+    localStorage.removeItem("nombre");
+    localStorage.removeItem("token");
+    localStorage.removeItem("id_emp");
+    localStorage.removeItem("token_type");
+    location.reload();
+    }
+
 }

@@ -1,0 +1,148 @@
+<mat-card>
+    <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="Técnicos">
+            <br>
+            <div class="d-flex justify-content-center">
+                <h4 class="">Gestión de técnicos</h4>
+            </div>  
+            <div class="card">
+              <!--Form insert tecnico-->
+              <div class="card-body">
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <button class="btn btn-primary" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          Crear Nuevo Tenico
+                      </button>
+                    </mat-expansion-panel-header>
+                    <app-form-tecnico></app-form-tecnico>
+                  </mat-expansion-panel>
+                </mat-accordion>
+                <mat-form-field class="col-lg-3">
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar técnico">
+                </mat-form-field>
+                <div class="table-responsive">
+                  <table mat-table [dataSource]="dataSource" class="table table-sm table-striped " >
+              
+                      <!-- Id Column -->
+                      <ng-container matColumnDef="id_tecn">
+                        <th mat-header-cell *matHeaderCellDef> Código </th>
+                        <td mat-cell *matCellDef="let tecnico"> {{tecnico.id_tecn}} </td>
+                      </ng-container>
+                      <!-- Nombres Column -->
+                      <ng-container matColumnDef="nombres">
+                        <th mat-header-cell *matHeaderCellDef> Nombres </th>
+                        <td mat-cell *matCellDef="let tecnico"> 
+                          <div style="width: 200px;">
+                              {{tecnico.nombres}} {{tecnico.apellidos}} 
+                          </div>
+                        </td>
+                      </ng-container>
+                      <!-- Apellidos Column -->
+                      <ng-container matColumnDef="cedula">
+                        <th mat-header-cell *matHeaderCellDef> Cédula </th>
+                        <td mat-cell *matCellDef="let tecnico"> {{tecnico.cedula}} </td>
+                      </ng-container>
+                      <!-- Telefono Column -->
+                      <ng-container matColumnDef="telefono">
+                        <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+                        <td mat-cell *matCellDef="let tecnico"> {{tecnico.telefono}} </td>
+                      </ng-container>
+                      <!-- Email Column -->
+                      <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Correo </th>
+                        <td mat-cell *matCellDef="let tecnico"> {{tecnico.email}} </td>
+                      </ng-container>
+                      <!-- Estado Column -->
+                      <ng-container matColumnDef="estado">
+                        <th mat-header-cell *matHeaderCellDef> Estado </th>
+                        <td mat-cell *matCellDef="let tecnico"> {{tecnico.estado}} </td>
+                      </ng-container>
+                      <!--Actividad Column-->
+                      <ng-container matColumnDef="actividad">
+                          <th mat-header-cell *matHeaderCellDef> Actividad </th>
+                          <td mat-cell *matCellDef="let tecnico"> {{tecnico.actividad}} </td>
+                        </ng-container>
+
+                      <ng-container matColumnDef="acciones">
+                          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                          <td mat-cell *matCellDef="let tecnico">
+                            <div style="width: 160px;">
+                                <button class="btn btn-info btn-sm" (click)="open(tecnico.id_tecn, template)" data-toggle="modal" data-target="#exampleModalCenter" style="margin-right: 5px;">
+                                    Editar
+                                  </button>
+                                  <button class="btn btn-danger btn-sm" (click)="deleteTecnico(tecnico.id_tecn)">Eliminar</button>
+                            </div>
+                          </td>
+                        </ng-container>
+                        
+                    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+              </div>
+              <!--end  forms tecnico-->
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+  
+</mat-card>
+
+<ng-template #template>
+    <ngx-spinner
+    bdColor="rgba(51,51,51,0.8)"
+    size="large"
+    color="#fff"
+    type="ball-clip-rotate-multiple">
+  </ngx-spinner>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">Editar datos de técnico</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!--formulario de edición-->
+  <form [formGroup]="form_tecnico_edicion" (ngSubmit)="onSubmitEdit()">
+  <div class="modal-body">
+
+          <div class="form-group">
+              <label for="nombres">Actividad Técnico:</label>
+              <select class="form-control" id="actividad" formControlName="actividad" >
+                <option value="empty">Seleccionar</option>
+                <option value="cortes">CORTES</option>
+                <option value="lecturas">LECTURAS</option>
+              </select>
+          </div>
+        <div class="form-group">
+            <label for="nombres">Nombre:</label>
+            <input type="text" class="form-control"  id="nombres" placeholder="" value="" formControlName="nombres">
+            <input type="hidden" class="form-control"  id="id" placeholder="" value="" formControlName="id">
+        </div>
+        <div class="form-group">
+            <label for="apellidos">Apellido:</label>
+            <input type="text" class="form-control"    id="apellidos" placeholder="" formControlName="apellidos">
+        </div>
+        <div class="form-group">
+            <label for="cedula">Cédula:</label>
+            <input type="text" class="form-control"    id="cedula" placeholder="" formControlName="cedula">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" class="form-control"   id="telefono" placeholder="" formControlName="telefono">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" class="form-control"    id="email" placeholder="" formControlName="email">
+            <input type="hidden" class="form-control"    id="estado" placeholder="" value="1" formControlName="estado">
+        </div>
+
+
+  </div>
+  <div class="modal-footer">
+  <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modalRef.hide()">Cerrar</button>
+  <button type="submit" [disabled]="form_tecnico_edicion.invalid || loading" class="btn btn-success">Guardar <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i></button>
+  </div>
+</form>
+<!--fin formulario-->
+</ng-template>

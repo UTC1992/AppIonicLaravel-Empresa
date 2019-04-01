@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
                   localStorage.setItem("email",res.username);
                   localStorage.setItem("id_emp",res.id_emp);
                   //console.log("respuesta "+res.username);
-                  location.reload();
+                  this.router.navigate(['/base']);
                 }else{
                   alert("Su cuenta se encuentra bloqueada, comuníquese con soporte técnico");
                   this.CerrarSesion();
@@ -55,9 +55,7 @@ export class LoginComponent implements OnInit {
           }
         },  
         error=>{
-          if(error){
-            alert("Credenciales incorrectas");
-          }
+          console.log(error);
         }
       );
     }
