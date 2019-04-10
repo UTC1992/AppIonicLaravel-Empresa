@@ -56,5 +56,11 @@ export class LecturasService {
     distribuirRutasTecnico(data:object):Observable<any>{
       return this.http.post(this.baseUrl+"/distribution",data,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
     }
-  
+
+    /** 
+     * rutas asignadas a técnicos
+     */
+    OrdentrabajoTecnicosLecturas():Observable<any>{
+      return this.http.get(this.baseUrl+"/orden-trabajo",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    }
 }

@@ -5,6 +5,7 @@ use App\Models\Tecnico;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Historial;
 use App\Models\OrdenTemp;
 use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
@@ -70,16 +71,6 @@ class TecnicoController extends Controller
 
     }
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -106,8 +97,10 @@ class TecnicoController extends Controller
         $tecnico->id_emp=$this->getIdEmpUserAuth();
         $tecnico->save();
         if($tecnico){
+          $this->createHistoryUser("Crear","Creacion de etecnico correcto","Tecnicos");
           return response()->json(true);
         }else{
+          $this->createHistoryUser("Error","Creacion de etecnico fallido","Tecnicos");
           return response()->json(false);
         }
       } catch (\Exception $e) {
@@ -118,16 +111,6 @@ class TecnicoController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tecnico  $tecnico
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tecnico $tecnico)
-    {
-
-    }
 
     //tecnicos sin asignar actividades
     public function getTecnicosSinActividades(){
@@ -156,21 +139,16 @@ class TecnicoController extends Controller
       $result->save();
 
       if($result){
+        $this->createHistoryUser("Eliminar","Elimina Tecnico","Tecnicos");
         return response()->json(true);
       }else{
+        $this->createHistoryUser("Error","Elimina Tecnico fallido","Tecnicos");
           return response()->json(false);
       }
     }
     /**
-     * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tecnico  $tecnico
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
-    {
-
-    }
     public function editTecnicoAngular(Request $request){
       $tecnico=Tecnico::find($request->id_tecn);
       $tecnico->nombres=$request->nombres;
@@ -186,6 +164,7 @@ class TecnicoController extends Controller
       $tecnico->password=$pass;
       $tecnico->id_emp=$this->getIdEmpUserAuth();
       $result = $tecnico->save();
+      $this->createHistoryUser("Editar","Edita Tecnico","Tecnicos");
       return response()->json($result);
     }
 
@@ -194,6 +173,9 @@ class TecnicoController extends Controller
       return response()->json($tecnico);
     }
 
+/**
+ *
+ */
     public function buildTaskTecnicos(Request $request){
       try {
         if($request->cantidad_actividades<=0 || $request->cantidad_actividades==null){
@@ -232,6 +214,7 @@ class TecnicoController extends Controller
           $tecnico->save();
         }
 
+        $this->createHistoryUser("Distribucion","Distribucion de actividades a Tecnico","Tecnicos");
         return response()->json(true);
 
       } catch (\Exception $e) {
@@ -248,33 +231,12 @@ class TecnicoController extends Controller
         $tecnico->asignado=0;
         $tecnico->save();
         if($tecnico){
+          $this->createHistoryUser("Cambiar Estado","Cambia estado de Tecnico","Tecnicos");
           return response()->json(true);
         }
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);
       }
-
-    }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tecnico  $tecnico
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tecnico $tecnico)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Tecnico  $tecnico
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tecnico $tecnico)
-    {
 
     }
 
@@ -302,4 +264,22 @@ class TecnicoController extends Controller
       }
 
     }
+    /**
+     * guardar historial de actividades de usuario autenticado
+     */
+    private function createHistoryUser($accion,$observacion,$modulo){
+      try {
+        $user = auth()->user();
+        $historial= new Historial();
+        $historial->accion=$accion;
+        $historial->observacion=$observacion;
+        $historial->usuario=$user->id;
+        $historial->modulo=$modulo;
+        $historial->empresa=$this->getIdEmpUserAuth();
+        $historial->save();
+      } catch (\Exception $e) {
+        return response()->json("Error: ".$e);
+      }
+    }
+
 }

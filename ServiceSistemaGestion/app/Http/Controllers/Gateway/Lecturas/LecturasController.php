@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gateway\Lecturas;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\LecturasService;
+use App\Models\Tecnico;
 
 class LecturasController extends Controller
 {
@@ -105,10 +106,25 @@ class LecturasController extends Controller
          $data["idTecnico"]= $request->idTecnico;
          $data["idEmpresa"]= $this->getIdEmpUserAuth();
          $result=$this->lecturasService->distribuirRutaService($data);
+         $this->changeEstadoTecnicoLecturas($request->idTecnico);
          return response($result);
        } catch (\Exception $e) {
           return response()->json("Error :".$e);
        }
+     }
+
+     /**
+      * asigna tecnico
+      */
+     private function changeEstadoTecnicoLecturas($id){
+       try {
+          $tecnico=Tecnico::find($id);
+          $tecnico->asignado=1;
+          $tecnico->save();
+       } catch (\Exception $e) {
+
+       }
+
      }
      // obtener id empresa de usuario autenticado
      private function getIdEmpUserAuth(){
@@ -120,5 +136,19 @@ class LecturasController extends Controller
          return response()->json("Error :".$e);
        }
      }
+
+     /**
+      * obtiene datis de asignacion desde el servicio lecturas
+      */
+      public function getOrdenTrabajoTecnicosLecturas(){
+        try {
+          $ID_EMP=$this->getIdEmpUserAuth();
+          $result=$this->lecturasService->orderTrabajoTecnicosService($ID_EMP);
+          return $result;
+        } catch (\Exception $e) {
+          return response()->json("Error :".$e);
+        }
+
+      }
 
 }

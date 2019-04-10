@@ -21,10 +21,7 @@
               </div>
 
                 
-          
-                   
-                
-
+  
         </mat-tab>
         <!--tab de distribucion-->
         <mat-tab label="Distribuir rutas">
@@ -74,8 +71,33 @@
             
                 <button (click)="asignarRutaTecnico()" class="btn btn-success"> Asignar Ruta</button>
              
-            </div>
+            </div >
 
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <th>TECNICO</th>
+                  <th>AGENCIA</th>
+                  <th>SECTOR</th>
+                  <th>RUTA</th>
+                  <th>CANTIDAD</th>
+                  <th>ACCIONES</th>
+                </thead>
+                <tbody> 
+                  <tr *ngFor="let ruta of datosAsignacion">
+                    <td>{{ruta.nombres}} {{ruta.apellidos}}</td>
+                    <td>{{ruta.agencia}}</td>
+                    <td>{{ruta.sector}}</td>
+                    <td>{{ruta.ruta}}</td>
+                    <td>{{ruta.cantidad_ruta}}</td>
+                    <td>
+                      <button class="btn btn-danger sm" >Eliminar</button>
+                      <button class="btn btn-warning sm" >Asignar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
             </div>
 

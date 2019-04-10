@@ -28,7 +28,7 @@ $router->post('/filtros','Procesos\ProcesosController@getColumnsFilter');
 $router->post('/data-filter','Procesos\ProcesosController@getDataGroupBy');
 $router->post('/data-first','Procesos\ProcesosController@getDataFirstFilter');
 $router->post('/data','Procesos\ProcesosController@getDataToDistribution');
-
+$router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOrdenTrabajoTecnicos');
 /**
  * rutras de orden trabaja distribucion
  */

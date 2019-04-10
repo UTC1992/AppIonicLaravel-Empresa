@@ -66,9 +66,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('data','Gateway\Lecturas\LecturasController@getDataFilter');
     Route::post('data-distribution','Gateway\Lecturas\LecturasController@getDataDistribution');
     Route::post('distribution','Gateway\Lecturas\LecturasController@distribuirRuta');
-
-
-
+    Route::get('orden-trabajo','Gateway\Lecturas\LecturasController@getOrdenTrabajoTecnicosLecturas');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -76,7 +74,6 @@ Route::group(['prefix' => 'mobile'], function(){
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');
     // gateway routes Mobile
-
   });
 
 // rutas de movil lecturas
@@ -84,5 +81,17 @@ Route::group(['prefix' => 'mobile'], function(){
       Route::post('login/','Gateway\Lecturas\LecturasAppController@login');
       Route::get('rutas/{idEmpresa}/{idTecnico}','Gateway\Lecturas\LecturasAppController@index');
   });
+
+  /**
+   * rutas de estadisitca
+   */
+   Route::group(['prefix' => 'reportes'], function(){
+     // estadistica de cortes
+       Route::post('cortes-diario','Reportes\ReportesController@getEstadisticaDiariaCortes');
+       Route::post('cortes-mes','Reportes\ReportesController@getEstadisticaMesCortes');
+       Route::post('cortes-tecnicos-diario','Reportes\ReportesController@getEstadisticaTecnicosCortes');
+       Route::post('cortes-tecnicos-mes','Reportes\ReportesController@getEstadisticaTecnicosMesCortes');
+
+     });
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');

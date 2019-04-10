@@ -123,4 +123,11 @@ class LecturasService
     public function distribuirRutaService($data){
       return $this->performRequest('POST',"/distribuir",$data);
     }
+
+    /**
+     *obtiene rutas distribuidas a técnicos
+     */
+     public function orderTrabajoTecnicosService($idEmpresa){
+       return $this->performRequest('GET',"/orden-trabajo/{$idEmpresa}");
+     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\OrdenTrabajo;
 use App\Models\OrdenTemp;
 use App\Models\Tecnico;
+use App\Models\Historial;
 use App\Models\ActividadDiaria;
 use Illuminate\Support\Facades\Storage;
 use Excel;
@@ -89,6 +90,7 @@ class OrdenTempController extends Controller
       }
 
       if($contador == $cantidad){
+        $this->createHistoryUser("Elimina Asignacion","Elimina asignacion de tecnicos","Cortes");
         return response()->json(true);
       } else {
         return response()->json(false);
@@ -99,15 +101,6 @@ class OrdenTempController extends Controller
   }
 
 
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create()
-  {
-      //
-  }
   /**
    * Store a newly created resource in storage.
    *
@@ -196,6 +189,7 @@ class OrdenTempController extends Controller
 
           }
           if($con>0){
+              $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
               $mesagge=true;
               return response()->json($mesagge);
           }
@@ -206,11 +200,13 @@ class OrdenTempController extends Controller
 
       }else{
         $mesagge=false;
+          $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
         return response()->json($mesagge);
 
       }
     }else{
       $mesagge=false;
+      $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
       return response()->json($mesagge);
 
     }
@@ -393,50 +389,23 @@ public function validarCoordenada($coordenada){
     }
 
 
-  //fin funciones
+  //fin funciones utm
 
   /**
-   * Display the specified resource.
-   *
-   * @param  \App\Models\OrdenTemp  $ordenTemp
-   * @return \Illuminate\Http\Response
+   * guardar historial de actividades de usuario autenticado
    */
-  public function show(OrdenTemp $ordenTemp)
-  {
-      //
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  \App\Models\OrdenTemp  $ordenTemp
-   * @return \Illuminate\Http\Response
-   */
-  public function edit(OrdenTemp $ordenTemp)
-  {
-      //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  \App\Models\OrdenTemp  $ordenTemp
-   * @return \Illuminate\Http\Response
-   */
-  public function update(Request $request, OrdenTemp $ordenTemp)
-  {
-      //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  \App\Models\OrdenTemp  $ordenTemp
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy(OrdenTemp $ordenTemp)
-  {
-      //
+  private function createHistoryUser($accion,$observacion,$modulo){
+    try {
+      $user = auth()->user();
+      $historial= new Historial();
+      $historial->accion=$accion;
+      $historial->observacion=$observacion;
+      $historial->usuario=$user->id;
+      $historial->modulo=$modulo;
+      $historial->empresa=$this->getIdEmpUserAuth();
+      $historial->save();
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
   }
 }
