@@ -37,8 +37,15 @@ class MobileController extends Controller
     }
 
 
+    /**
+     * recibe data desde móvil para proceso
+     */
     public function prcesarLecturas(Request $request){
       try {
+        $data=$request->all();
+        foreach ($data as $key => $value) {
+          // code...
+        }
 
       } catch (\Exception $e) {
         return response()->json("error: ".$e);

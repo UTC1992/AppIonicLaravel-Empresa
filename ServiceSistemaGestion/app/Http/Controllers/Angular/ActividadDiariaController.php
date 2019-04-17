@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ActividadDiaria;
 use Illuminate\Http\JsonResponse;
 use App\Models\Tecnico;
+use App\Models\Historial;
 use App\Models\ReconexionManual;
 use App\Models\OrdenTrabajo;
 
@@ -16,9 +17,15 @@ class ActividadDiariaController extends Controller
     $this->middleware('auth:api');
   }
     public function getActivitadesTecnico(){
-      $actividades=new ActividadDiaria();
-      $result=$actividades->getViewActivities();
-      return response()->json($result);
+      try {
+        $actividades=new ActividadDiaria();
+        $result=$actividades->getViewActivities();
+        return response()->json($result);
+      } catch (\Exception $e) {
+
+      }
+
+
     }
     public function getActivitiesTecnico($id_tecnico, $tipo,$sector){
       $orden=new ActividadDiaria();
@@ -115,6 +122,7 @@ class ActividadDiariaController extends Controller
     //actualizar actividades manuales
     public function validarActividadesManuales(){
       try {
+
         $actividad=new ActividadDiaria();
         $result=$actividad->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('n9cono','=','040')->get();
         $reconexion=new ReconexionManual();
@@ -149,6 +157,7 @@ class ActividadDiariaController extends Controller
               $rec->save();
           }
         }
+        $this->createHistoryUser("Actividades Manuales","Valida Actividades manuales","Cortes");
         return response()->json(true);
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);
@@ -184,13 +193,14 @@ class ActividadDiariaController extends Controller
             $act->save();
           }
         }
+        $this->createHistoryUser("Consolidar","Consolidar actividades diarias","Cortes");
         return response()->json(true);
       }
 
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
     }
-    
+
   }
 
   // obtdener actividades consolidadas
@@ -243,14 +253,41 @@ class ActividadDiariaController extends Controller
           }
 
         }
+
+        $actividad_diaria1=new ActividadDiaria();
+        $res1=$actividad_diaria1->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('estado',3)->get();
+        if(count($res1)>0){
+          $message="Error: No se puede eliminar,  la ruta ya ha sido consolidada!!";
+            return response()->json($message);
+        }
         $actividad_diaria=new ActividadDiaria();
         $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->delete();
         if($res>0){
+            $this->createHistoryUser("Eliminar Ruta","Se elimina actividades de la fecha: ".$fecha." e ID_EMP: ".$ID_EMP."","Cortes");
           return response()->json(true);
         }
+        $this->createHistoryUser("Eliminar Ruta","Eliminación fallida NO data","Cortes");
         return response()->json(false);
     } catch (\Exception $e) {
         return response()->json("Error: ".$e);
+    }
+  }
+
+  /**
+   * guardar historial de actividades de usuario autenticado
+   */
+  private function createHistoryUser($accion,$observacion,$modulo){
+    try {
+      $user = auth()->user();
+      $historial= new Historial();
+      $historial->accion=$accion;
+      $historial->observacion=$observacion;
+      $historial->usuario=$user->id;
+      $historial->modulo=$modulo;
+      $historial->empresa=$this->getIdEmpUserAuth();
+      $historial->save();
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
     }
   }
 

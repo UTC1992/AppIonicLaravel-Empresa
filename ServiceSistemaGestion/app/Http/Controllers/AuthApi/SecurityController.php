@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\User;
 use App\Models\Empresa;
+use App\Models\Historial;
 use Illuminate\Support\Facades\Hash;
 
 class SecurityController extends Controller
@@ -18,6 +19,7 @@ class SecurityController extends Controller
   //obtener datos usuario autenticado
   public function getUserData(){
     try {
+       $this->createHistoryUser("Login","Login user en cliente angular","auth");
         $user = auth()->user();
         $us=new User();
         if($us->validaEmpresaActiva($user->id_emp)){
@@ -51,6 +53,7 @@ class SecurityController extends Controller
   public function editarNombre(Request $request){
     try {
       if(!is_null($request->nombre)){
+        $this->createHistoryUser("Editar","Actualizacion nombre","auth");
         $user_id=$this->getUserAuthId();
         $user=User::find($user_id);
         $user->name=$request->nombre;
@@ -71,6 +74,7 @@ class SecurityController extends Controller
   public function editarEmail(Request $request){
     try {
       if(!is_null($request->email)){
+        $this->createHistoryUser("Editar","Actualizacion email","auth");
         $user_id=$this->getUserAuthId();
         $user=User::find($user_id);
         $user->email=$request->email;
@@ -91,6 +95,7 @@ class SecurityController extends Controller
   public function editarPassword(Request $request){
     try {
       if(!is_null($request->password)){
+        $this->createHistoryUser("Editar","Actualizacion password","auth");
         $user_id=$this->getUserAuthId();
         $user=User::find($user_id);
         $user->password=Hash::make($request->password);
@@ -127,6 +132,24 @@ public function editarEmpresa(Request $request){
     return response()->json("Error: ".$e);
   }
 
+}
+
+/**
+ * crea historial de acciones de usuario de la aplicación
+ */
+private function createHistoryUser($accion,$observacion,$modulo){
+  try {
+    $user = auth()->user();
+    $historial= new Historial();
+    $historial->accion=$accion;
+    $historial->observacion=$observacion;
+    $historial->usuario=$user->id;
+    $historial->modulo=$modulo;
+    $historial->empresa=$this->getIdEmpUserAuth();
+    $historial->save();
+  } catch (\Exception $e) {
+    return response()->json("Error: ".$e);
+  }
 }
 
 

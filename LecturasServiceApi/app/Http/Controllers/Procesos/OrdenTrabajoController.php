@@ -135,5 +135,18 @@ class OrdenTrabajoController extends Controller
     return $config;
   }
 
+  /**
+   * obtiene datos de asignacion de tecnicos
+   */
+  public function getOrdenTrabajoTecnicos($idEmpresa){
+    try {
+      $tabla=$this->getTableCompany($idEmpresa);
+      $result=OrdenTrabajo::getOrdenTrabajoAsignado($tabla);
+      return response()->json($result,200);
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+
+  }
 
 }
