@@ -117,6 +117,7 @@ export class LecturasComponent implements OnInit {
     this.lecturasService.getFilterFields().subscribe(
       result=>{
         this.filtrosLabel=result;
+        console.log("Filtros ==> ");
         console.log(this.filtrosLabel);
       }
     );
