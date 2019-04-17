@@ -109,5 +109,17 @@ class MobileController extends Controller
 
         }
 
+  /**
+   * ingresar catastros
+   */
+  public function insertCatastros(Request $request){
+    try {
+      
+    } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+    }
+
+  }
+
 
 }

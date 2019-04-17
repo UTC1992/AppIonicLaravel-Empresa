@@ -26,7 +26,7 @@ class LecturasAppController extends Controller
       try {
         $cedula=$request->cedula;
         $password=$request->password;
-        $result=Tecnico::where('cedula',$cedula)->where('password',$password)->first();
+        $result=Tecnico::where('cedula',$cedula)->where('password',$password)->where('borrado',0)->first();
         if($result){
             return response()->json($result);
         }
@@ -44,7 +44,7 @@ class LecturasAppController extends Controller
     public function index($idEmpresa,$idTecnico){
       try {
         $result=$this->lecturasAppServices->getDataDistributionByTecnicoService($idEmpresa,$idTecnico);
-        return response($result);
+        return response($result)->header('Content-Type', 'applicationIjson');
       } catch (\Exception $e) {
         return response()->json("Error :".$e);
       }
@@ -55,7 +55,7 @@ class LecturasAppController extends Controller
      */
      public function updateLecturas(){
        try {
-         
+
        } catch (\Exception $e) {
          return response()->json("Error :".$e);
        }

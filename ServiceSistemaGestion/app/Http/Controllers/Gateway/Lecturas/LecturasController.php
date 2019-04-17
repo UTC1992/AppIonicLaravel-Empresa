@@ -41,7 +41,7 @@ class LecturasController extends Controller
         try {
           $data["idEmpresa"]=$this->getIdEmpUserAuth();
           $result=$this->lecturasService->getFilterFields($data);
-          return response($result);
+          return response($result)->header('Content-Type', 'applicationIjson');
         } catch (\Exception $e) {
           return response()->json("Error :".$e);
         }
