@@ -76,6 +76,10 @@ Route::group(['prefix' => 'mobile'], function(){
     // gateway routes Mobile
   });
 
+
+// login app lecturasA
+  //Route::post('app/login/','Gateway\Lecturas\LecturasAppController@login');
+
 // rutas de movil lecturas
   Route::group(['middleware' => 'app'], function () {
       Route::post('login/','Gateway\Lecturas\LecturasAppController@login');
@@ -95,3 +99,4 @@ Route::group(['prefix' => 'mobile'], function(){
      });
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');
+Route::get('export-lecturas/{idEmpresa}/{mes}','Angular\ImportController@exportarConsolidadoLecturas');

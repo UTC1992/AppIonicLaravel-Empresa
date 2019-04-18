@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use App\Models\Catastros;
 
 class MobileController extends Controller
 {
@@ -108,6 +109,20 @@ class MobileController extends Controller
           }
 
         }
+
+  /**
+   * ingresar catastros
+   */
+  public function insertCatastros(Request $request){
+    try {
+      $input= $request->all();
+      $res= Catastros::create($input);
+      return $this->ApiResponser($res);
+    } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+    }
+
+  }
 
 
 }

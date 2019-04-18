@@ -127,7 +127,14 @@ class LecturasService
     /**
      *obtiene rutas distribuidas a técnicos
      */
-     public function orderTrabajoTecnicosService($idEmpresa){
+  public function orderTrabajoTecnicosService($idEmpresa){
        return $this->performRequest('GET',"/orden-trabajo/{$idEmpresa}");
-     }
+  }
+
+/**
+ * obtien lecturas consolidadas por mes
+ */
+  public function lecturasConsolidadasService($idEmpresa,$mes){
+    return $this->performRequest('GET',"/consolidados/{$idEmpresa}/{$mes}");
+  }
 }

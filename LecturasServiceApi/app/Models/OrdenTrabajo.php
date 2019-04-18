@@ -21,10 +21,17 @@ class OrdenTrabajo extends Model
     ];
 
 /**
- * llamada procedimiento almacenado empresa DECOBO
+ * llamada procedimiento almacenado empresa
  */
 public static function getOrdenTrabajoAsignado($tabla){
   return $result=  DB::select('call ps_tecnicos_asignacion_lecturas("'.$tabla.'")');
+}
+
+/**
+ *
+ */
+public static function getLecturasConsolidadas($tabla,$mes){
+  return $result=  DB::select('call ps_consolidado_lecturas("'.$tabla.'","'.$mes.'")');
 }
 
 }

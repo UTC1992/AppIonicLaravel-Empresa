@@ -29,6 +29,7 @@ $router->post('/data-filter','Procesos\ProcesosController@getDataGroupBy');
 $router->post('/data-first','Procesos\ProcesosController@getDataFirstFilter');
 $router->post('/data','Procesos\ProcesosController@getDataToDistribution');
 $router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOrdenTrabajoTecnicos');
+$router->get('/consolidados/{idEmpresa}/{mes}','Procesos\LecturasController@index');
 /**
  * rutras de orden trabaja distribucion
  */
@@ -37,7 +38,12 @@ $router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOr
 // rutas de carga
 $router->post('/upload','Procesos\ProcesosController@carga');
 
+
+
+
+
 /**
  * rutas de app móvil
  */
 $router->get('/data-movil/{idEmpresa}/{idTecnico}','Movil\MobileController@index');
+$router->post('/catastros-insert','Movil\MobileController@insertCatastros');

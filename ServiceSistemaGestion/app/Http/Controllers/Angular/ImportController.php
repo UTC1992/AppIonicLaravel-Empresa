@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Angular;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\ActividadDiaria;
 use Illuminate\Support\Facades\Storage;
@@ -10,12 +11,19 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use \PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Services\LecturasService;
+use App\Traits\ApiResponser;
 
 class ImportController extends Controller
 {
 
-    public function __construct(){
+  use ApiResponser;
+  //inject lecturas service
+    public $lecturasServices;
+
+    public function __construct(LecturasService $lecturasServices){
         //$this->middleware('auth:api');
+        $this->lecturasServices=$lecturasServices;
     }
     public function index(){
       return view('import');
@@ -188,5 +196,189 @@ class ImportController extends Controller
             return response()->json($e);
           }
 
+    }
+
+    /**
+     * exportar excel decobo
+     *el 1 es de latacunga
+     *el 7 es pangua
+     *el 5 es sigchos
+     */
+    public function exportarConsolidadoLecturas($idEmpresa,$mes){
+      try {
+        $type="xlsx";
+        $data=$this->lecturasServices->lecturasConsolidadasService($idEmpresa,$mes);
+        $dataArray = json_decode($data, true);
+        $dataLatacungaArray=array();
+        $dataPanguaArray=array();
+        $dataSigchosArray=array();
+
+        $cont_lata=0;
+        $cont_pangua=0;
+        $cont_sigchos=0;
+        foreach ($dataArray as $key => $value) {
+
+          if($value["agencia"]=="01"){
+            $dataLatacungaArray[$cont_lata]["zona"]=$value["zona"];
+            $dataLatacungaArray[$cont_lata]["agencia"]=$value["agencia"];
+            $dataLatacungaArray[$cont_lata]["sector"]=$value["sector"];
+            $dataLatacungaArray[$cont_lata]["ruta"]=$value["ruta"];
+            $dataLatacungaArray[$cont_lata]["cuenta"]=$value["cuenta"];
+            $dataLatacungaArray[$cont_lata]["medidor"]=$value["medidor"];
+            $cont_lata++;
+          }
+          if($value["agencia"]=="07"){
+            $dataPanguaArray[$cont_pangua]["zona"]=$value["zona"];
+            $dataPanguaArray[$cont_pangua]["agencia"]=$value["agencia"];
+            $dataPanguaArray[$cont_pangua]["sector"]=$value["sector"];
+            $dataPanguaArray[$cont_pangua]["ruta"]=$value["ruta"];
+            $dataPanguaArray[$cont_pangua]["cuenta"]=$value["cuenta"];
+            $dataPanguaArray[$cont_pangua]["medidor"]=$value["medidor"];
+            $cont_pangua++;
+          }
+          if($value["agencia"]=="05"){
+            $dataSigchosArray[$cont_sigchos]["zona"]=$value["zona"];
+            $dataSigchosArray[$cont_sigchos]["agencia"]=$value["agencia"];
+            $dataSigchosArray[$cont_sigchos]["sector"]=$value["sector"];
+            $dataSigchosArray[$cont_sigchos]["ruta"]=$value["ruta"];
+            $dataSigchosArray[$cont_sigchos]["cuenta"]=$value["cuenta"];
+            $dataSigchosArray[$cont_sigchos]["medidor"]=$value["medidor"];
+            $cont_sigchos++;
+          }
+        }
+
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getActiveSheet()->setTitle('CONSOLIDADO');
+        $indexSheet=0;
+        if(count($dataLatacungaArray)>0){
+
+          $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A1",'zona')
+                      ->setCellValue("B1",'agencia')
+                      ->setCellValue("C1",'sector')
+                      ->setCellValue("D1",'ruta')
+                      ->setCellValue("E1",'cuenta')
+                      ->setCellValue("F1",'medidor');
+          $x= 2;
+          foreach($dataLatacungaArray as $item){
+              $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A$x",$item["zona"])
+                      ->setCellValue("B$x",$item["agencia"])
+                      ->setCellValue("C$x",$item["sector"])
+                      ->setCellValue("D$x",$item["ruta"])
+                      ->setCellValue("E$x",$item["cuenta"])
+                      ->setCellValue("F$x",$item["medidor"]);
+              $x++;
+          }
+          $spreadsheet->getActiveSheet()->setTitle('LATACUNGA');
+          $spreadsheet->createSheet();
+          $indexSheet++;
+        }
+
+        if(count($dataSigchosArray)>0){
+          $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A1",'zona')
+                      ->setCellValue("B1",'agencia')
+                      ->setCellValue("C1",'sector')
+                      ->setCellValue("D1",'ruta')
+                      ->setCellValue("E1",'cuenta')
+                      ->setCellValue("F1",'medidor');
+          $x= 2;
+          foreach($dataSigchosArray as $item){
+              $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A$x",$item['zona'])
+                      ->setCellValue("B$x",$item['agencia'])
+                      ->setCellValue("C$x",$item['sector'])
+                      ->setCellValue("D$x",$item['ruta'])
+                      ->setCellValue("E$x",$item['cuenta'])
+                      ->setCellValue("F$x",$item['medidor']);
+              $x++;
+
+          }
+
+          $spreadsheet->getActiveSheet()->setTitle('SIGCHOS');
+          $spreadsheet->createSheet();
+          $indexSheet++;
+        }
+
+        if(count($dataPanguaArray)>0){
+          $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A1",'zona')
+                      ->setCellValue("B1",'agencia')
+                      ->setCellValue("C1",'sector')
+                      ->setCellValue("D1",'ruta')
+                      ->setCellValue("E1",'cuenta')
+                      ->setCellValue("F1",'medidor');
+          $x= 2;
+          foreach($dataPanguaArray as $item){
+
+              $spreadsheet->setActiveSheetIndex($indexSheet)
+                      ->setCellValue("A$x",$item['zona'])
+                      ->setCellValue("B$x",$item['agencia'])
+                      ->setCellValue("C$x",$item['sector'])
+                      ->setCellValue("D$x",$item['ruta'])
+                      ->setCellValue("E$x",$item['cuenta'])
+                      ->setCellValue("F$x",$item['medidor']);
+              $x++;
+
+          }
+          $spreadsheet->getActiveSheet()->setTitle('PANGUA');
+          $spreadsheet->createSheet();
+          $indexSheet++;
+        }
+        $spreadsheet->setActiveSheetIndex(0);
+        //nombre del EXCEL descargado
+        //$vector = explode("-",$mes);
+        $fileName = $mes.'_CONSOLIDADO_LECTURAS';
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename='.$fileName.".".$type);
+        $writer->save("php://output");
+        exit;
+      } catch (\Exception $e) {
+          return response()->json($e);
+      }
+
+    }
+
+
+    public function testExport(){
+      $spreadsheet = new Spreadsheet();
+// Set document properties
+$spreadsheet->getProperties()->setCreator('PhpOffice')
+      ->setLastModifiedBy('PhpOffice')
+      ->setTitle('Office 2007 XLSX Test Document')
+      ->setSubject('Office 2007 XLSX Test Document')
+      ->setDescription('PhpOffice')
+      ->setKeywords('PhpOffice')
+      ->setCategory('PhpOffice');
+      // Add some data
+      $spreadsheet->setActiveSheetIndex(0)
+              ->setCellValue('A1', 'Hello');
+      // Rename worksheet
+      $spreadsheet->getActiveSheet()->setTitle('URL Added');
+      $spreadsheet->createSheet();
+      // Add some data
+      $spreadsheet->setActiveSheetIndex(1)
+              ->setCellValue('A1', 'world!');
+      // Rename worksheet
+      $spreadsheet->getActiveSheet()->setTitle('URL Removed');
+      // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+      $spreadsheet->setActiveSheetIndex(0);
+      // Redirect output to a client’s web browser (Xlsx)
+      header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      header('Content-Disposition: attachment;filename="01simple.xlsx"');
+      header('Cache-Control: max-age=0');
+      // If you're serving to IE 9, then the following may be needed
+      header('Cache-Control: max-age=1');
+      // If you're serving to IE over SSL, then the following may be needed
+      header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+      header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+      header('Pragma: public'); // HTTP/1.0
+      $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+      $writer->save('php://output');
+      exit;
     }
 }
