@@ -45,31 +45,31 @@ class MobileController extends Controller
             //$actividad=ActividadDiaria::find($value['id_act']);
             $idsActividades[$cont]=$value['id_act'];
             if($value['estado']=='2' && $value['n9leco']>0){
-              $actividadesArray['n9leco']=$value['n9leco'];
-              $actividadesArray['n9lect']=$value['n9leco'];
-              $actividadesArray['estado']=$value['estado'];
-              $actividadesArray['referencia']="Finalizado";
-              $actividadesArray['n9feco']=date('Y')."".date('m')."".date('d');
-              $actividadesArray['n9fecl']=date('Y')."".date('m')."".date('d');
+              $actividadesArray[$cont]['n9leco']=$value['n9leco'];
+              $actividadesArray[$cont]['n9lect']=$value['n9leco'];
+              $actividadesArray[$cont]['estado']=$value['estado'];
+              $actividadesArray[$cont]['referencia']="Finalizado";
+              $actividadesArray[$cont]['n9feco']=date('Y')."".date('m')."".date('d');
+              $actividadesArray[$cont]['n9fecl']=date('Y')."".date('m')."".date('d');
             } else {
-              $actividadesArray['estado']=3;
-              $actividadesArray['referencia']="No Finalizado";
-              $actividadesArray['n9leco']=0;
-              $actividadesArray['n9lect']=0;
-              $actividadesArray['n9feco']=0;
-              $actividadesArray['n9fecl']=0;
+              $actividadesArray[$cont]['estado']=3;
+              $actividadesArray[$cont]['referencia']="No Finalizado";
+              $actividadesArray[$cont]['n9leco']=0;
+              $actividadesArray[$cont]['n9lect']=0;
+              $actividadesArray[$cont]['n9feco']=0;
+              $actividadesArray[$cont]['n9fecl']=0;
             }
             //$actividad->save();
 
             //$ordenTrabajo=new OrdenTrabajo();
             //$idsOrdenActividad[$cont]=$value['id_act'];
-            $ordenArray['observacion']=$value['observacion'];
-            $ordenArray['estado']=1;
-            $ordenArray['foto']=$value['foto'];
-            $ordenArray['hora']=$value['hora'];
+            $ordenArray[$cont]['observacion']=$value['observacion'];
+            $ordenArray[$cont]['estado']=1;
+            $ordenArray[$cont]['foto']=$value['foto'];
+            $ordenArray[$cont]['hora']=$value['hora'];
             //$res->save();
 
-            $tecnicosArray['id_tecn']=$value['id_tecn'];
+            $tecnicosArray[$cont]=$value['id_tecn'];
             //$tecnico->asignado=0;
             //$tecnico->save();
 
@@ -79,7 +79,9 @@ class MobileController extends Controller
 
         $res= ActividadDiaria::whereIn('id_act',$idsActividades)->update($actividadesArray);
         $res2=OrdenTrabajo::whereIn('id_act',$idsActividades)->update($ordenArray);
-        $res3=Tecnico::whereIn('id_tecn')->update(['asignado'=>0]);
+        $tecn=Tecnico::find($tecnicosArray[0]);
+        $tecn->asignado=0;
+        $tecn->save();
         if($con>0){
           return response()->json(true);
         }

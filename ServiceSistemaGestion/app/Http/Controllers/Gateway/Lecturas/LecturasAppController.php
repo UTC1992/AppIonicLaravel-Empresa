@@ -53,14 +53,43 @@ class LecturasAppController extends Controller
     /**
      * envio de lecturas al servicio de proceso lecturas
      */
-     public function updateLecturas(){
+     public function updateLecturas(Request $request){
        try {
-
+         if(!$request->lisTareas){
+           $data=array();
+           $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
+           $data["status"]=false;
+           return response($data,404)->header('Content-Type', 'application/json');
+         }
+         $id_tecnico= $request->id_tecn;
+         $result= json_decode($this->lecturasAppServices->updateLecturasService($request->all()),true);
+         if($result["status"]){
+           $tecnico= Tecnico::find($id_tecnico);
+           $tecnico->asignado=0;
+           $tecnico->save();
+           return response($result)->header('Content-Type', 'application/json');
+         }
+         return response($result)->header('Content-Type', 'application/json');
        } catch (\Exception $e) {
          return response()->json("Error :".$e);
        }
 
      }
+
+     /**
+      * ingresar catastros
+      */
+      public function insertarCatastros(Request $request){
+        try {
+          if(!is_null($request)){
+            $result= $this->lecturasAppServices->insertarCatastrosAService($request);
+            return response($result)->header('Content-Type', 'application/json');
+          }
+        } catch (\Exception $e) {
+           return response()->json("Error :".$e);
+        }
+
+      }
 
 
 }

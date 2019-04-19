@@ -36,4 +36,18 @@ class LecturasAppService
     return $this->performRequest('GET',"/data-movil/{$idEmpresa}/{$idTecnico}");
   }
 
+  /**
+   * insertar catastros
+   */
+   public function insertarCatastrosService($data){
+     return $this->performRequest('POST',"/catastros-insert",$data);
+   }
+
+   /**
+    * recibe y actualiza datos de lectutas y orden rabajo
+    */
+    public function updateLecturasService($data){
+      return $this->performRequest('POST',"/lecturas-movil",$data);
+    }
+
 }
