@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\LecturasAppService;
 use App\Models\Tecnico;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Observacion;
 
 class LecturasAppController extends Controller
 {
@@ -92,4 +93,23 @@ class LecturasAppController extends Controller
       }
 
 
+  /**
+   * obtener observaciones
+   */
+   public function getObservaciones($ID_EMP){
+     try {
+       $result=Observacion::where('id_emp',$ID_EMP)->get();
+       if(count($result)>0){
+         $data["observaciones"]=$result;
+         $data["status"]=true;
+         return response()->json($data);
+       }
+       $data["mensaje"]="No hay observaciones creadas para empresa con ID: ".$ID_EMP;
+       $data["status"]=false;
+       return response()->json($data);
+     } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+     }
+
+   }
 }

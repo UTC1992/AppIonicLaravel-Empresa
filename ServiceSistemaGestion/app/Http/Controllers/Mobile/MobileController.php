@@ -26,74 +26,9 @@ class MobileController extends Controller
     }
   }
 
-  //actualiza datos enviados desde aplicativo movil
-  public function updateActivities(Request $request){
-    try {
-      if(!is_null($request)){
-        $input=$request->json()->all();
-        $con=0;
-
-        $actividadesArray=array();
-        $idsActividades=array();
-        $ordenArray=array();
-        $idsOrdenActividad=array();
-        $tecnicosArray=array();
-
-        foreach ($input as $key => $value) {
 
 
-            //$actividad=ActividadDiaria::find($value['id_act']);
-            $idsActividades[$cont]=$value['id_act'];
-            if($value['estado']=='2' && $value['n9leco']>0){
-              $actividadesArray[$cont]['n9leco']=$value['n9leco'];
-              $actividadesArray[$cont]['n9lect']=$value['n9leco'];
-              $actividadesArray[$cont]['estado']=$value['estado'];
-              $actividadesArray[$cont]['referencia']="Finalizado";
-              $actividadesArray[$cont]['n9feco']=date('Y')."".date('m')."".date('d');
-              $actividadesArray[$cont]['n9fecl']=date('Y')."".date('m')."".date('d');
-            } else {
-              $actividadesArray[$cont]['estado']=3;
-              $actividadesArray[$cont]['referencia']="No Finalizado";
-              $actividadesArray[$cont]['n9leco']=0;
-              $actividadesArray[$cont]['n9lect']=0;
-              $actividadesArray[$cont]['n9feco']=0;
-              $actividadesArray[$cont]['n9fecl']=0;
-            }
-            //$actividad->save();
 
-            //$ordenTrabajo=new OrdenTrabajo();
-            //$idsOrdenActividad[$cont]=$value['id_act'];
-            $ordenArray[$cont]['observacion']=$value['observacion'];
-            $ordenArray[$cont]['estado']=1;
-            $ordenArray[$cont]['foto']=$value['foto'];
-            $ordenArray[$cont]['hora']=$value['hora'];
-            //$res->save();
-
-            $tecnicosArray[$cont]=$value['id_tecn'];
-            //$tecnico->asignado=0;
-            //$tecnico->save();
-
-              $con++;
-        }
-
-
-        $res= ActividadDiaria::whereIn('id_act',$idsActividades)->update($actividadesArray);
-        $res2=OrdenTrabajo::whereIn('id_act',$idsActividades)->update($ordenArray);
-        $tecn=Tecnico::find($tecnicosArray[0]);
-        $tecn->asignado=0;
-        $tecn->save();
-        if($con>0){
-          return response()->json(true);
-        }
-      }else{
-        return response()->json(false);
-      }
-    } catch (\Exception $e) {
-      return response()->json("Error: ".$e);
-    }
-  }
-
-  /*
   public function updateActivities(Request $request){
     try {
       if(!is_null($request)){
@@ -142,64 +77,11 @@ class MobileController extends Controller
       return response()->json("Error: ".$e);
     }
   }
-*/
-
-public function insertReconexionManual(Request $request){
-  try {
-    if(!is_null($request)){
-      $recManualArray=array();
-      $input=$request->json()->all();
-      //obtener cantidad de datos enviados
-      $cantidad = count($input);
-      //contador de registros
-      $contador = 0;
-      //obteniendo el id del tecnico
-      $tecnico= new Tecnico();
-      $resTecnico = $tecnico->where('cedula','=',$input[$cantidad-1]['cedula'])->first();
-      $idTec = $resTecnico->id_tecn;
-      $idEmpTec=$resTecnico->id_emp;
-      /*
-      for ($i = 0; $i < $cantidad-1; $i++)
-      {
-        if($contador < $cantidad-1){
-          $recManual= new ReconexionManual();
-          $recManual->lectura = $input[$i]['lectura'];
-          $recManual->medidor = $input[$i]['medidor'];
-          $recManual->observacion = $input[$i]['observacion'];
-          $recManual->foto = $input[$i]['foto'];
-          $recManual->id_tecn = $idTec;
-          $recManual->estado = 0;
-          $recManual->id_emp=$idEmpTec;
-          $recManual->save();
-        }
-        $contador++;
-      }
-      */
-      foreach ($input as $key => $value) {
-        $recManualArray['lectura'] = $value['lectura'];
-        $recManualArray['medidor'] = $$value['medidor'];
-        $recManualArray['observacion'] = $$value['observacion'];
-        $recManualArray['foto'] = $$value['foto'];
-        $recManualArray['id_tecn'] = $idTec;
-        $recManualArray['estado'] = 0;
-        $recManualArray['id_emp']=$idEmpTec;
-        $contador
-      }
-      if($contador == $cantidad-1){
-        $res= ReconexionManual::create($recManualArray);
-        return response()->json(true);
-      }
-    }else{
-      return response()->json(false);
-    }
-  } catch (\Exception $e) {
-    return response()->json("Error: ".$e);
-  }
-}
 
 
 
-/*
+
+
   public function insertReconexionManual(Request $request){
     try {
       if(!is_null($request)){
@@ -240,8 +122,10 @@ public function insertReconexionManual(Request $request){
     }
   }
 
-*/
 
+/**
+ * obtener observaciones
+ */
 
 
 
