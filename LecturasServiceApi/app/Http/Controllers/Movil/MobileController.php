@@ -62,7 +62,7 @@ class MobileController extends Controller
           $dataOrdenTrabajo["fecha_lectura"]=$value["fecha_lectura"];
           $dataOrdenTrabajo["hora"]=$value["hora"];
           $dataOrdenTrabajo["lat"]=$value["lat"];
-          $dataOrdenTrabajo["long"]=$value["long"];
+          $dataOrdenTrabajo["lon"]=$value["lon"];
           $dataOrdenTrabajo["observacion"]="Terminado";
           $dataOrdenTrabajo["foto"]=$value["foto"];
           $dataOrdenTrabajo["estado"]=1;
