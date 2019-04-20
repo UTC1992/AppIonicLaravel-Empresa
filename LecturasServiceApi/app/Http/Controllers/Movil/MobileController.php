@@ -41,18 +41,54 @@ class MobileController extends Controller
     /**
      * recibe data desde móvil para proceso
      */
-    public function prcesarLecturas(Request $request){
+    public function recibirLecturas(Request $request){
       try {
-        $data=$request->all();
-        foreach ($data as $key => $value) {
-          // code...
-        }
+        //$input=$request->json()->all();
+        $data=$request->lisTareas;
+        $idEmpresa=$request->id_emp;
+        $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
 
+        $cont=0;
+        foreach ($data as $key => $value) {
+          // data lecturas
+          $dataProcArray=array();
+          $dataProcArray["nueva_lectura"]=$value["nueva_lectura"];
+          $dataProcArray["estado"]=$value["estado"];
+          DB::table($tablaLecturasCompany)
+                 ->where('id',$value["id"])
+                 ->update($dataProcArray);
+          //orden trabajo
+          $dataOrdenTrabajo=array();
+          $dataOrdenTrabajo["fecha_lectura"]=$value["fecha_lectura"];
+          $dataOrdenTrabajo["hora"]=$value["hora"];
+          $dataOrdenTrabajo["lat"]=$value["lat"];
+          $dataOrdenTrabajo["lon"]=$value["long"];
+          $dataOrdenTrabajo["observacion"]="Terminado";
+          $dataOrdenTrabajo["foto"]=$value["foto"];
+          $dataOrdenTrabajo["estado"]=1;
+          DB::table('orden_trabajo')
+                 ->where('id_lectura',$value["id"])
+                 ->update($dataOrdenTrabajo);
+          $cont++;
+        }
+        $data= array();
+        if($cont>0){
+          $data["mensaje"]="Lecturas recibidas correctamente";
+          $data["cantidad"]=$cont;
+          $data["status"]=true;
+        }else{
+          $data["mensaje"]="Ocurrio un error al actualizar registros";
+          $data["status"]=false;
+        }
+        return response()->json($data);
       } catch (\Exception $e) {
         return response()->json("error: ".$e);
       }
 
     }
+
+
+
 
     /**
      * calcular consumo mensual por de cliente

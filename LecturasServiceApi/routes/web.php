@@ -47,3 +47,4 @@ $router->post('/upload','Procesos\ProcesosController@carga');
  */
 $router->get('/data-movil/{idEmpresa}/{idTecnico}','Movil\MobileController@index');
 $router->post('/catastros-insert','Movil\MobileController@insertCatastros');
+$router->post('/lecturas-movil','Movil\MobileController@recibirLecturas');

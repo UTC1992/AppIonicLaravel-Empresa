@@ -20,11 +20,15 @@ class Configuracion extends Model
 
     ];
 
+    /**
+     * creacion de tabla de lecturas por empresa
+     */
     public function createTableLecturas($data){
       $tabla="";
       foreach ($data as $key => $value) {
         if($value->key=="table"){
           $tabla=$value->value;
+          break;
         }
       }
       Schema::create($tabla, function (Blueprint $table) use($data){
@@ -35,7 +39,8 @@ class Configuracion extends Model
           }
         }
         $table->string("longitud")->nullable();;
-        $table->string("latitud")->nullable();;
+        $table->string("latitud")->nullable();
+        $table->string("nueva_lectura")->nullable();
         $table->integer("idEmpresa")->nullable();;
         $table->boolean("estado")->nullable();;
         $table->timestamps();

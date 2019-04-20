@@ -39,8 +39,15 @@ class LecturasAppService
   /**
    * insertar catastros
    */
-   public function insertarCatastrosAService($data){
+   public function insertarCatastrosService($data){
      return $this->performRequest('POST',"/catastros-insert",$data);
    }
+
+   /**
+    * recibe y actualiza datos de lectutas y orden rabajo
+    */
+    public function updateLecturasService($data){
+      return $this->performRequest('POST',"/lecturas-movil",$data);
+    }
 
 }

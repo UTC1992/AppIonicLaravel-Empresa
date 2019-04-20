@@ -84,6 +84,8 @@ Route::group(['prefix' => 'mobile'], function(){
   Route::group(['middleware' => 'app'], function () {
       Route::post('login/','Gateway\Lecturas\LecturasAppController@login');
       Route::get('rutas/{idEmpresa}/{idTecnico}','Gateway\Lecturas\LecturasAppController@index');
+      Route::post('lecturas','Gateway\Lecturas\LecturasAppController@updateLecturas');
+      Route::get('observaciones/{id}','Gateway\Lecturas\LecturasAppController@getObservaciones');
   });
 
   /**
