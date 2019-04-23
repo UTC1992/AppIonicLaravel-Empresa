@@ -69,7 +69,10 @@ export class ActividadesTecnicoComponent implements OnInit {
   onSelection(e, list){
     this.tecnicoSeleccionado = e.option.value;
     this.listTecnicosSeleccionados = list;
-    console.log(list[0].value);
+    if(list.length > 0){
+      console.log(list[0].value);
+    }
+    
   }
 
   ngOnInit() {
