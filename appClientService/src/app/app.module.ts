@@ -9,8 +9,11 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatTableModule, MatToolbarModule, 
   MatButtonModule, MatSidenavModule, MatIconModule, 
   MatListModule, MatGridListModule, MatCardModule, 
-  MatMenuModule, MatDatepickerModule, MatNativeDateModule, MatTableDataSource } from '@angular/material';
+  MatMenuModule, MatDatepickerModule, MatNativeDateModule, 
+  MatTableDataSource, MatSelectModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
 
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
@@ -72,6 +75,8 @@ import { LoginComponent } from './view-componets/login/login.component';
     MatExpansionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatPaginatorModule,
+    MatSelectModule
   ],
   providers: [
     MatDatepickerModule,

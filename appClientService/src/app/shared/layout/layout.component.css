@@ -4,9 +4,15 @@
   
   .sidenav{
     width: 230px;
-    background-color: #a29da3;
+    box-shadow: 3px 0 6px rgba(0, 0, 0, .24)
   }
   
+  /*ACTIVAR ITEMS DEL MENU LATERAL*/
+  .mat-nav-list a.active {
+    background: #97989E;
+    color: white;
+  }
+
   .mat-toolbar.mat-primary{
     position: sticky;
     top: 0;
@@ -43,3 +49,5 @@
   .menuLateral{
     background-color: #5D0263; color: white;
   }
+
+  

@@ -8,13 +8,17 @@
     [opened]="!(isHandset$ | async)">
     <mat-toolbar class="menuLateral">
         <span>Energy OS</span>
+        <!--<img mat-card-sm-image class="logo" src="../../../assets/img/logoEnergyOS.png">-->
     </mat-toolbar>
-    <div class="list-group list-group-flush" *ngFor="let modulo of modulos">
-        <a [routerLink]="[modulo.ruta]" routerLinkActive="active" class="list-group-item list-group-item-action waves-effect">
-            <mdb-icon fas icon="chart-pie" class="mr-3"></mdb-icon>{{modulo.nombre}}
-        </a>
-        
-    </div>
+    <mat-nav-list>
+      <a mat-menu-item >Menú</a>
+      <mat-divider></mat-divider>
+      <a mat-menu-item *ngFor="let modulo of modulos" [routerLink]="[modulo.ruta]" routerLinkActive="active" >
+          {{modulo.nombre}}
+      </a>
+      <a mat-menu-item [routerLink]="['/base/tecnicos']" routerLinkActive="active">Técnicos</a>
+    </mat-nav-list>
+    
     <!--
     <mat-nav-list>
       <mat-divider></mat-divider>
@@ -29,11 +33,9 @@
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <img mat-card-sm-image class="logo" src="../../../assets/img/logoEnergyOS.png">
       <span class="example-fill-remaining-space"></span>
         <mat-menu #appMenu="matMenu">
           <button mat-menu-item [routerLink]="['/base/perfil']">Cuenta</button>

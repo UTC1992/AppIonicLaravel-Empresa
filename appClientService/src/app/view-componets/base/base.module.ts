@@ -11,12 +11,14 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { MatTableModule, MatToolbarModule, MatButtonModule, 
   MatSidenavModule, MatIconModule, MatListModule, 
   MatGridListModule, MatCardModule, MatMenuModule, 
-  MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatTableDataSource } from '@angular/material';
+  MatTabsModule, MatDatepickerModule, MatNativeDateModule, 
+  MatTableDataSource, MatSelectModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
@@ -77,6 +79,8 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatPaginatorModule,
+    MatSelectModule
   ],
   declarations: [
     InicioComponent,
