@@ -56,7 +56,8 @@ class LecturasAppController extends Controller
      */
      public function updateLecturas(Request $request){
        try {
-         if(!$request->lisTareas){
+          $input = $request->json()->all();
+         /*if(!$request->lisTareas){
            $data=array();
            $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
            $data["status"]=false;
@@ -69,8 +70,8 @@ class LecturasAppController extends Controller
            $tecnico->asignado=0;
            $tecnico->save();
            return response($result)->header('Content-Type', 'application/json');
-         }
-         return response($result)->header('Content-Type', 'application/json');
+         }*/
+         return response($input)->header('Content-Type', 'application/json');
        } catch (\Exception $e) {
          return response()->json("Error :".$e);
        }
