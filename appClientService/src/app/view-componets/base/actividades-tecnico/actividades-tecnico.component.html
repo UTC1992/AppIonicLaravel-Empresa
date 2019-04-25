@@ -1,4 +1,81 @@
-<br>
+<ng-template #template>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLongTitle">Detalles de la asignación</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!--tabla detalle actividades-->
+      <div class="table-responsive" style="font-size: 10pt;">
+            <table class="table table-bordered table-striped table-sm" 
+                 style="font-family: calibri; font-size: 10pt;" 
+                 *ngIf="view_table">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <!--<th>ID Actividad</th>-->
+                        <th>FECHA DE ASIGNACIÓN</th>
+                        <!--<th>N9CONO</th>-->
+                        <!--<th>N9COCU</th>-->
+                        <!--<th>N9COSE</th>-->
+                        <!--<th >N9CORU </th>-->
+                        <!--<th>N9PLVE</th>-->
+                        <!--<th>N9VACA</th>-->
+                        <!--<th>N9MECO</th>-->
+                        <!--<th>N9LECO</th>-->
+                        <!--<th>N9COCL</th>-->
+                        <th>N9CONO</th>
+                        <th>N9MECO</th>
+                        <th>N9NOMB</th>
+                        <th>N9REFE</th>
+                        <!--<th>CUSECU</th>
+                        <th>CUCOON</th>
+                        <th>CUCOOE</th>-->
+                        <th>ESTADO</th>
+                        <!--<th>OBSERVAciÓN</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let actividades of actividades_tecncio | async | paginate: { itemsPerPage: 10, currentPage: p }; let i=index">
+                        <td>{{i+1}}</td>
+                         <!--<td>{{actividades.id_act}}</td>-->
+                        <td>{{actividades.fecha}}</td>
+                        <!--<td>{{actividades.n9cono}}</td>-->
+                        <!--<td>{{actividades.n9cocu}}</td>-->
+                        <!--<td>{{actividades.n9cose}}</td>-->
+                        <!--<td>{{actividades.n9coru}}</td>-->
+                        <!--<td>{{actividades.n9plve}}</td>-->
+                        <!--<td>{{actividades.n9vaca}}</td>-->
+                        <!--<td>{{actividades.n9meco}}</td>-->
+                        <!--<td>{{actividades.n9leco}}</td>-->
+                       <!-- <td>{{actividades.n9cocl}}</td>-->
+                       <td>{{actividades.n9cono}}</td>
+                       <td>{{actividades.n9meco}}</td>
+                        <td>{{actividades.n9nomb}}</td>
+                        <td>{{actividades.n9refe}}</td>
+                        <!--<td>{{actividades.cusecu}}</td>
+                        <td>{{actividades.cucoon}}</td>
+                        <td>{{actividades.cucooe}}</td>-->
+                        <td *ngIf="actividades.estado==0"><span class="text-danger">Pendiente</span> </td>
+                        <td *ngIf="actividades.estado==1"><span class="text-success">Realizado</span> </td>
+                        <!--<td>{{actividades.observacion}}</td>-->
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group">
+                <pagination-controls (pageChange)="p = $event" class="text-danger"></pagination-controls>    
+            </div>
+      </div>
+      <!--fin tabla detalles-->
+  
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="modalRef.hide()">Cerrar</button>
+    </div>
+  <!--fin formulario-->
+  </ng-template>
+
 <div class="row">
     <!-- Modal -->
     <div class="modal fade" id="DetalleTareasModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -198,7 +275,7 @@
 <div class="card card-body" style="margin-bottom: 10px;">
     <div class="row">
         <div class="col d-flex justify-content-center">
-            <h5 class="">Técnicos sin asignar</h5>    
+            <h5 class="">Técnicos disponibles</h5>    
         </div>
     </div>
     <mat-card-content>
@@ -245,20 +322,26 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center">
-            <h5 class="">Técnicos asignados</h5> 
+            <h5 class="">Detalle de asignaciones</h5> 
         </div>
-        <br>
-        <div class="d-flex justify-content-left">
-            <p>Aquí puede observar información sobre los técnicos y sus actividades:</p> 
-        </div>
+        <mat-grid-list cols="2" rowHeight="1:0.2">
+            <mat-grid-tile>
+                Información asignaciones:
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <mat-form-field class="col-lg-6 col-md-6 col-sm-6">
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
         <div class="table-responsive">
             <table mat-table [dataSource]="dataSource" multiTemplateDataRows
-             class="table table-sm">
+             class="table table-sm table-striped">
                 
                 <!-- Id Column -->
                 <ng-container matColumnDef="index">
                     <th mat-header-cell *matHeaderCellDef> N° </th>
-                    <td mat-cell *matCellDef="let j=index"> {{j+1}} </td>
+                    <td mat-cell *matCellDef="let distribucion"> {{distribucion.index}} </td>
                 </ng-container>
                 <!-- Nombres Column -->
                 <ng-container matColumnDef="tecnico">
@@ -278,12 +361,12 @@
                             <div class="table-responsive">
                                 <table class="table table-sm table-striped ">
                                     <tr>
-                                        <th>Cantón</th>
-                                        <th>Código</th>
-                                        <th>Sector</th>
-                                        <th>Cantidad</th>
-                                        <th>Tipo</th>
-                                        <th>Acciones</th>
+                                        <td>Cantón</td>
+                                        <td>Código</td>
+                                        <td>Sector</td>
+                                        <td>Cantidad</td>
+                                        <td>Tipo</td>
+                                        <td>Acciones</td>
                                     </tr>
                                     <tr *ngFor="let item of distribucion.data">
                                         <td>{{item.datos.n9coag}}</td>
@@ -294,8 +377,8 @@
                                         <td>
                                             <div style="width: 250px;">
                                                 <button type="button" style="margin-right: 5px;" 
-                                                (click)="verDetalleActividades(item.datos.id_tecn, item.datos.tipo,item.datos.n9cose)" 
-                                                class="btn btn-info btn-sm" data-toggle="modal" data-target="#DetalleTareasModal">
+                                                (click)="openModalDetalle(item.datos.id_tecn, item.datos.tipo,item.datos.n9cose, template)" 
+                                                class="btn btn-info btn-sm">
                                                     Detalle    
                                                     </button>
                                                 <button class="btn btn-warning btn-sm" (click)="AsignarActividades(item.datos.id_tecn)" 
@@ -303,7 +386,7 @@
                                                         Asignar
                                                 </button>
                                                 <button class="btn btn-danger btn-sm" 
-                                                (click)="eliminarAsignacion(item.datos.id_tecn, item.datos.n9cose, item.datos.cantidad, 
+                                                (click)="confirmarEliminar(item.datos.id_tecn, item.datos.n9cose, item.datos.cantidad, 
                                                 item.datos.n9cono)">
                                                         Eliminar
                                                 </button>  

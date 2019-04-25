@@ -60,7 +60,7 @@ export class TecnicosComponent implements OnInit {
       resp=>{
         if(resp){
           console.log(resp);
-          Swal.fire(
+          this.showAlert(
             'Eliminado!',
             'El técnico a sido eliminado.',
             'success'
@@ -68,7 +68,7 @@ export class TecnicosComponent implements OnInit {
           this.mostrarTecnicos();   
         } else {
           console.log(resp);
-          Swal.fire(
+          this.showAlert(
             'Alerta!',
             'El técnico No a sido eliminado.',
             'warning'
@@ -158,10 +158,10 @@ export class TecnicosComponent implements OnInit {
           console.log('Tecnico guardado');
           this.mostrarTecnicos();
           this.cerrarModal();
-          Swal.fire('Éxito', 'Técnico creado con exito!', 'success');
+          this.showAlert('Éxito', 'Técnico creado con exito!', 'success');
         } else {
           console.log('Tecnico no guardado');
-          Swal.fire('Alerta!', 'La cédula ya existe!', 'warning');
+          this.showAlert('Alerta!', 'La cédula ya existe!', 'warning');
         }
       });
     }
@@ -174,9 +174,10 @@ export class TecnicosComponent implements OnInit {
           console.log('Tecnico editado');
           this.mostrarTecnicos();
           this.cerrarModal();
-          Swal.fire('Éxito', 'Técnico editado con exito!', 'success');
+          this.showAlert('Éxito', 'Técnico editado con exito!', 'success');
         } else {
           console.log('Tecnico error al guardar');
+          this.showAlert('Alerta!', 'Técnico no editado', 'warning');
         }
       },error=>{
         console.log(<any>error)
@@ -192,11 +193,21 @@ export class TecnicosComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar!'
+      confirmButtonText: 'Si, eliminar!',
+      allowOutsideClick: false
     }).then((result) => {
       if (result.value) {
         this.deleteTecnico(id);
       }
+    });
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
     });
   }
 

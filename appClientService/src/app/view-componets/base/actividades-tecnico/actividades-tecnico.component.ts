@@ -18,6 +18,7 @@ import {MatTableDataSource, MatPaginator} from '@angular/material';
 import Swal from 'sweetalert2';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
+
 @Component({
   selector: 'app-actividades-tecnico',
   templateUrl: './actividades-tecnico.component.html',
@@ -63,9 +64,9 @@ export class ActividadesTecnicoComponent implements OnInit {
   listTecnicosSeleccionados: any[];
 
   //asignar select con material
-  actividadSelect: String;
-  cantonSelect: String;
-  sectorSelect: number;
+  actividadSelect: String = null;
+  cantonSelect: String = null;
+  sectorSelect: number = 0;
   formSectores = new FormControl();
   formCanton: FormGroup;
 
@@ -124,6 +125,7 @@ export class ActividadesTecnicoComponent implements OnInit {
       var valor = dataAux.find(x=>x.id_tecn == this.actividades[i].id_tecn);
       if(!valor){
         dataAux.push({
+          index:i+1,
           id_tecn:this.actividades[i].id_tecn,
           tecnico:this.actividades[i].nombres+" "+this.actividades[i].apellidos,
           data: null
@@ -190,6 +192,15 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.mostrarDistribucion();
     this.countActivities();
   }
+
+  openModalDetalle(id,tipo,sector, template: TemplateRef<any>) {
+    this.verDetalleActividades(id,tipo,sector);
+    this.modalRef = this.modalService.show(template);
+  }
+
+  cerrarModal(){
+    this.modalRef.hide();
+  }
  
   //ver detalle en modal 
   verDetalleActividades(id,tipo,sector) {
@@ -227,7 +238,11 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.tecnicoService.changeStateTecnico(id).subscribe(
       msj=>{
         if(msj){
-          alert("Técnico habilitado correctamente");
+          this.showAlert(
+            'Éxito!',
+            'El técnico ha sido habilitado.',
+            'success'
+          )
           this.reloadComponent();
         }
       }
@@ -239,7 +254,6 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.sectores_exists=false;
     this.cantidad_exists=false;
     this.formSectores = new FormControl();
-    this.listTecnicosSeleccionados = [];
     this.cantonSelect = "empty";
   }
 
@@ -333,33 +347,57 @@ export class ActividadesTecnicoComponent implements OnInit {
       this.ordenServices.getRecManualesSinProcesar().subscribe(
         resultado=>{
           if(resultado>0){
-            alert("Aun no ha procesado las reconexiones manuales");
+            this.showAlert(
+              'Alerta!',
+              'Debes procesar las reconexiones manuales.',
+              'warning'
+            )
             this.spinner.hide();
             return;
           }else{
             var actividad=this.actividadSelect;
             
             if(cont_tecnicos<=0){
-              alert("Seleccione almenos un tecnico");
+              //alert("Seleccione almenos un tecnico");
+              this.showAlert(
+                'Alerta!',
+                'Debes seleccionar almenos un tecnico.',
+                'warning'
+              )
               this.spinner.hide();
               return;
             }
 
-            if(actividad+"" == "empty"){
-              alert("Seleccione una actividad");
+            if(this.actividadSelect == "empty" || this.actividadSelect == null){
+              //alert("Seleccione una actividad");
+              this.showAlert(
+                'Alerta!',
+                'Debes seleccionar una actividad.',
+                'warning'
+              )
               this.spinner.hide();
               return;
             } else {
                 var actividad1=this.cantonSelect;
 
                 if(actividad1+"" == 'empty'){
-                  alert("Seleccione un cantón");
+                  //alert("Seleccione un cantón");
+                  this.showAlert(
+                    'Alerta!',
+                    'Debes seleccionar un cantón.',
+                    'warning'
+                  )
                   this.spinner.hide();
                   return;
                 } else {
                   
-                  if(this.formSectores.value.length<=0){
-                    alert("Seleccione un sector");
+                  if(this.formSectores.value == null){
+                    //alert("Seleccione un sector");
+                    this.showAlert(
+                      'Alerta!',
+                      'Debes seleccionar un sector.',
+                      'warning'
+                    )
                     this.spinner.hide();
                     return;
                   } else {
@@ -367,7 +405,12 @@ export class ActividadesTecnicoComponent implements OnInit {
                     var actividad3=<HTMLInputElement>re3[0]["value"];
                     
                     if(Number(actividad3) == 0){
-                      alert("NO ha seccionado el número actividades");
+                      //alert("NO ha seccionado el número actividades");
+                      this.showAlert(
+                        'Alerta!',
+                        'Debes seleccionar un número de actividades mayor a cero 0.',
+                        'warning'
+                      )
                       this.spinner.hide();
                       return;
                     }
@@ -382,7 +425,12 @@ export class ActividadesTecnicoComponent implements OnInit {
               msj=>{
                 //alert(msj.length);
                 if(msj.length<=0){
-                  alert("seleccione actividades a distribuir");
+                  //alert("seleccione actividades a distribuir");
+                  this.showAlert(
+                    'Alerta!',
+                    'Debes seleccionar una actividad para distribuir',
+                    'warning'
+                  )
                   this.spinner.hide();
                   return;
                 }
@@ -414,11 +462,26 @@ export class ActividadesTecnicoComponent implements OnInit {
                       this.listTecnicosSeleccionados = [];
                       this.countActivities();
                       this.spinner.hide();
+                      this.showAlert(
+                        'Éxito!',
+                        'La asignación fue exitosa.',
+                        'success'
+                      )
                     }else if(result==1){
-                      alert("El  número de actividades no puede ser igual o menor a cero  ");
+                      //alert("El  número de actividades no puede ser igual o menor a cero  ");
+                      this.showAlert(
+                        'Alerta!',
+                        'Debes seleccionar un número de actividades mayor a cero 0.',
+                        'warning'
+                      )
                       this.spinner.hide();
                     }else{
-                      alert("No se asigno las actividades  ");
+                      //alert("No se asigno las actividades  ");
+                      this.showAlert(
+                        'Alerta!',
+                        'No se asignaron las actividades.',
+                        'warning'
+                      )
                       this.spinner.hide();
                     }
                     
@@ -454,6 +517,8 @@ export class ActividadesTecnicoComponent implements OnInit {
     });
   }
 
+
+
   eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
     this.spinner.show();
     //console.log("ELIMINAR LA DISTRIBUCION ===================");
@@ -463,13 +528,41 @@ export class ActividadesTecnicoComponent implements OnInit {
       if(res == true){
         //alert("Asignación eliminada correctamente");
         this.reloadComponent();
-        this.spinner.hide();
+        this.showAlert('Eliminado!',
+        'La asignación a sido eliminada.',
+        'success');
         //location.reload(true);
       } else {
-        
-        alert("Error al eliminar la asignación");
+        this.showAlert('Alerta!',
+        'La asignación No a sido eliminada.',
+        'warning');
         this.reloadComponent();
-        this.spinner.hide();
+      }
+    });
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
+
+  confirmarEliminar(id_tecn, sector, cantidad, tipoAct){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Se eliminará la asignación",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarAsignacion(id_tecn, sector, cantidad, tipoAct);
       }
     });
   }
