@@ -44,4 +44,12 @@ class Reportes extends Model
     $result=  DB::select('call sp_estadistica_tecnicos_mes("'.$empresa.'", "'.$mes.'")');
     return $result;
     }
+
+    /**
+     * procedimiento almacenado reporte medidor
+     */
+     public static function getReporteMedidor($empresa,$incio,$fin,$medidor){
+       $result=  DB::select('call sp_reporte_medidor_cortes("'.$empresa.'", "'.$incio.'","'.$fin.'","'.$medidor.'")');
+       return $result;
+     }
 }

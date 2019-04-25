@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class PermisosController extends Controller
 {
   public function __construct(){
-    $this->middleware('auth:api');
+    //$this->middleware('auth:api');
   }
 
   /**
@@ -39,6 +39,20 @@ class PermisosController extends Controller
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
     }
+  }
+
+/**
+ *
+ */
+  public function getPlanEmpresa(){
+    try {
+      $ID_EMP=2;//$this->getIdEmpUserAuth();
+      $planes=Empresa::getPlanesEmpresa($ID_EMP);
+      return response()->json($planes);
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
+
   }
 
 }

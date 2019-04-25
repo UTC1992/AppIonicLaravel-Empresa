@@ -30,12 +30,12 @@ class Empresa extends Model
                 $empresa->id_admin = $data->id_admin;
                 $empresa->save();
                 return true;
-            } else 
+            } else
             {
                 return false;
-            }   
+            }
         } catch (Exception $e) {
-            return false;   
+            return false;
         }
     }
 
@@ -54,7 +54,7 @@ class Empresa extends Model
     }
 
     public function updateEmpresa($data=[])
-    {	
+    {
     	try {
 	        $empresa = Empresa::find($data->id_emp);
 	        $empresa->nombre = $data->nombre;
@@ -75,5 +75,21 @@ class Empresa extends Model
       	} catch (\Exception $e) {
 	        return $e;
       	}
+    }
+
+/**
+ * obtiene plan empresa
+ */
+    public static function getPlanesEmpresa($idEmpresa){
+      try {
+        return $planes = DB::table('tbl_planes as T0')
+            ->join('tbl_plan_empresa as T1','T1.id_plan','=','T0.id_plan')
+            ->join('tbl_empresa as T2','T2.id_emp','=','T1.id_emp')
+            ->select('*')
+            ->where('T2.id_emp',$idEmpresa)
+            ->get();
+      } catch (\Exception $e) {
+
+      }
     }
 }
