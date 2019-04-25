@@ -94,8 +94,10 @@ export class AddCsvComponent implements OnInit {
     this.ordenService.addCsvFiles(formModel)
     .subscribe(
       msj=>{
+        console.log(msj);
+        
         if(msj){
-          //this.loading = false;
+          this.loading = false;
           this.spinner.hide();
           alert("Archivo subido correctamente");
           this.clearFile();

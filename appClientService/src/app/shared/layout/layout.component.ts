@@ -44,6 +44,7 @@ export class LayoutComponent {
       this.usuario = localStorage.getItem("nombre");
       this.permisosService.getModulos().subscribe(
         result=> {
+          //console.log(result);
           this.modulos=result;
         }
       );
