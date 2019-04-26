@@ -1,6 +1,6 @@
 <div class="container"  >
     <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-4 mx-auto">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <br>
         <br>
         <div class="text-center">
@@ -18,14 +18,14 @@
 
               <div class="form-group">
                 <label for="inputEmail">Email:</label>
-                <input type="email" name="username"  [(ngModel)]="username" id="inputEmail"
+                <input type="email" name="username"  [(ngModel)]="usuario.username" id="inputEmail"
                 class="form-control" placeholder="Email address" required autofocus autocomplete="off">
 
               </div>
 
               <div class="form-group">
                 <label for="inputPassword">Password:</label>
-                <input  name="password"  [(ngModel)]="password" type="password" id="inputPassword"
+                <input  name="password"  [(ngModel)]="usuario.password" type="password" id="inputPassword"
                 class="form-control" placeholder="Password" required>
 
               </div>
@@ -34,7 +34,7 @@
               </div>
 
               <button class="btn btn-lg btn-primary btn-block text-uppercase"
-              (click)="logear()" type="submit">Ingresar</button>
+              (click)="login()" type="submit">Ingresar</button>
 
             </form>
 

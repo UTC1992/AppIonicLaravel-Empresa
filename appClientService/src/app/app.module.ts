@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ModuleWithProviders, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -22,7 +21,6 @@ import { Ng2OrderModule } from 'ng2-order-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import { AppRoutingModule } from './app-routing.module';
 
@@ -36,6 +34,9 @@ import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { LoginComponent } from './view-componets/login/login.component';
 
+//INTERCEPTORS
+import { HttpClient, HttpHeaders, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './interceptors/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -60,14 +61,13 @@ import { LoginComponent } from './view-componets/login/login.component';
     MatCardModule,
     MatMenuModule,
     MatTableModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
     NgxSpinnerModule,
-    MultiselectDropdownModule,
     MatDialogModule,
     MatFormFieldModule,
     SharedModule,
@@ -80,6 +80,8 @@ import { LoginComponent } from './view-componets/login/login.component';
   providers: [
     MatDatepickerModule,
     BsModalRef,
+    HttpClient,
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
   schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]

@@ -8,7 +8,6 @@ import { Observable, empty } from 'rxjs';
 import { Type } from '@angular/compiler';
 import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 
-import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 import { Sector } from 'src/app/models/sector';
 import { SectorList } from 'src/app/models/sector-list';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -33,7 +32,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 export class ActividadesTecnicoComponent implements OnInit {
   optionsModel: number[];
-  myOptions: IMultiSelectOption[];
+  myOptions: any[] = [];
   countryForm: FormGroup;
   tecnicos:Tecnico[] = [];
 

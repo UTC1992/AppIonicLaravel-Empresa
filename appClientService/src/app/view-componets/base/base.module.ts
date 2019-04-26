@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 //ngx
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
@@ -16,7 +16,6 @@ import { MatTableModule, MatToolbarModule, MatButtonModule,
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import {MatPaginatorModule} from '@angular/material/paginator';
 
@@ -65,14 +64,13 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     MatCardModule,
     MatMenuModule,
     MatTableModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
     NgxSpinnerModule,
-    MultiselectDropdownModule,
     MatDialogModule,
     MatFormFieldModule,
     MatExpansionModule,
