@@ -20,7 +20,7 @@ export class TecnicoService {
 
   //metodo obtiene todos los tecnicos del servidor
   getAllTecnicos():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos")
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -34,7 +34,7 @@ export class TecnicoService {
    * obtiene tecnicos de cortes
    */
   getTecnicosCortes():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-cortes")
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-cortes")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -48,7 +48,7 @@ export class TecnicoService {
    * obtiene tecnicos de lecturas
    */
   getTecnicosLecturas():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-lecturas")
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-lecturas")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -60,7 +60,7 @@ export class TecnicoService {
 
   //metodo tecnicos con actividades
   getTecnicosSinActividades():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-sin-actividades")
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-actividades")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -71,7 +71,7 @@ export class TecnicoService {
   }
   //metodo obtien por id de tenico
   getTecnicoById(id):Observable<Tecnico>{
-    return this.http.get(this.baseUrl+"/get-tecnico/"+id)
+    return this.http.get<Tecnico>(this.baseUrl+"/get-tecnico/"+id)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -149,7 +149,7 @@ export class TecnicoService {
 
   // obtener resumen todas las actividades asignadas por tecnico
   getAllActivitiesTecnicos():Observable<any[]>{
-    return this.http.get(this.baseUrl+"/actividades-tecnicos")
+    return this.http.get<any[]>(this.baseUrl+"/actividades-tecnicos")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -194,7 +194,7 @@ export class TecnicoService {
 
   //mostrar detalles de la asignacion de tareas
   showDistribucion():Observable<any[]>{
-    return this.http.get(this.baseUrl+"/mostrar-distribucion")
+    return this.http.get<any[]>(this.baseUrl+"/mostrar-distribucion")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -223,7 +223,7 @@ export class TecnicoService {
    * obtener técnicos de lecturas
    */
   getTecnicosLecturasSinAsignar():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-sin-lecturas")
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-lecturas")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);

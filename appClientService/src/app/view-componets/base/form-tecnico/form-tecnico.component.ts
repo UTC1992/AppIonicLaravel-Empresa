@@ -2,7 +2,6 @@ import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { TecnicoService } from '../../../services/tecnico.service';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-form-tecnico',
@@ -16,7 +15,6 @@ export class FormTecnicoComponent implements OnInit {
  
   constructor(private formBuilder: FormBuilder, 
               private tecnicoService:TecnicoService,
-              private spinner: NgxSpinnerService
   ) {
     this.createForm();
    }
@@ -61,7 +59,6 @@ export class FormTecnicoComponent implements OnInit {
     return input;
   }
   onSubmit() {
-    this.spinner.show();
     const formModel = this.prepareSave();
     //this.loading = true;
     
@@ -70,11 +67,9 @@ export class FormTecnicoComponent implements OnInit {
       file=>{
         if(file){
           alert('Técnico creado correctamente!');
-          this.spinner.hide();
           location.reload();
         }else{
           alert('Cédula repetida !');
-          this.spinner.hide();
         }
       }
 

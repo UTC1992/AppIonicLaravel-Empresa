@@ -10,7 +10,6 @@ import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 
 import { Sector } from 'src/app/models/sector';
 import { SectorList } from 'src/app/models/sector-list';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 import {BsModalRef, BsModalService,  } from 'ngx-bootstrap/modal';
 import {MatTableDataSource, MatPaginator} from '@angular/material';
@@ -77,7 +76,6 @@ export class ActividadesTecnicoComponent implements OnInit {
   constructor(private tecnicoService:TecnicoService, 
               private ordenServices:OrdenService,
               private fb: FormBuilder,
-              private spinner: NgxSpinnerService,
               private modalService: BsModalService,
               public modalRef: BsModalRef,
               ) {
@@ -88,7 +86,7 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.cantidad_exists=false;
     this.createForm();
     this.createFormCantones();
-    this.spinner.show();
+    
    }
 
    
@@ -342,7 +340,7 @@ export class ActividadesTecnicoComponent implements OnInit {
     //distribuir actividades tecnico
     buildTask(){
       //console.log("DISTRIBUIR ACTIVIDADES");
-      this.spinner.show();
+      
       this.ordenServices.getRecManualesSinProcesar().subscribe(
         resultado=>{
           if(resultado>0){
@@ -351,7 +349,7 @@ export class ActividadesTecnicoComponent implements OnInit {
               'Debes procesar las reconexiones manuales.',
               'warning'
             )
-            this.spinner.hide();
+            
             return;
           }else{
             var actividad=this.actividadSelect;
@@ -363,7 +361,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                 'Debes seleccionar almenos un tecnico.',
                 'warning'
               )
-              this.spinner.hide();
+              
               return;
             }
 
@@ -374,7 +372,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                 'Debes seleccionar una actividad.',
                 'warning'
               )
-              this.spinner.hide();
+              
               return;
             } else {
                 var actividad1=this.cantonSelect;
@@ -386,7 +384,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                     'Debes seleccionar un cantón.',
                     'warning'
                   )
-                  this.spinner.hide();
+                  
                   return;
                 } else {
                   
@@ -397,7 +395,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                       'Debes seleccionar un sector.',
                       'warning'
                     )
-                    this.spinner.hide();
+                    
                     return;
                   } else {
                     var re3= document.getElementsByName("cantidad_actividades");
@@ -410,7 +408,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                         'Debes seleccionar un número de actividades mayor a cero 0.',
                         'warning'
                       )
-                      this.spinner.hide();
+                      
                       return;
                     }
                   }
@@ -430,11 +428,11 @@ export class ActividadesTecnicoComponent implements OnInit {
                     'Debes seleccionar una actividad para distribuir',
                     'warning'
                   )
-                  this.spinner.hide();
+                  
                   return;
                 }
               //this.loading=true;
-              //this.spinner.show();
+              //
                msj.forEach(element => {
                  array_actividades[cont]=element["id_act"];
                  //console.log(array_actividades);
@@ -460,7 +458,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                       this.formSectores = new FormControl();
                       this.listTecnicosSeleccionados = [];
                       this.countActivities();
-                      this.spinner.hide();
+                      
                       this.showAlert(
                         'Éxito!',
                         'La asignación fue exitosa.',
@@ -473,7 +471,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                         'Debes seleccionar un número de actividades mayor a cero 0.',
                         'warning'
                       )
-                      this.spinner.hide();
+                      
                     }else{
                       //alert("No se asigno las actividades  ");
                       this.showAlert(
@@ -481,7 +479,7 @@ export class ActividadesTecnicoComponent implements OnInit {
                         'No se asignaron las actividades.',
                         'warning'
                       )
-                      this.spinner.hide();
+                      
                     }
                     
                  }
@@ -519,7 +517,7 @@ export class ActividadesTecnicoComponent implements OnInit {
 
 
   eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
-    this.spinner.show();
+    
     //console.log("ELIMINAR LA DISTRIBUCION ===================");
     this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad, tipoAct);
     this.distribucionDelete.subscribe(res =>{

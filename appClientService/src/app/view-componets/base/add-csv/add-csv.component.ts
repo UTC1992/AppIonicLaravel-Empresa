@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable } from 'rxjs';
 
 import { TableClientComponent } from '../table-client/table-client.component';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 import {MatDialog, MatDialogConfig} from "@angular/material";
 import { AlertaDeleteComponent } from '../alerta-delete/alerta-delete.component';
@@ -32,7 +31,6 @@ export class AddCsvComponent implements OnInit {
   constructor(
       private ordenService:OrdenService,
       private fb: FormBuilder,
-      private spinner: NgxSpinnerService,
       private dialog: MatDialog,
       private dateAdapter: DateAdapter<Date>
   ) {
@@ -88,7 +86,7 @@ export class AddCsvComponent implements OnInit {
       return;
     }
     //this.loading = true;
-    this.spinner.show();
+    
     const formModel = this.prepareSave();
     //this.loading2 = true;
     this.ordenService.addCsvFiles(formModel)
@@ -96,12 +94,12 @@ export class AddCsvComponent implements OnInit {
       msj=>{
         if(msj){
           //this.loading = false;
-          this.spinner.hide();
+          
           alert("Archivo subido correctamente");
           this.clearFile();
           this.reloadTableClient();
         }else{
-          this.spinner.hide();
+          
           alert("Ocurrio un error");
         }
       }
@@ -115,17 +113,17 @@ export class AddCsvComponent implements OnInit {
 
   validarRecManuales(){
     //this.loadingRecManual = true;
-    this.spinner.show();
+    
     this.resultValida=this.ordenService.validarReconexionesManuales();
     this.resultValida.subscribe(
       msj=>{
         if(msj){
           //this.loadingRecManual = false;
-          this.spinner.hide();
+          
           alert("Proceso Realizado Correctamente");
           this.reloadTableClient();
         }else{
-          this.spinner.hide();
+          
           alert(msj);
         }
       });

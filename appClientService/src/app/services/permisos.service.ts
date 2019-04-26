@@ -19,7 +19,7 @@ export class PermisosService {
    }
 
    getModulos():Observable<Modulo[]>{
-    return this.http.get(this.baseUrl+"/modulos")
+    return this.http.get<Modulo[]>(this.baseUrl+"/modulos")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);

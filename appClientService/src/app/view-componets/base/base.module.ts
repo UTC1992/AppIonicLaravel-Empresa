@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 //ngx
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { MatTableModule, MatToolbarModule, MatButtonModule, 
   MatSidenavModule, MatIconModule, MatListModule, 
@@ -41,7 +40,6 @@ import { TableRecmanualComponent } from './table-recmanual/table-recmanual.compo
 import { ChatComponent } from './chat/chat.component';
 
 //MB bootstrap
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LecturasComponent } from './lecturas/lecturas.component';
 
 @NgModule({
@@ -49,7 +47,6 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    MDBBootstrapModule.forRoot(),
     BaseRoutingModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -70,7 +67,6 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
-    NgxSpinnerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatExpansionModule,
@@ -99,7 +95,6 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     
   ],
   exports: [
-    MDBBootstrapModule,
   ],
   providers: [
   ],

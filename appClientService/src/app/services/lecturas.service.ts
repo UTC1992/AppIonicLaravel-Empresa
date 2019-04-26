@@ -29,7 +29,7 @@ export class LecturasService {
     * obtiene campos filtro de distribucion
     */
    getFilterFields():Observable<Filtro[]>{
-    return this.http.get(this.baseUrl+"/filtros")
+    return this.http.get<Filtro[]>(this.baseUrl+"/filtros")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -43,7 +43,7 @@ export class LecturasService {
     * Obtener filtros de primer orden
     */
    getFirstFilterFields():Observable<Filtro[]>{
-    return this.http.get(this.baseUrl+"/data-first")
+    return this.http.get<Filtro[]>(this.baseUrl+"/data-first")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);

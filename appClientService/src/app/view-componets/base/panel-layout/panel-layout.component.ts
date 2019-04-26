@@ -7,7 +7,6 @@ import { ExcelServiceService } from '../../../services/excel-service.service';
 import { Tecnico } from '../../../models/tecnico';
 import { Observable } from 'rxjs';
 
-import { NgxSpinnerService } from 'ngx-spinner';
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
 
 @Component({
@@ -39,9 +38,8 @@ export class PanelLayoutComponent implements OnInit {
 
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
-              private excelService:ExcelServiceService,
-              private spinner: NgxSpinnerService) 
-  {
+              private excelService:ExcelServiceService
+  ){
     this.view_table=false;
     this.view_data_empty=false;
    }
@@ -126,7 +124,6 @@ export class PanelLayoutComponent implements OnInit {
     var date = document.getElementsByName("fecha")[0]["value"];
     //console.log("fecha de consolidado ==> " + date);
     if(date!=""){
-      this.spinner.show();
       //this.loading=true;
       this.ordenService.consolidarActividades(date).subscribe(
         result=>{
@@ -135,12 +132,11 @@ export class PanelLayoutComponent implements OnInit {
             this.fecha_consolidado=date;
             this.id_emp=id_emp2;
             this.exportable=true;
-            this.spinner.hide();
             //this.loading = false;
             alert("Actividades Consolidadas Correctamente");
           }else{
             alert("Debe terminar o eliminar todas las asignaciones pendientes para consolidar los datos.");
-            this.spinner.hide();
+            
           }
         }
       );

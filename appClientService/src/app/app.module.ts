@@ -20,7 +20,6 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
 
-import { NgxSpinnerModule } from 'ngx-spinner';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import { AppRoutingModule } from './app-routing.module';
 
@@ -67,7 +66,6 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
-    NgxSpinnerModule,
     MatDialogModule,
     MatFormFieldModule,
     SharedModule,

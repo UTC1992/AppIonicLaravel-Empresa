@@ -41,7 +41,7 @@ export class LayoutComponent {
     ) {}
 
     ngOnInit(): void {
-      this.usuario = localStorage.getItem("nombre");
+      this.usuario = this.loginService.usuario.name;
       this.permisosService.getModulos().subscribe(
         result=> {
           this.modulos=result;
@@ -55,7 +55,7 @@ export class LayoutComponent {
     }
 
     logout(): void{
-      let username = this.loginService.usuario.username;
+      let username = this.loginService.usuario.name;
       this.loginService.logout();
       Swal.fire('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
       this.router.navigate(['/login']);

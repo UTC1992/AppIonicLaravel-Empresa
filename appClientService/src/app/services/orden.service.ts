@@ -19,7 +19,7 @@ export class OrdenService {
    }
 
   getOrdenes():Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/ordenes")
+    return this.http.get<Orden[]>(this.baseUrl+"/ordenes")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -48,7 +48,7 @@ export class OrdenService {
   }
 
   getActivitiesToDay(fecha,tecnico,actividad,estado):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/actividades-fecha/"+fecha+"/"+tecnico+"/"+actividad+"/"+estado)
+    return this.http.get<Orden[]>(this.baseUrl+"/actividades-fecha/"+fecha+"/"+tecnico+"/"+actividad+"/"+estado)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -58,7 +58,7 @@ export class OrdenService {
     );
   }
   getCantones(tipo):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/cantones/"+tipo)
+    return this.http.get<Orden[]>(this.baseUrl+"/cantones/"+tipo)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -69,7 +69,7 @@ export class OrdenService {
   }
   // obtiene sectores desde servicio .. parametro canton type: get
   getSectoresService(tipo,canton):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/sectores/"+tipo+"/"+canton)
+    return this.http.get<Orden[]>(this.baseUrl+"/sectores/"+tipo+"/"+canton)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
@@ -131,7 +131,7 @@ export class OrdenService {
   }
   //obtner actividades consolidadas por fecha: paremeter date
   obtenerCosolidadosDelDia(date):Observable<Orden[]>{
-    return this.http.get(this.baseUrl+"/actividades-consolidadas/"+date)
+    return this.http.get<Orden[]>(this.baseUrl+"/actividades-consolidadas/"+date)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);
