@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
+import { TableActividadesComponent } from '../table-actividades/table-actividades.component';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -48,8 +49,10 @@ export class PanelLayoutComponent implements OnInit {
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
+  @ViewChild(TableActividadesComponent) tablaActividades: TableActividadesComponent;
 
   recmanualesExcel: boolean;
+  actividadesExcel: boolean;
 
   today:Date;
   fecha_consolidado='';
@@ -74,13 +77,6 @@ export class PanelLayoutComponent implements OnInit {
     ]
   );
 
-  displayedColumns: string[] = ['index', 'tecnico','actividad', 
-  'cuenta', 'canton', 'sector', 'medidor', 'lectura',
-  'usuario', 'latitud', 'longitud', 'hora', 'novedad',
-  'estadoAct', 'estadoFinal'];
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
               private excelService:ExcelServiceService,
@@ -94,23 +90,8 @@ export class PanelLayoutComponent implements OnInit {
   ngOnInit() {
     this.tecnicos=this.tecnicoService.getTecnicosCortes();
     this.recmanualesExcel = false;
+    this.actividadesExcel = false;
     this.french();
-    this.inicializarTabladeDatos();
-  }
-
-  inicializarTabladeDatos(){
-    this.ordenes=this.ordenService.getActivitiesToDay("0000-00-00","empty","empty","empty");
-      this.ordenes.subscribe(
-        data=>{
-          console.log(data);
-            this.dataSource = new MatTableDataSource(data);
-            this.dataSource.paginator = this.paginator;
-        }
-      );
-  }
-
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   french() {
@@ -129,78 +110,16 @@ export class PanelLayoutComponent implements OnInit {
     return pickerInput;
   }
 
-
-
-  verActividaes(){
-    //ocultar las reconexiones manuales
-    this.tablaRecManual.ocultarRecManuales();
-    this.tablaRecManual.ocultarEmptyRecManuales();
-    //bloquear descarga de recmanual
-    this.recmanualesExcel = false;
-
-    if(this.fechaBuscar != null){
-      var vectorFecha = this.fechaBuscar.split('-');
-      var fecha=vectorFecha[2]+"-"+vectorFecha[1]+"-"+vectorFecha[0];
-      var tecnico = this.tecnicoBuscar;
-      var actividad = this.actividadBuscar;
-      var estado = this.estadoBuscar;
-      console.log(fecha);
-
-      this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
-      this.ordenes.subscribe(
-        data=>{
-          console.log(data);
-          if(data.length>0){
-            this.dataSource.data = data;
-            this.dataSource.paginator = this.paginator;
-            this.view_table=true;
-            this.view_data_empty=false;
-          }else{
-            this.view_table=false;
-            this.view_data_empty=true;
-          }
-        }
-      );
-    }else{
-      this.view_table=false;
-      this.view_data_empty=false;
-      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
-    }
-    
-  }
   exportarExcelActividades(){
     if(this.fechaBuscar != null){
       console.log(this.fechaBuscar);
       var date = this.fechaBuscar;
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
-      if(this.ordenes != null && this.view_table==true){
-        let datos = Array();
-        this.ordenes.subscribe(
-          data=>{
-            for (var i = 0; i < data.length; ++i) {
-              datos.push({
-                        TECNICO:      data[i]['nombres']+" "+data[i]['apellidos'],
-                        ACTIVIDAD:    data[i]['n9cono'],
-                        CUENTA:       data[i]['n9cocu'],
-                        CANTON:       data[i]['n9coag'],
-                        SECTOR:       data[i]['n9cose'],
-                        MEDIDOR:      data[i]['n9meco'],
-                        LECTURA:      data[i]['n9leco'],
-                        CLIENTE:      data[i]['n9nomb'],
-                        HORATAREA:    data[i]['hora'],
-                        NOVEDADES:    data[i]['observacionFin'],
-                        ESTADO:       data[i]['referencia'],
-                        CUCOON:       data[i]['cucoon'],
-                        CUCOOE:       data[i]['cucooe']
-                      });
-            }
-            console.log(data);
-            this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
-          });
-      } 
-
-      if(this.recmanualesExcel==true){
+      
+      if(this.actividadesExcel==true){
+        this.tablaActividades.exportarExcel(fecha);
+      }else if(this.recmanualesExcel==true){
         this.tablaRecManual.exportarExcelRecManual(fecha);
       } else {
         this.showAlert("Información!", 
@@ -280,6 +199,36 @@ export class PanelLayoutComponent implements OnInit {
     this.url_export=this.url_export+'/'+date+'/'+id_emp;
   }
 
+  verActividadesDiarias(){
+    //ocultar las reconexiones manuales
+    this.tablaRecManual.ocultarRecManuales();
+    this.tablaRecManual.ocultarEmptyRecManuales();
+    //bloquear descarga de recmanual
+    this.recmanualesExcel = false;
+    this.actividadesExcel = true;
+
+    if(this.fechaBuscar != null){
+      var vectorFecha = this.fechaBuscar.split('-');
+      var fecha=vectorFecha[2]+"-"+vectorFecha[1]+"-"+vectorFecha[0];
+      var tecnico = this.tecnicoBuscar;
+      var actividad = this.actividadBuscar;
+      var estado = this.estadoBuscar;
+      console.log(fecha);
+      let dataActividades:any[] = [];
+      dataActividades.push({
+        'fecha':fecha,
+        'id_tecn':tecnico,
+        'actividad':actividad,
+        'estado':estado
+      });
+      this.tablaActividades.cargarDatos(dataActividades);
+      console.log(dataActividades);
+    }else{
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
+    }
+    
+  }
+
   verRecManual(){
     if(this.fechaBuscar != null){
       var date = this.fechaBuscar;
@@ -291,9 +240,11 @@ export class PanelLayoutComponent implements OnInit {
             'fecha':fecha,
             'id_tecn':tecnico,
             }
-        this.view_table=false;
-        this.view_data_empty=false;
+            
+        this.tablaActividades.ocultarActividades();
+        this.tablaActividades.ocultarEmptyActividades();
         this.recmanualesExcel=true;
+        this.actividadesExcel = false;
         this.tablaRecManual.cargarDatos(dataRecManual);
         console.log(dataRecManual);
     }

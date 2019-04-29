@@ -38,9 +38,11 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { AlertaDeleteComponent } from './alerta-delete/alerta-delete.component';
 import { TableRecmanualComponent } from './table-recmanual/table-recmanual.component';
 import { ChatComponent } from './chat/chat.component';
+import { LecturasComponent } from './lecturas/lecturas.component';
+import { TableActividadesComponent } from './table-actividades/table-actividades.component';
 
 //MB bootstrap
-import { LecturasComponent } from './lecturas/lecturas.component';
+
 
 @NgModule({
   imports: [
@@ -92,6 +94,7 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     TableRecmanualComponent,
     ChatComponent,
     LecturasComponent,
+    TableActividadesComponent,
     
   ],
   exports: [

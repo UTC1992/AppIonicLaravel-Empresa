@@ -17,6 +17,8 @@ export class TableRecmanualComponent implements OnInit {
 	view_tableRecmanual: boolean;
 	view_data_empty_recmanual: boolean;
 
+	existenRecManual: Boolean;
+
 	displayedColumns: string[] = ['index', 'tecnicos', 'medidor', 
 	'lectura', 'observacion', 'foto'];
   dataSource = new MatTableDataSource();
@@ -26,7 +28,9 @@ export class TableRecmanualComponent implements OnInit {
 		private ordenService:OrdenService,
 		private router:Router,
 		private excelService:ExcelServiceService,
-		) { }
+		) { 
+			this.existenRecManual = false;
+		}
 
 	ngOnInit() {
 	}
@@ -35,7 +39,10 @@ export class TableRecmanualComponent implements OnInit {
 	    this.recmanuales =this.ordenService.getRecManual(data);
 	    this.ordenService.getRecManual(data).subscribe(
 	    	data => {
-	    		console.log(data);
+					console.log(data);
+					if(!data){
+						this.existenRecManual = false;
+					}
 	    		if(data.length>0){
 		            this.mostrarRecManuales();
 								this.view_data_empty_recmanual=false;
@@ -66,11 +73,12 @@ export class TableRecmanualComponent implements OnInit {
 	}
 
 	exportarExcelRecManual(fecha:any){
-	    let datos = Array();
+			let datos = Array();
 	    if(this.recmanuales != null && this.view_tableRecmanual==true){
 				this.recmanuales.subscribe(
 	        data=>{
-	          for (var i = 0; i < data.length; ++i) {
+						console.log(data);
+						for (var i = 0; i < data.length; ++i) {
 	            datos.push({
 												TECNICO:      data[i]['nombres']+" "+data[i]['apellidos'],
 	                      MEDIDOR:      data[i]['medidor'],
@@ -80,11 +88,21 @@ export class TableRecmanualComponent implements OnInit {
 	                    });
 	          }
 
-	          this.excelService.exportAsExcelFile(datos,fecha+'_RecManuales');
+						this.excelService.exportAsExcelFile(datos,fecha+'_RecManuales');
+						
 	        });
-	    }
+	    } else {
+				this.showAlert("Alert!","No existen datos para descargar.","warning");
+			}
 	}
 
-	
+	showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
 
 }
