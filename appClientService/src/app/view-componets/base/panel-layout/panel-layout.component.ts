@@ -7,12 +7,38 @@ import { ExcelServiceService } from '../../../services/excel-service.service';
 import { Tecnico } from '../../../models/tecnico';
 import { Observable } from 'rxjs';
 
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
+
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import * as moment from 'moment';
+
+import {MatTableDataSource, MatPaginator} from '@angular/material';
+import Swal from 'sweetalert2';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD-MM-YYYY',
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD-MM-YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-panel-layout',
   templateUrl: './panel-layout.component.html',
-  styleUrls: ['./panel-layout.component.css']
+  styleUrls: ['./panel-layout.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 
 export class PanelLayoutComponent implements OnInit {
@@ -36,18 +62,74 @@ export class PanelLayoutComponent implements OnInit {
   id_emp='';
   fecha = new Date();
 
+  //fecha de filtro
+  fechaBuscar: string = null;
+  tecnicoBuscar: string = 'empty';
+  actividadBuscar: string = 'empty';
+  estadoBuscar: string = 'empty';
+
+  date = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
+  displayedColumns: string[] = ['index', 'tecnico','actividad', 
+  'cuenta', 'canton', 'sector', 'medidor', 'lectura',
+  'usuario', 'latitud', 'longitud', 'hora', 'novedad',
+  'estadoAct', 'estadoFinal'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
-              private excelService:ExcelServiceService
+              private excelService:ExcelServiceService,
+              private adapter: DateAdapter<any>,
+              private fb: FormBuilder
   ){
     this.view_table=false;
     this.view_data_empty=false;
    }
 
-  ngOnInit() {  
+  ngOnInit() {
     this.tecnicos=this.tecnicoService.getTecnicosCortes();
     this.recmanualesExcel = false;
+    this.french();
+    this.inicializarTabladeDatos();
   }
+
+  inicializarTabladeDatos(){
+    this.ordenes=this.ordenService.getActivitiesToDay("0000-00-00","empty","empty","empty");
+      this.ordenes.subscribe(
+        data=>{
+          console.log(data);
+            this.dataSource = new MatTableDataSource(data);
+            this.dataSource.paginator = this.paginator;
+        }
+      );
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  french() {
+    this.adapter.setLocale('es');
+  }
+
+  getFecha(pickerInput: string): void {
+    this.fechaBuscar = pickerInput;
+    //console.log(this.fechaBuscar);
+  }
+
+  getErrorMessage(pickerInput: string): string {
+    if (!pickerInput || pickerInput === '' ) {
+      return 'Please choose a date.';
+    }
+    return pickerInput;
+  }
+
+
 
   verActividaes(){
     //ocultar las reconexiones manuales
@@ -56,18 +138,21 @@ export class PanelLayoutComponent implements OnInit {
     //bloquear descarga de recmanual
     this.recmanualesExcel = false;
 
-    var result = document.getElementById("fechaReporte");
-    var fecha=<HTMLInputElement>result["value"];
-    var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
-    var actividad = <HTMLInputElement>document.getElementById("actividades_select")["value"];
-    var estado = <HTMLInputElement>document.getElementById("estado_select")["value"];
-    if(fecha){
-      
+    if(this.fechaBuscar != null){
+      var vectorFecha = this.fechaBuscar.split('-');
+      var fecha=vectorFecha[2]+"-"+vectorFecha[1]+"-"+vectorFecha[0];
+      var tecnico = this.tecnicoBuscar;
+      var actividad = this.actividadBuscar;
+      var estado = this.estadoBuscar;
+      console.log(fecha);
+
       this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
       this.ordenes.subscribe(
         data=>{
-          //console.log(data);
+          console.log(data);
           if(data.length>0){
+            this.dataSource.data = data;
+            this.dataSource.paginator = this.paginator;
             this.view_table=true;
             this.view_data_empty=false;
           }else{
@@ -79,69 +164,81 @@ export class PanelLayoutComponent implements OnInit {
     }else{
       this.view_table=false;
       this.view_data_empty=false;
-      alert("Seleccione una fecha");
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
     }
     
   }
   exportarExcelActividades(){
-    var date = document.getElementById("fechaReporte")["value"]+"";
-    var vector = date.split("-");
-    var fecha=vector[2]+"-"+vector[1]+"-"+vector[0]
-    if(this.ordenes != null && this.view_table==true){
-      let datos = Array();
-      this.ordenes.subscribe(
-        data=>{
-          for (var i = 0; i < data.length; ++i) {
-            datos.push({
-                      ACTIVIDAD:    data[i]['n9cono'],
-                      CUENTA:       data[i]['n9cocu'],
-                      CANTON:       data[i]['n9coag'],
-                      SECTOR:       data[i]['n9cose'],
-                      MEDIDOR:      data[i]['n9meco'],
-                      LECTURA:      data[i]['n9leco'],
-                      CLIENTE:      data[i]['n9nomb'],
-                      HORATAREA:    data[i]['hora'],
-                      NOVEDADES:    data[i]['observacionFin'],
-                      ESTADO:       data[i]['referencia'],
-                      CUCOON:       data[i]['cucoon'],
-                      CUCOOE:       data[i]['cucooe']
-                    });
-          }
+    if(this.fechaBuscar != null){
+      console.log(this.fechaBuscar);
+      var date = this.fechaBuscar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      if(this.ordenes != null && this.view_table==true){
+        let datos = Array();
+        this.ordenes.subscribe(
+          data=>{
+            for (var i = 0; i < data.length; ++i) {
+              datos.push({
+                        TECNICO:      data[i]['nombres']+" "+data[i]['apellidos'],
+                        ACTIVIDAD:    data[i]['n9cono'],
+                        CUENTA:       data[i]['n9cocu'],
+                        CANTON:       data[i]['n9coag'],
+                        SECTOR:       data[i]['n9cose'],
+                        MEDIDOR:      data[i]['n9meco'],
+                        LECTURA:      data[i]['n9leco'],
+                        CLIENTE:      data[i]['n9nomb'],
+                        HORATAREA:    data[i]['hora'],
+                        NOVEDADES:    data[i]['observacionFin'],
+                        ESTADO:       data[i]['referencia'],
+                        CUCOON:       data[i]['cucoon'],
+                        CUCOOE:       data[i]['cucooe']
+                      });
+            }
+            console.log(data);
+            this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
+          });
+      } 
 
-          this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
-        });
+      if(this.recmanualesExcel==true){
+        this.tablaRecManual.exportarExcelRecManual(fecha);
+      } else {
+        this.showAlert("Información!", 
+        "Debe mostrar los datos para descargarlos.", "info");
+      }
+    } else {
+      this.showAlert("Alerta!", "Debe elegir una fecha y mostrar los datos para descargarlos.", "warning");
     }
     
-    if(this.recmanualesExcel==true){
-      this.tablaRecManual.exportarExcelRecManual(fecha);
-    }
       
   }
 
 
   //consolidar actividades diarias
   consolodarActividades(){
-    var date = document.getElementsByName("fecha")[0]["value"];
+    var date = this.fechaBuscar;
     //console.log("fecha de consolidado ==> " + date);
     if(date!=""){
       //this.loading=true;
       this.ordenService.consolidarActividades(date).subscribe(
         result=>{
           if(result){
-            var id_emp2=localStorage.getItem("id_emp");
+            var id_emp2=sessionStorage.getItem("id_emp");
             this.fecha_consolidado=date;
             this.id_emp=id_emp2;
             this.exportable=true;
             //this.loading = false;
-            alert("Actividades Consolidadas Correctamente");
+            this.showAlert("Éxito!","Actividades Consolidadas Correctamente", "success");
           }else{
-            alert("Debe terminar o eliminar todas las asignaciones pendientes para consolidar los datos.");
+            this.showAlert("Alert!",
+            "Debe finalziar o eliminar todas las asignaciones pendientes para consolidar los datos.",
+            "success");
             
           }
         }
       );
     }else{
-      alert("Seleccione una fecha");
+      this.showAlert("Alerta!", "Debe elegir una fecha.", "warning");
       return;
     }
   }
@@ -168,14 +265,15 @@ export class PanelLayoutComponent implements OnInit {
 
   //exportar excel 
   exportarConsolidado(){
-    var id_emp=localStorage.getItem("id_emp");
-    var date = document.getElementsByName("fecha")[0]["value"];
+    var id_emp=sessionStorage.getItem("id_emp");
+    var date = this.fechaBuscar;
     if(date==""){
-      alert('seleccione una fecha');
+      this.showAlert("Alerta!", "Debe elegir una fecha.", "warning");
       return;
     }
     if(id_emp!=""){
-      alert('Ocurrio un error!');
+      //alert('Ocurrio un error!');
+      this.showAlert("Alerta!", "Ocurrio un error al exportar.", "warning");
       return;
     }
 
@@ -183,24 +281,36 @@ export class PanelLayoutComponent implements OnInit {
   }
 
   verRecManual(){
-    var result = document.getElementById("fechaReporte");
-    var fecha=<HTMLInputElement>result["value"];
-    var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
-    if(fecha){
-      let dataRecManual={
-          'fecha':fecha,
-          'id_tecn':tecnico,
-          }
-      this.view_table=false;
-      this.view_data_empty=false;
-      this.recmanualesExcel=true;
-      this.tablaRecManual.cargarDatos(dataRecManual);
-      
+    if(this.fechaBuscar != null){
+      var date = this.fechaBuscar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      var tecnico = this.tecnicoBuscar;
+      if(fecha){
+        let dataRecManual={
+            'fecha':fecha,
+            'id_tecn':tecnico,
+            }
+        this.view_table=false;
+        this.view_data_empty=false;
+        this.recmanualesExcel=true;
+        this.tablaRecManual.cargarDatos(dataRecManual);
+        console.log(dataRecManual);
+    }
+
     }else{
-      alert("Seleccione una fecha");
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
     }
     
   }
 
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
 
 }

@@ -118,15 +118,17 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   agruparDistribucion(){
     var dataAux: any[] = [];
+    var index = 1;
     for (let i = 0; i < this.actividades.length; i++) {
       var valor = dataAux.find(x=>x.id_tecn == this.actividades[i].id_tecn);
       if(!valor){
         dataAux.push({
-          index:i+1,
+          index:index,
           id_tecn:this.actividades[i].id_tecn,
           tecnico:this.actividades[i].nombres+" "+this.actividades[i].apellidos,
           data: null
         });
+        index++;
       }
     }
     var dataTecnicos : any[] = [];

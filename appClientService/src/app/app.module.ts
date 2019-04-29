@@ -37,6 +37,9 @@ import { LoginComponent } from './view-componets/login/login.component';
 import { HttpClient, HttpHeaders, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 
+//datapiker
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,9 +80,11 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
   ],
   providers: [
     MatDatepickerModule,
+    MatNativeDateModule,
     BsModalRef,
     HttpClient,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
   ],
   bootstrap: [AppComponent],
   schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]

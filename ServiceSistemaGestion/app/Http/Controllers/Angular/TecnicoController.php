@@ -247,13 +247,9 @@ class TecnicoController extends Controller
           $id_tecn=$request->id_tecn;
           $fecha=$request->fecha;
           $recManuales=new ReconexionManual();
-          $result=$recManuales->where(function($query) use($id_tecn){
-            if($id_tecn!="empty")
-              $query->where('id_tecn',$id_tecn);
-          })->where(function($query) use($fecha){
-            if($fecha!="empty")
-              $query->where('created_at','like','%'.$fecha.'%');
-          })->where('id_emp',$this->getIdEmpUserAuth())->get();
+          $result=$recManuales->getRecManual($fecha, $id_tecn, 
+            $this->getIdEmpUserAuth());
+
           if(count($result)>0){
             return response()->json($result);
           }else{
@@ -264,6 +260,7 @@ class TecnicoController extends Controller
       }
 
     }
+
     /**
      * guardar historial de actividades de usuario autenticado
      */
