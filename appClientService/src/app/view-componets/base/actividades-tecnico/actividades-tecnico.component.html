@@ -147,7 +147,13 @@
                         </div>
                     </div>
                     <div class="text-center col col-lg-12">
-                        <button class="btn btn-success btn-sm" (click)="buildTask()" >Asignar actividades </button>  
+                        <button class="btn btn-success btn-sm" 
+                        (click)="buildTask()"
+                        mat-raised-button
+                        matTooltip="Precione para asignar actividades" >
+                        <mat-icon>check</mat-icon>    
+                        Asignar actividades
+                        </button>  
                     </div>
                 </div>
             </mat-expansion-panel>
@@ -248,7 +254,7 @@
                             [@detailExpand]="distribucion == expandedElement ? 'expanded' : 'collapsed'">
                             <div class="example-element-description">
                                 <div class="table-responsive">
-                                    <table class="table table-sm table-striped ">
+                                    <table class="table table-sm table-striped table-bordered">
                                         <tr>
                                             <td>Código de Actividad</td>
                                             <td>Agencia</td>
@@ -264,19 +270,22 @@
                                             <td>{{item.datos.cantidad}}</td>
                                             <td>{{item.datos.tipo}}</td>
                                             <td>
-                                                <div style="width: 250px;">
-                                                    <button type="button" style="margin-right: 5px;" 
+                                                <div style="width: 350px;">
+                                                    <button mat-button type="button" style="margin-right: 5px;" 
                                                     (click)="openModalDetalle(item.datos.id_tecn, item.datos.tipo,item.datos.n9cose, template)" 
                                                     class="btn btn-info btn-sm">
-                                                        Detalle    
-                                                        </button>
-                                                    <button class="btn btn-warning btn-sm" (click)="AsignarActividades(item.datos.id_tecn)" 
-                                                    style="margin-right: 5px;">
-                                                            Asignar
+                                                    <mat-icon>list</mat-icon>    
+                                                    Detalle   
                                                     </button>
-                                                    <button class="btn btn-danger btn-sm" 
+                                                    <button mat-button class="btn btn-warning btn-sm" (click)="AsignarActividades(item.datos.id_tecn)" 
+                                                    style="margin-right: 5px;">
+                                                    <mat-icon>replay</mat-icon>    
+                                                    Asignar
+                                                    </button>
+                                                    <button mat-button class="btn btn-danger btn-sm" 
                                                     (click)="confirmarEliminar(item.datos.id_tecn, item.datos.n9cose, item.datos.cantidad, 
                                                     item.datos.n9cono)">
+                                                    <mat-icon>delete</mat-icon>
                                                             Eliminar
                                                     </button>  
                                                 </div>

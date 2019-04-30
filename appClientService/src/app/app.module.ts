@@ -12,6 +12,7 @@ import { MatTableModule, MatToolbarModule,
   MatTableDataSource, MatSelectModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { Routes,RouterModule } from '@angular/router';
 import { WelcomeComponent } from './view-componets/welcome/welcome.component';
@@ -76,7 +77,8 @@ import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter'
     MatDatepickerModule,
     MatNativeDateModule,
     MatPaginatorModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltipModule
   ],
   providers: [
     MatDatepickerModule,

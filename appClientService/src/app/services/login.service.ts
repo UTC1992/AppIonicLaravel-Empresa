@@ -126,6 +126,7 @@ export class LoginService {
     this._usuario.name = user.name;
     this._usuario.id_emp = user.id_emp;
     this._usuario.username = user.username;
+    this._usuario.empresa = user.empresa;
 
     sessionStorage.setItem('usuario', JSON.stringify(this._usuario));
   }

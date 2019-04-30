@@ -7,6 +7,8 @@ import { ExcelServiceService } from '../../../services/excel-service.service';
 import { Tecnico } from '../../../models/tecnico';
 import { Observable } from 'rxjs';
 
+import { LoginService } from '../../../services/login.service';
+
 import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
@@ -14,9 +16,7 @@ import { TableActividadesComponent } from '../table-actividades/table-actividade
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import * as moment from 'moment';
 
-import {MatTableDataSource, MatPaginator} from '@angular/material';
 import Swal from 'sweetalert2';
 
 export const MY_FORMATS = {
@@ -77,11 +77,20 @@ export class PanelLayoutComponent implements OnInit {
     ]
   );
 
+  //consolidado
+  fechaConsolidar: string = null;
+  dateConsolidado = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
               private excelService:ExcelServiceService,
               private adapter: DateAdapter<any>,
-              private fb: FormBuilder
+              private fb: FormBuilder,
+              private loginService: LoginService
   ){
     this.view_table=false;
     this.view_data_empty=false;
@@ -100,6 +109,11 @@ export class PanelLayoutComponent implements OnInit {
 
   getFecha(pickerInput: string): void {
     this.fechaBuscar = pickerInput;
+    //console.log(this.fechaBuscar);
+  }
+  
+  getFechaConsolidar(pickerInput: string): void {
+    this.fechaConsolidar = pickerInput;
     //console.log(this.fechaBuscar);
   }
 
@@ -135,16 +149,17 @@ export class PanelLayoutComponent implements OnInit {
 
   //consolidar actividades diarias
   consolodarActividades(){
-    var date = this.fechaBuscar;
     //console.log("fecha de consolidado ==> " + date);
-    if(date!=""){
+    if(this.fechaConsolidar != null){
+      var date = this.fechaConsolidar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
       //this.loading=true;
       this.ordenService.consolidarActividades(date).subscribe(
         result=>{
           if(result){
-            var id_emp2=sessionStorage.getItem("id_emp");
-            this.fecha_consolidado=date;
-            this.id_emp=id_emp2;
+            this.fecha_consolidado=fecha;
+            this.id_emp=this.loginService.usuario.id_emp;
             this.exportable=true;
             //this.loading = false;
             this.showAlert("Éxito!","Actividades Consolidadas Correctamente", "success");

@@ -1,19 +1,37 @@
 import { Component, OnInit,ElementRef, ViewChild } from '@angular/core';
 import { OrdenService } from '../../../services/orden.service';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 import { Observable } from 'rxjs';
 
 import { TableClientComponent } from '../table-client/table-client.component';
 
-import {MatDialog, MatDialogConfig} from "@angular/material";
-import { AlertaDeleteComponent } from '../alerta-delete/alerta-delete.component';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
-import { NativeDateAdapter, DateAdapter } from "@angular/material";
+import Swal from 'sweetalert2';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD-MM-YYYY',
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD-MM-YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 
 @Component({
   selector: 'app-add-csv',
   templateUrl: './add-csv.component.html',
-  styleUrls: ['./add-csv.component.css']
+  styleUrls: ['./add-csv.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class AddCsvComponent implements OnInit {
 
@@ -27,11 +45,19 @@ export class AddCsvComponent implements OnInit {
   resultValida:Observable<any>;
   public validaReconexiones:boolean;
 
+  //fecha borrado
+  fechaBorrado: string = null;
+  dateBorrado = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+  serializedDate = new FormControl((new Date()).toUTCString());
+
   @ViewChild('fileInput') fileInput: ElementRef;
   constructor(
       private ordenService:OrdenService,
       private fb: FormBuilder,
-      private dialog: MatDialog,
       private dateAdapter: DateAdapter<Date>
   ) {
     this.dateAdapter.setLocale('es'); 
@@ -42,11 +68,14 @@ export class AddCsvComponent implements OnInit {
    }
 
   ngOnInit() {
-
     this.reloadTableClient();
-   
-   
   }
+
+  getFechaBorrar(pickerInput: string): void {
+    this.fechaBorrado = pickerInput;
+    //console.log(this.fechaBuscar);
+  }
+
   //metodo envia file al servidor    
   uploadCsvFile(file){
     this.ordenService.addCsvFiles(file.archivo)
@@ -129,43 +158,37 @@ export class AddCsvComponent implements OnInit {
       });
   }
 
-  validarBorradoDeActividades(){
-      const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-
-    dialogConfig.data = {
-      title: 'Alerta de ¡Borrado!',
-      description:  'Deseas borrar las actividades subidas la fecha seleccionada,'+
-      ' también se eliminarán las asignaciones realizadas a los tecnicos,'+ 
-                    ' recuerda que el borrado es permanente.'+
-                    ' ¿Deseas realizar está acción?',
-      height: '400px',
-      width: '100px',
-    };
-
+  confirmarEliminar(){
+    if(this.fechaBorrado != null){
+      Swal.fire({
+        title: 'Alerta de ¡Borrado!',
+        text: 'Deseas borrar las actividades subidas en la fecha seleccionada,'+
+              ' también se eliminarán las asignaciones realizadas a los tecnicos,'+ 
+              ' recuerda que el borrado es permanente.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¿Deseas borrar de todas formas?',
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          this.eliminarActividades();
+        }
+      });
+    } else {
+      this.showAlert("","Debe elegir la fecha en que subio los datos.","warning");
+    }
     
-    const dialogRef = this.dialog.open(AlertaDeleteComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(
-        data => {
-          if(data){
-            //console.log("Datos borrados");
-            this.eliminarActividades();
-          } else {
-            console.log("Cancelar operación de borrado");
-          }
-        });
   }
 
   // eliminar actividades
   eliminarActividades(){
-    var fecha = <HTMLInputElement>document.getElementsByName("fecha_borrado")[0]["value"];
    
-    if(fecha){
-      console.log('ingresando a borrar');
-    if(localStorage.getItem("token")!=null){
+    if(this.fechaBorrado != null){
+      var date = this.fechaBorrado;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
       let data={
         'fecha':fecha
       }
@@ -173,16 +196,25 @@ export class AddCsvComponent implements OnInit {
         result=>{
           if(result){
             console.log(result);
-              alert('Actividadas borradas correctamente!');
-              location.reload();
+            this.showAlert("Éxito!",'Actividadas borradas correctamente!',"success");
+              
           }else{
-            alert('No existen resgistros para borrar');
+            this.showAlert("Alerta!",'No existen resgistros en esa fecha para borrarlos.',"warning");
           }
         }
       );
     }
-    }
     
   }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
+
 
 }

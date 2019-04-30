@@ -6,7 +6,7 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)">
-    <mat-toolbar class="menuLateral">
+    <mat-toolbar color="secondary">
         <span>Energy OS</span>
         <!--<img mat-card-sm-image class="logo" src="../../../assets/img/logoEnergyOS.png">-->
     </mat-toolbar>
@@ -16,7 +16,10 @@
       <a mat-menu-item *ngFor="let modulo of modulos" [routerLink]="[modulo.ruta]" routerLinkActive="active" >
           {{modulo.nombre}}
       </a>
-      <a mat-menu-item [routerLink]="['/base/tecnicos']" routerLinkActive="active">Técnicos</a>
+      <a mat-menu-item [routerLink]="['/base/tecnicos']" routerLinkActive="active"> 
+        <mat-icon aria-label="Side nav toggle icon">people</mat-icon>
+        Técnicos
+        </a>
     </mat-nav-list>
     
     <!--
@@ -28,7 +31,7 @@
     -->
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="barraDerecha" >
+    <mat-toolbar color="primary" >
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -38,8 +41,12 @@
       </button>
       <span class="example-fill-remaining-space"></span>
         <mat-menu #appMenu="matMenu">
-          <button mat-menu-item [routerLink]="['/base/perfil']">Cuenta</button>
-          <button mat-menu-item (click)="logout()">Salir</button>
+          <button mat-menu-item [routerLink]="['/base/perfil']">
+            <mat-icon>account_circle</mat-icon>
+            Cuenta</button>
+          <button mat-menu-item (click)="logout()">
+              <mat-icon>power_settings_new</mat-icon>
+            Salir</button>
         </mat-menu>
         <span style="font-size: 12pt;">{{ usuario }}</span>
         <button mat-icon-button [matMenuTriggerFor]="appMenu">
@@ -47,12 +54,11 @@
         </button>
         
     </mat-toolbar>
-
-    <!-- Add Content Here -->
-
-    <router-outlet></router-outlet>
-    
-    <!-- Add Content Here -->
+    <section>
+      <!-- Add Content Here -->
+      <router-outlet></router-outlet> 
+      <!-- Add Content Here -->
+    </section>
 
   </mat-sidenav-content>
 </mat-sidenav-container>

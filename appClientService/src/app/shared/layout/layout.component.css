@@ -14,8 +14,14 @@
   }
 
   .mat-toolbar.mat-primary{
+    background-color: #783384; 
     position: sticky;
     top: 0;
+    z-index: 9;
+  }
+
+  .mat-toolbar.mat-secondary{
+    background-color: #5D0263; color: white;
   }
   
   .example-fill-remaining-space{

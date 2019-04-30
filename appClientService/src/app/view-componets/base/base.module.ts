@@ -17,6 +17,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
@@ -76,7 +77,8 @@ import { TableActividadesComponent } from './table-actividades/table-actividades
     MatDatepickerModule,
     MatNativeDateModule,
     MatPaginatorModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTooltipModule
   ],
   declarations: [
     InicioComponent,
