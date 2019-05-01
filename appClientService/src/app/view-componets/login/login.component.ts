@@ -3,6 +3,7 @@ import { Usuario } from '../../models/usuario';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -11,11 +12,13 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
 
+  loginForm: FormGroup;
   usuario: Usuario;
 
   constructor(
     private loginService:LoginService,
-    private router:Router
+    private router:Router,
+    private formBuilder: FormBuilder
     ) { 
       this.usuario = new Usuario();
     }
@@ -25,13 +28,22 @@ export class LoginComponent implements OnInit {
       Swal.fire('Login', `Hola ${this.loginService.usuario.name} ya estas logueado!`, 'info');
       this.router.navigate(['/base']);
     }
+    this.createForms();
 
   }
 
+  createForms(){
+    this.loginForm = this.formBuilder.group({
+      username: [null, [Validators.required, Validators.email]],
+      password: [null, Validators.required],
+    });
+  }
+
   login(){
+    this.usuario = this.loginForm.value;
     console.log(this.usuario);
     if(this.usuario.username == null || this.usuario.password == null){
-      Swal.fire('Error Login', 'Email o password estan vacios!', 'error');
+      Swal.fire('Alerta!', 'Email o password están vacios!', 'warning');
       return;
     }
 
@@ -63,8 +75,8 @@ export class LoginComponent implements OnInit {
         }
       );
     }, error =>{
-      if(error.status == 400){
-        Swal.fire('Error Login', 'Usuario o clave incorrectas!', 'error');
+      if(error.status == 400 || error.status == 401){
+        Swal.fire('Error Login', 'Email o clave incorrectas!', 'error');
       }
     });
   }

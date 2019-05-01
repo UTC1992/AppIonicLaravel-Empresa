@@ -58,6 +58,7 @@ Route::group(['prefix' => 'angular'], function(){
     //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
     Route::post('delete-activities','Angular\ActividadDiariaController@eliminarActividades');
 	  Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
+    Route::get('planes','AuthApi\PermisosController@getPlanEmpresa');
 
     // gateway routes
     Route::post('upload','Gateway\Lecturas\LecturasController@uploadFile');
@@ -97,6 +98,7 @@ Route::group(['prefix' => 'mobile'], function(){
        Route::post('cortes-mes','Reportes\ReportesController@getEstadisticaMesCortes');
        Route::post('cortes-tecnicos-diario','Reportes\ReportesController@getEstadisticaTecnicosCortes');
        Route::post('cortes-tecnicos-mes','Reportes\ReportesController@getEstadisticaTecnicosMesCortes');
+       Route::post('medidor-cortes','Reportes\ReportesController@reporteMedidorFecha');
 
      });
 

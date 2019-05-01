@@ -41,4 +41,18 @@ class PermisosController extends Controller
     }
   }
 
+/**
+ *
+ */
+  public function getPlanEmpresa(){
+    try {
+      $ID_EMP=$this->getIdEmpUserAuth();
+      $planes=Empresa::getPlanesEmpresa($ID_EMP);
+      return response()->json($planes);
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
+
+  }
+
 }

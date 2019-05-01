@@ -56,22 +56,26 @@ class LecturasAppController extends Controller
      */
      public function updateLecturas(Request $request){
        try {
-          $input = $request->json()->all();
-         /*if(!$request->lisTareas){
+         $input=json_decode($request[0],true);
+         if(count($input["listTareas"])<=0){
            $data=array();
            $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
            $data["status"]=false;
            return response($data,404)->header('Content-Type', 'application/json');
          }
-         $id_tecnico= $request->id_tecn;
-         $result= json_decode($this->lecturasAppServices->updateLecturasService($request->all()),true);
+         $id_tecnico= $input["id_tecn"];
+         $arrayLectura=array();
+         $arrayLectura["id_emp"]=$input["id_emp"];
+         $arrayLectura["listTareas"]=$input["listTareas"];
+         $result= json_decode($this->lecturasAppServices->updateLecturasService($arrayLectura),true);
          if($result["status"]){
            $tecnico= Tecnico::find($id_tecnico);
            $tecnico->asignado=0;
            $tecnico->save();
            return response($result)->header('Content-Type', 'application/json');
-         }*/
-         return response($input)->header('Content-Type', 'application/json');
+         }
+         return response($result)->header('Content-Type', 'application/json');
+         //return response(count($input["listTareas"]));
        } catch (\Exception $e) {
          return response()->json("Error :".$e);
        }

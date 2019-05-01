@@ -95,14 +95,10 @@ class ActividadDiaria extends Model
     ->get();
   }
 
-  /**
- * obtiene reporte actividades cortes
- */
   public function getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado,$ID_EMP){
     return $actividad2 = DB::table('tbl_actividaddiaria as T0')
           ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
-          ->leftJoin('tbl_tecnico as T2','T2.id_tecn','=','T1.id_tecn')
-          ->select('T0.*','T1.observacion as observacionFin', 'T1.hora as hora','T2.nombres','T2.apellidos','T2.cedula')
+          ->select('T0.*','T1.observacion as observacionFin', 'T1.hora as hora')
           ->where('T0.created_at','like','%'.$fecha.'%')
           ->where(function($query) use($id_tecnico){
             if($id_tecnico!="empty")
@@ -120,9 +116,6 @@ class ActividadDiaria extends Model
           ->orderByRaw('T0.id_act desc')
           ->get();
   }
-
-  
-  
   //obtener cantores actividades por tipo
   public function getCantonstByActivityType($tipo_actividad,$ID_EMP){
     return $actividad = DB::table('tbl_actividaddiaria as T0')

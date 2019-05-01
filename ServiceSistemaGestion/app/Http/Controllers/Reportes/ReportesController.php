@@ -87,4 +87,36 @@ class ReportesController extends Controller
     }
 
   }
+
+  /**
+   * reporte de estado actividades por medidor
+   */
+
+   public function reporteMedidorFecha(Request $request){
+     try {
+       $empresa=$request->empresa;
+       $inicio=$request->fecha_inicio;
+       $fin=$request->fecha_fin;
+       $medidor=$request->medidor;
+       $reportes=Reportes::getReporteMedidor($empresa,$inicio,$fin,$medidor);
+       if(count($reportes)>0){
+         return response()->json($reportes,200);
+       }
+       return response()->json('No Data', 206);
+     } catch (\Exception $e) {
+       return response()->json("Error: ".$e,500);
+     }
+
+   }
+   /*
+   // obtener id empresa de usuario autenticado
+   private function getIdEmpUserAuth(){
+     try {
+       $user_auth = auth()->user();
+       $ID_EMP=$user_auth->id_emp;
+       return $ID_EMP;
+     } catch (\Exception $e) {
+       return response()->json("Error: ".$e);
+     }
+   }*/
 }

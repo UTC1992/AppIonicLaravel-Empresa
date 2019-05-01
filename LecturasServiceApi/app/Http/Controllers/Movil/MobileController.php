@@ -29,6 +29,7 @@ class MobileController extends Controller
                         ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
                         ->where($tablaLecturasCompany.'.estado', 1)
                         ->where('orden_trabajo.id_tecnico', $idTecnico)
+                        ->limit(50)
                         ->get();
 
         return response()->json($rutas);
@@ -44,7 +45,7 @@ class MobileController extends Controller
     public function recibirLecturas(Request $request){
       try {
         //$input=$request->json()->all();
-        $data=$request->lisTareas;
+        $data=$request->listTareas;
         $idEmpresa=$request->id_emp;
         $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
 
@@ -52,19 +53,19 @@ class MobileController extends Controller
         foreach ($data as $key => $value) {
           // data lecturas
           $dataProcArray=array();
-          $dataProcArray["nueva_lectura"]=$value["nueva_lectura"];
-          $dataProcArray["estado"]=$value["estado"];
+          $dataProcArray["nueva_lectura"]="886";
+          $dataProcArray["estado"]="2";//$value["estado"];
           DB::table($tablaLecturasCompany)
                  ->where('id',$value["id"])
                  ->update($dataProcArray);
           //orden trabajo
           $dataOrdenTrabajo=array();
-          $dataOrdenTrabajo["fecha_lectura"]=$value["fecha_lectura"];
-          $dataOrdenTrabajo["hora"]=$value["hora"];
-          $dataOrdenTrabajo["lat"]=$value["lat"];
-          $dataOrdenTrabajo["lon"]=$value["long"];
-          $dataOrdenTrabajo["observacion"]="Terminado";
-          $dataOrdenTrabajo["foto"]=$value["foto"];
+          $dataOrdenTrabajo["fecha_lectura"]="123";//$value["fechatarea"];
+          $dataOrdenTrabajo["hora"]="12344";//$value["hora"];
+          $dataOrdenTrabajo["lat"]=$value["latitud"];
+          $dataOrdenTrabajo["lon"]=$value["longitud"];
+          $dataOrdenTrabajo["observacion"]="observacion de prueba";
+          $dataOrdenTrabajo["foto"]="foto";
           $dataOrdenTrabajo["estado"]=1;
           DB::table('orden_trabajo')
                  ->where('id_lectura',$value["id"])

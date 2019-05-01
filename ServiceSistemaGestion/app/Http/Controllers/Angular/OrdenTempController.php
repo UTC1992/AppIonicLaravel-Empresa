@@ -10,6 +10,7 @@ use App\Models\Tecnico;
 use App\Models\Historial;
 use App\Models\ActividadDiaria;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Excel;
 
 class OrdenTempController extends Controller
@@ -100,6 +101,119 @@ class OrdenTempController extends Controller
     }
   }
 
+/**
+ * metodo optimizado de subida de datos desde excel
+ */
+ public function store(Request $request){
+   try {
+     if($request->hasFile('archivo')){
+
+       $path = $request->file('archivo')->getRealPath();
+       $data = \Excel::load($path)->get();
+       if($data->count()){
+         $con=0;
+         $actividadArray=array();
+         foreach ($data as $key => $value) {
+
+           //$actividad=new ActividadDiaria();
+             $actividadArray[$con]['n9sepr']=$value->n9sepr;
+             $actividadArray[$con]['n9cono']= $value->n9cono;
+             $actividadArray[$con]['n9cocu']= $value->n9cocu;
+             $actividadArray[$con]['n9selo']= $value->n9selo;
+             $actividadArray[$con]['n9cozo']= $value->n9cozo;
+             $actividadArray[$con]['n9coag']= $value->n9coag;
+             $actividadArray[$con]['n9cose']= $value->n9cose;
+             $actividadArray[$con]['n9coru']= $value->n9coru;
+             $actividadArray[$con]['n9seru']= $value->n9seru;
+             $actividadArray[$con]['n9vano']= $value->n9vano;
+             $actividadArray[$con]['n9plve']= $value->n9plve;
+             $actividadArray[$con]['n9vaca']= $value->n9vaca;
+             $actividadArray[$con]['n9esta']= $value->n9esta;
+             $actividadArray[$con]['n9cocn']= $value->n9cocn;
+             $actividadArray[$con]['n9fech']= $value->n9fech;
+             $actividadArray[$con]['n9meco']= $value->n9meco;
+             $actividadArray[$con]['n9seri']= $value->n9seri;
+             $actividadArray[$con]['n9feco']= $value->n9feco;
+             /*if($value->n9leco!="0"){
+               $actividad->n9leco= $value->n9leco;
+             }*/
+             $actividadArray[$con]['n9leco']= $value->n9leco;
+             $actividadArray[$con]['n9manp']= $value->n9manp;
+             $actividadArray[$con]['n9cocl']= $value->n9cocl;
+             $actividadArray[$con]['n9nomb']= $value->n9nomb;
+             $actividadArray[$con]['n9cedu']= $value->n9cedu;
+             $actividadArray[$con]['n9prin']= $value->n9prin;
+             $actividadArray[$con]['n9nrpr']= $value->n9nrpr;
+             $actividadArray[$con]['n9refe']= $value->n9refe;
+             $actividadArray[$con]['n9tele']= $value->n9tele;
+             $actividadArray[$con]['n9medi']= $value->n9medi;
+             $actividadArray[$con]['n9fecl']= $value->n9fecl;
+             $actividadArray[$con]['n9lect']= $value->n9lect;
+             $actividadArray[$con]['n9cobs']= $value->n9cobs;
+             $actividadArray[$con]['n9cob2']= $value->n9cob2;
+             $actividadArray[$con]['n9ckd1']= $value->n9ckd1;
+             $actividadArray[$con]['n9ckd2']= $value->n9ckd2;
+             $actividadArray[$con]['cusecu']= $value->cusecu;
+             $actividadArray[$con]['cupost']= $value->cupost;
+             $actividadArray[$con]['cucoon']= $value->cucoon;
+             $actividadArray[$con]['cucooe']= $value->cucooe;
+             $actividadArray[$con]['cuclas']= $value->cuclas;
+             $actividadArray[$con]['cuesta']= $value->cuesta;
+             $actividadArray[$con]['cutari']= $value->cutari;
+             $actividadArray[$con]['estado']= false;
+             $actividadArray[$con]['created_at']=date('Y-m-d H:i:s');
+             $actividadArray[$con]['referencia']="sin asignar";
+             if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
+               $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
+               if($coordenadas!=false){
+                 $latitud=round($coordenadas["lat"],7);
+                 $longitud=round($coordenadas["lon"],6);
+                 if($this->validarCoordenada($latitud) && $this->validarCoordenada($longitud)){
+                   $actividadArray[$con]['latitud']=$latitud;
+                   $actividadArray[$con]['longitud']=$longitud;
+                 }else{
+                   $actividadArray[$con]['latitud']=0;
+                   $actividadArray[$con]['longitud']=0;
+                 }
+               }
+             }else{
+               $actividadArray[$con]['latitud']=0;
+               $actividadArray[$con]['longitud']=0;
+             }
+             $actividadArray[$con]['id_emp']=$this->getIdEmpUserAuth();
+             if(count($actividadArray)==1000){
+               $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
+               $result=  DB::table('tbl_actividaddiaria')->insert($actividadArray);
+               $con=0;
+               $actividadArray=array();
+             }
+             $con++;
+            // $actividad->save();
+
+         }
+         if(count($actividadArray)>0){
+           $result=  DB::table('tbl_actividaddiaria')->insert($actividadArray);
+           $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
+           return response()->json(true);
+         }
+         $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
+         return response()->json(true);
+
+       }
+       $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
+       return response()->json(false);
+
+
+     }else{
+       $mesagge=false;
+       $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
+       return response()->json($mesagge);
+
+     }
+   } catch (\Exception $e) {
+     return response()->json("Error: ".$e);
+   }
+ }
 
   /**
    * Store a newly created resource in storage.
@@ -107,7 +221,7 @@ class OrdenTempController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store5(Request $request)
   {
 
     if($request->hasFile('archivo')){
