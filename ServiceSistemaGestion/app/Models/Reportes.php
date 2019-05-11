@@ -52,4 +52,13 @@ class Reportes extends Model
        $result=  DB::select('call sp_reporte_medidor_cortes("'.$empresa.'", "'.$incio.'","'.$fin.'","'.$medidor.'")');
        return $result;
      }
+
+     /**
+      * procedimiento actividades tecncio
+      */
+     public static function getActividadByTecnico($tecnico,$fecha)
+     {
+     $result=  DB::select('call sp_actividad_sector_tecnico("'.$tecnico.'","'.$fecha.'")');
+     return $result;
+     }
 }
