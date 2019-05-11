@@ -42,6 +42,9 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 //datapiker
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 
+//graficos ng2-charts
+import { ChartsModule } from 'ng2-charts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +83,8 @@ import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter'
     MatPaginatorModule,
     MatSelectModule,
     MatTooltipModule,
-    MatInputModule
+    MatInputModule,
+    ChartsModule
   ],
   providers: [
     MatDatepickerModule,

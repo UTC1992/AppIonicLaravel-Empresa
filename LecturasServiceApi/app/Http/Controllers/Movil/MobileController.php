@@ -29,7 +29,6 @@ class MobileController extends Controller
                         ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
                         ->where($tablaLecturasCompany.'.estado', 1)
                         ->where('orden_trabajo.id_tecnico', $idTecnico)
-                        ->limit(50)
                         ->get();
 
         return response()->json($rutas);
@@ -45,34 +44,41 @@ class MobileController extends Controller
     public function recibirLecturas(Request $request){
       try {
         //$input=$request->json()->all();
-        $data=$request->listTareas;
+        
+        //$input=$request->json()->all();
+        $data=json_decode($request->listTareas, true);
         $idEmpresa=$request->id_emp;
         $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
 
         $cont=0;
         foreach ($data as $key => $value) {
+          // code...
           // data lecturas
           $dataProcArray=array();
-          $dataProcArray["nueva_lectura"]="886";
-          $dataProcArray["estado"]="2";//$value["estado"];
+          $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+          $dataProcArray["estado"]=$value["estado"];
           DB::table($tablaLecturasCompany)
                  ->where('id',$value["id"])
                  ->update($dataProcArray);
           //orden trabajo
           $dataOrdenTrabajo=array();
-          $dataOrdenTrabajo["fecha_lectura"]="123";//$value["fechatarea"];
-          $dataOrdenTrabajo["hora"]="12344";//$value["hora"];
-          $dataOrdenTrabajo["lat"]=$value["latitud"];
-          $dataOrdenTrabajo["lon"]=$value["longitud"];
-          $dataOrdenTrabajo["observacion"]="observacion de prueba";
-          $dataOrdenTrabajo["foto"]="foto";
-          $dataOrdenTrabajo["estado"]=1;
+          $dataOrdenTrabajo["fecha_lectura"]=$value["fechatarea"];
+          $dataOrdenTrabajo["hora"]=$value["hora"];
+          $dataOrdenTrabajo["lat"]=$value["lat_lectura"];
+          $dataOrdenTrabajo["lon"]=$value["lon_lectura"];
+          $dataOrdenTrabajo["observacion"]=$value["observacion"];;
+          $dataOrdenTrabajo["foto"]=$value["foto"];
+
+          if($value["estado"]!=0){
+            $dataOrdenTrabajo["estado"]=$value["estado"];
+          }
+          
           DB::table('orden_trabajo')
                  ->where('id_lectura',$value["id"])
                  ->update($dataOrdenTrabajo);
           $cont++;
         }
-        $data= array();
+
         if($cont>0){
           $data["mensaje"]="Lecturas recibidas correctamente";
           $data["cantidad"]=$cont;
@@ -81,6 +87,7 @@ class MobileController extends Controller
           $data["mensaje"]="Ocurrio un error al actualizar registros";
           $data["status"]=false;
         }
+        
         return response()->json($data);
       } catch (\Exception $e) {
         return response()->json("error: ".$e);

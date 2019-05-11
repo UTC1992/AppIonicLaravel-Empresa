@@ -42,7 +42,9 @@ import { ChatComponent } from './chat/chat.component';
 import { LecturasComponent } from './lecturas/lecturas.component';
 import { TableActividadesComponent } from './table-actividades/table-actividades.component';
 
-//MB bootstrap
+//graficos ng2-charts
+import { ChartsModule } from 'ng2-charts';
+import { EstadisticasCortesComponent } from './estadisticas-cortes/estadisticas-cortes.component';
 
 
 @NgModule({
@@ -78,7 +80,8 @@ import { TableActividadesComponent } from './table-actividades/table-actividades
     MatNativeDateModule,
     MatPaginatorModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ChartsModule
   ],
   declarations: [
     InicioComponent,
@@ -97,6 +100,7 @@ import { TableActividadesComponent } from './table-actividades/table-actividades
     ChatComponent,
     LecturasComponent,
     TableActividadesComponent,
+    EstadisticasCortesComponent,
     
   ],
   exports: [

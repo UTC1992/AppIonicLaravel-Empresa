@@ -13,9 +13,9 @@ export class LoginService {
   private _usuario: Usuario;
   private _token: string;
 
-  //baseUrl='http://pruebas.tiendanaturalecuador.online/';
+  baseUrl='http://pruebas.tiendanaturalecuador.online/';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
-  baseUrl='http://localhost:8000/';
+  //baseUrl='http://localhost:8000/';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
   constructor(
     private http:HttpClient

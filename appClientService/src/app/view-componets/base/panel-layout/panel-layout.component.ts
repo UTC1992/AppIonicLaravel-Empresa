@@ -109,12 +109,12 @@ export class PanelLayoutComponent implements OnInit {
 
   getFecha(pickerInput: string): void {
     this.fechaBuscar = pickerInput;
-    //console.log(this.fechaBuscar);
+    console.log(this.fechaBuscar);
   }
   
   getFechaConsolidar(pickerInput: string): void {
     this.fechaConsolidar = pickerInput;
-    //console.log(this.fechaBuscar);
+    console.log(this.fechaConsolidar);
   }
 
   getErrorMessage(pickerInput: string): string {
