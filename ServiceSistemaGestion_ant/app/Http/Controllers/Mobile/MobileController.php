@@ -16,28 +16,27 @@ use Illuminate\Support\Facades\DB;
 class MobileController extends Controller
 {
 //obtiene data para los tecnicos
-public function getTechnicalData($cedula){
-  $tecnico=new Tecnico();
-  if($tecnico->where('cedula',$cedula)->count()>0){
-      $res=$tecnico->where('cedula',$cedula)->get();
-      $orden=new ActividadDiaria();
-      $idsActArray=array();
+  public function getTechnicalData($cedula){
+    $tecnico=new Tecnico();
+    if($tecnico->where('cedula',$cedula)->count()>0){
+        $res=$tecnico->where('cedula',$cedula)->get();
+        $orden=new ActividadDiaria();
+        $idsActArray=array();
 
-      $result=$orden->getDataActividadesTecnico($res[0]['id_tecn'],$res[0]['id_emp']);
-      $cont=0;
-      foreach ($result as $key => $value) {
-        $idsActArray[$cont]=$value->id_act;
-        $cont++;
-      }
-      DB::table('tbl_ordentrabajo')
-             ->whereIn('id_act',$idsActArray)
-             ->update(['discharged' => 1]);
-      return response()->json($result);
-  }else{
-    return response()->json(false);
+        $result=$orden->getDataActividadesTecnico($res[0]['id_tecn'],$res[0]['id_emp']);
+        $cont=0;
+        foreach ($result as $key => $value) {
+          $idsActArray[$cont]=$value->id_act;
+          $cont++;
+        }
+        DB::table('tbl_ordentrabajo')
+               ->whereIn('id_act',$idsActArray)
+               ->update(['discharged' => 1]);
+        return response()->json($result);
+    }else{
+      return response()->json(false);
+    }
   }
-}
-
 
 
 
@@ -87,7 +86,7 @@ public function getTechnicalData($cedula){
           DB::table('tbl_ordentrabajo')
                  ->whereIn('id_act',$idsActArray)
                  ->update(['sent' => 1]);
-
+                 
           return response()->json(true);
         }
       }else{
