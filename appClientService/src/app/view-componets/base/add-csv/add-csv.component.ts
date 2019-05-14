@@ -149,7 +149,7 @@ export class AddCsvComponent implements OnInit {
         if(msj){
           //this.loadingRecManual = false;
           
-          alert("Proceso Realizado Correctamente");
+          this.showAlert('Éxito!',"Proceso realizado correctamente", 'success');
           this.reloadTableClient();
         }else{
           
@@ -197,9 +197,10 @@ export class AddCsvComponent implements OnInit {
           if(result){
             console.log(result);
             this.showAlert("Éxito!",'Actividadas borradas correctamente!',"success");
-              
+            this.reloadTableClient();
           }else{
             this.showAlert("Alerta!",'No existen resgistros en esa fecha para borrarlos.',"warning");
+            this.reloadTableClient();
           }
         }
       );

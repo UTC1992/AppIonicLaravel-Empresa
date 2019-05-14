@@ -31,6 +31,7 @@ export class TableClientComponent implements OnInit {
   cargarDatos(){
     this.ordenService.getOrdenes().subscribe(
       result=>{
+        //console.log(result);
         this.dataSource = new MatTableDataSource(result);
         this.dataSource.paginator = this.paginator;
         this.total=result.length;

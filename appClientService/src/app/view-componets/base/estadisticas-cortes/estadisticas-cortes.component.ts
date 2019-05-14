@@ -93,18 +93,21 @@ export class EstadisticasCortesComponent implements OnInit {
   }
 
   mostrarReporteDiario(){
-    let empresa = this.loginService.usuario.empresa;
+    let empresa = this.loginService.usuario.id_emp;
     var dateInicio = this.fechaDiarioInicio;
     var vectorInicio = dateInicio.split("-");
     var fechaInicio=vectorInicio[2]+"-"+vectorInicio[1]+"-"+vectorInicio[0];
+
     var dateFin = this.fechaDiarioFin;
     var vectorFin = dateFin.split("-");
     var fechaFin=vectorFin[2]+"-"+vectorFin[1]+"-"+vectorFin[0];
-    let data = [{ 
-      empresa: empresa,
-      inicio: fechaInicio,
-      fin: fechaFin
-    }] ;
+    let data: any[] = [];
+    data.push({ 
+      'empresa': empresa,
+      'inicio': fechaInicio,
+      'fin': fechaFin
+    });
+    console.log(data);
     this.reporteService.getCortesDiarios(data).subscribe(response =>{
       console.log(response);
     });

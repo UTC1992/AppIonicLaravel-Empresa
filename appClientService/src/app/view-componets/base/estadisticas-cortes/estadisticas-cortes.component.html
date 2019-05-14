@@ -18,9 +18,9 @@
       <div class="col col-3">
           <div class="input-formulario">
             <mat-form-field>
-              <input matInput #pickerInput [matDatepicker]="fechaFin" 
+              <input matInput #pickerInputFin [matDatepicker]="fechaFin" 
               placeholder="Fecha Fin" [formControl]="dateDiarioFin" 
-              (dateChange)="getFechaFin(pickerInput.value)">
+              (dateChange)="getFechaFin(pickerInputFin.value)">
               <mat-datepicker-toggle matSuffix [for]="fechaFin"></mat-datepicker-toggle>
               <mat-datepicker #fechaFin></mat-datepicker>
             </mat-form-field>

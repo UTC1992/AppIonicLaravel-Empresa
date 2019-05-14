@@ -170,8 +170,9 @@ export class PanelLayoutComponent implements OnInit {
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
       //this.loading=true;
-      this.ordenService.consolidarActividades(date).subscribe(
+      this.ordenService.consolidarActividades(fecha).subscribe(
         result=>{
+          console.log(result);
           if(result){
             this.fecha_consolidado=fecha;
             this.id_emp=this.loginService.usuario.id_emp;

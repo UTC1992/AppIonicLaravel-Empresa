@@ -88,10 +88,14 @@
                   </div>
                   <br>
                   <div class="d-flex justify-content-center">
-                      <h5 class="">Datos encontrados</h5>
+                      <h6 class="">Actividades</h6>
                   </div>
                   <!--datos de actividades-->
                   <app-table-actividades></app-table-actividades>
+                  <br>
+                  <div class="d-flex justify-content-center">
+                    <h6 class="">Reconexiones</h6>
+                  </div>
                   <!--datos de reconexiones manuales-->
                   <app-table-recmanual></app-table-recmanual>
                   
@@ -122,7 +126,7 @@
                           </div>
                       </div>
                       <div class="col col-3">
-                        <button mat-button class="btn btn-primary"  
+                        <button mat-button class="btn btn-primary btn-sm"  
                         (click)="mostrarEnvios();">
                         <mat-icon>remove_red_eye</mat-icon>
                         Mostrar envios
@@ -130,7 +134,7 @@
                       </div>
                   </div>
                   <div class="d-flex justify-content-center">
-                      <h5 class="">Datos encontrados</h5>
+                      <h6 class="">Envios</h6>
                   </div>
                   <app-table-envios></app-table-envios>
                 </mat-expansion-panel>

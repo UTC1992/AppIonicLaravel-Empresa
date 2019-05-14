@@ -20,14 +20,14 @@ class ReportesController extends Controller
    */
   public function getEstadisticaDiariaCortes(Request $request){
     try {
-      $empresa=$request->empresa;
-      $inicio=$request->inicio;
-      $fin=$request->fin;
+      $empresa=$request[0]['empresa'];
+      $inicio=$request[0]['inicio'];
+      $fin=$request[0]['fin'];
        $reportes=Reportes::getEstadisticaActividadesDiaria($empresa,$inicio,$fin);
        if(count($reportes)>0){
          return response()->json($reportes,200);
        }
-       return response()->json('No Data', 206);
+       return response()->json('No data', 206);
     } catch (\Exception $e) {
       return response()->json("Error: ".$e,500);
     }
