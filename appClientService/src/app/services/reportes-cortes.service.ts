@@ -11,7 +11,7 @@ export class ReportesCortes {
   headers=new Headers();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
-  baseUrl="http://localhost:8000/api";
+  baseUrl="http://192.168.1.4:8000/api";
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
       private http:HttpClient
@@ -34,6 +34,17 @@ export class ReportesCortes {
         }
         return throwError(e);
       })
+    );
+  }
+
+  getEnviosTecnicos(fecha: string): Observable<any>{
+    return this.http.get<any>(this.baseUrl+"/reportes/envios-tecnico/"+fecha)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
     );
   }
 

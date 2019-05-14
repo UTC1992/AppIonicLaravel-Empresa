@@ -56,22 +56,18 @@ class LecturasAppController extends Controller
      */
      public function updateLecturas(Request $request){
        try {
-         
-         if(!$request->listTareas){
+         $input=json_decode($request[0],true);
+         if(count($input["listTareas"])<=0){
            $data=array();
            $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
            $data["status"]=false;
            return response($data,404)->header('Content-Type', 'application/json');
          }
-         $id_tecnico= $request->id_tecn;
-
-         $data = array(
-            'id_tecn' => $request->id_tecn,
-            'id_emp' => $request->id_emp,
-            'listTareas' => json_encode($request->listTareas, true)
-           );
-
-         $result= json_decode($this->lecturasAppServices->updateLecturasService($data), true);
+         $id_tecnico= $input["id_tecn"];
+         $arrayLectura=array();
+         $arrayLectura["id_emp"]=$input["id_emp"];
+         $arrayLectura["listTareas"]=$input["listTareas"];
+         $result= json_decode($this->lecturasAppServices->updateLecturasService($arrayLectura),true);
          if($result["status"]){
            $tecnico= Tecnico::find($id_tecnico);
            $tecnico->asignado=0;

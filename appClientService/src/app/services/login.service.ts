@@ -15,7 +15,7 @@ export class LoginService {
 
   //baseUrl='http://pruebas.tiendanaturalecuador.online/';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
-  baseUrl='http://localhost:8000/';
+  baseUrl='http://192.168.1.4:8000/';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
   constructor(
     private http:HttpClient

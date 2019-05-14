@@ -99,7 +99,7 @@ Route::group(['prefix' => 'mobile'], function(){
        Route::post('cortes-tecnicos-diario','Reportes\ReportesController@getEstadisticaTecnicosCortes');
        Route::post('cortes-tecnicos-mes','Reportes\ReportesController@getEstadisticaTecnicosMesCortes');
        Route::post('medidor-cortes','Reportes\ReportesController@reporteMedidorFecha');
-
+       Route::get('envios-tecnico/{fecha}','Reportes\ReportesController@productividadTecnico');
      });
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');

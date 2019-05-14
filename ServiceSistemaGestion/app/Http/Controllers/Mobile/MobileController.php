@@ -10,21 +10,34 @@ use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
 use App\Models\ReconexionManual;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 
 class MobileController extends Controller
 {
 //obtiene data para los tecnicos
-  public function getTechnicalData($cedula){
-    $tecnico=new Tecnico();
-    if($tecnico->where('cedula',$cedula)->count()>0){
-        $res=$tecnico->where('cedula',$cedula)->get();
-        $orden=new ActividadDiaria();
-        $result=$orden->getDataActividadesTecnico($res[0]['id_tecn'],$res[0]['id_emp']);
-        return response()->json($result);
-    }else{
-      return response()->json(false);
-    }
+public function getTechnicalData($cedula){
+  $tecnico=new Tecnico();
+  if($tecnico->where('cedula',$cedula)->count()>0){
+      $res=$tecnico->where('cedula',$cedula)->get();
+      $orden=new ActividadDiaria();
+      $idsActArray=array();
+
+      $result=$orden->getDataActividadesTecnico($res[0]['id_tecn'],$res[0]['id_emp']);
+      $cont=0;
+      foreach ($result as $key => $value) {
+        $idsActArray[$cont]=$value->id_act;
+        $cont++;
+      }
+      DB::table('tbl_ordentrabajo')
+             ->whereIn('id_act',$idsActArray)
+             ->update(['discharged' => 1]);
+      return response()->json($result);
+  }else{
+    return response()->json(false);
   }
+}
+
 
 
 
@@ -34,9 +47,10 @@ class MobileController extends Controller
       if(!is_null($request)){
         $input=$request->json()->all();
         $con=0;
+        $idsActArray=array();
         foreach ($input as $key => $value) {
-          $con++;
 
+            $idsActArray[$con]=$value['id_act'];
             $actividad=ActividadDiaria::find($value['id_act']);
             if($value['estado']=='2' && $value['n9leco']>0){
               $actividad->n9leco=$value['n9leco'];
@@ -66,8 +80,14 @@ class MobileController extends Controller
             $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();
+            $con++;
         }
         if($con>0){
+
+          DB::table('tbl_ordentrabajo')
+                 ->whereIn('id_act',$idsActArray)
+                 ->update(['sent' => 1]);
+
           return response()->json(true);
         }
       }else{

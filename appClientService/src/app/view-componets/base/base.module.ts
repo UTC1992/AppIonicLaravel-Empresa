@@ -45,6 +45,7 @@ import { TableActividadesComponent } from './table-actividades/table-actividades
 //graficos ng2-charts
 import { ChartsModule } from 'ng2-charts';
 import { EstadisticasCortesComponent } from './estadisticas-cortes/estadisticas-cortes.component';
+import { TableEnviosComponent } from './table-envios/table-envios.component';
 
 
 @NgModule({
@@ -101,6 +102,7 @@ import { EstadisticasCortesComponent } from './estadisticas-cortes/estadisticas-
     LecturasComponent,
     TableActividadesComponent,
     EstadisticasCortesComponent,
+    TableEnviosComponent,
     
   ],
   exports: [

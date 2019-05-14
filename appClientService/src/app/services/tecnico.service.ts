@@ -12,7 +12,7 @@ export class TecnicoService {
   headers=new Headers();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
-  baseUrl="http://localhost:8000/api/angular";
+  baseUrl="http://192.168.1.4:8000/api/angular";
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
     private http:HttpClient

@@ -10,16 +10,15 @@
         </mat-tab>
         <mat-tab label="Consultas">
           <br>
-          <div class="card">
-            <div class="card-body">
+          <div class="card" style="margin-bottom: 10px;">
+            <div class="card-body" >
               <div class="d-flex justify-content-center">
                   <h5 class="">Consultas sobre actividades</h5>
               </div>
-              <br>
               <mat-accordion>
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
-                    Expandir para consultar
+                    Expandir para consultar actividades
                   </mat-expansion-panel-header>
                   <div class="row">
                     <div class="col col-3">
@@ -87,25 +86,57 @@
                     <mat-icon>cloud_download</mat-icon>
                     Exportar a Excel</button>
                   </div>
+                  <br>
+                  <div class="d-flex justify-content-center">
+                      <h5 class="">Datos encontrados</h5>
+                  </div>
+                  <!--datos de actividades-->
+                  <app-table-actividades></app-table-actividades>
+                  <!--datos de reconexiones manuales-->
+                  <app-table-recmanual></app-table-recmanual>
+                  
                 </mat-expansion-panel>
               </mat-accordion>
             </div>
           </div>
-          <br>
-          
-          <div class="card" >
+          <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-center">
-                  <h5 class="">Actividades buscadas</h5>
+                  <h5 class="">Consultas sobre envios</h5>
               </div>
-              <!--datos de actividades-->
-              <app-table-actividades></app-table-actividades>
-              <!--datos de reconexiones manuales-->
-              <app-table-recmanual></app-table-recmanual>
-
+              <nat-accordion>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    Expandir para consultar envios
+                  </mat-expansion-panel-header>
+                  <div class="row">
+                      <div class="col col-3">
+                          <div class="input-formulario">
+                            <mat-form-field>
+                              <input matInput #pickerInputEnvio [matDatepicker]="fechaEnvio" 
+                              placeholder="Elija la fecha" [formControl]="dateEnvios" 
+                              (dateChange)="getFechaEnvios(pickerInputEnvio.value)">
+                              <mat-datepicker-toggle matSuffix [for]="fechaEnvio"></mat-datepicker-toggle>
+                              <mat-datepicker #fechaEnvio></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="col col-3">
+                        <button mat-button class="btn btn-primary"  
+                        (click)="mostrarEnvios();">
+                        <mat-icon>remove_red_eye</mat-icon>
+                        Mostrar envios
+                      </button> 
+                      </div>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                      <h5 class="">Datos encontrados</h5>
+                  </div>
+                  <app-table-envios></app-table-envios>
+                </mat-expansion-panel>
+              </nat-accordion>
             </div>
           </div>
-          
           
         </mat-tab>
         <mat-tab label="Consolidado">

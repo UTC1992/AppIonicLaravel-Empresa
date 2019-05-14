@@ -13,6 +13,7 @@ import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
 import { TableActividadesComponent } from '../table-actividades/table-actividades.component';
+import { TableEnviosComponent } from '../table-envios/table-envios.component';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -50,6 +51,7 @@ export class PanelLayoutComponent implements OnInit {
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
   @ViewChild(TableActividadesComponent) tablaActividades: TableActividadesComponent;
+  @ViewChild(TableEnviosComponent) tablaEnvios: TableEnviosComponent;
 
   recmanualesExcel: boolean;
   actividadesExcel: boolean;
@@ -85,6 +87,14 @@ export class PanelLayoutComponent implements OnInit {
     ]
   );
 
+  //consolidado
+  fechaEnvio: string = null;
+  dateEnvios = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
               private excelService:ExcelServiceService,
@@ -115,6 +125,11 @@ export class PanelLayoutComponent implements OnInit {
   getFechaConsolidar(pickerInput: string): void {
     this.fechaConsolidar = pickerInput;
     console.log(this.fechaConsolidar);
+  }
+
+  getFechaEnvios(pickerInput: string): void {
+    this.fechaEnvio = pickerInput;
+    console.log(this.fechaEnvio);
   }
 
   getErrorMessage(pickerInput: string): string {
@@ -268,6 +283,19 @@ export class PanelLayoutComponent implements OnInit {
       this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
     }
     
+  }
+
+  mostrarEnvios(){
+    if(this.fechaEnvio != null && this.dateEnvios.valid){
+      var date = this.fechaEnvio;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      if(fecha){
+        this.tablaEnvios.cargarDatos(fecha);
+      }
+    }else{
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
+    }
   }
 
   showAlert(title, text, type){

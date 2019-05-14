@@ -15,12 +15,12 @@ import Swal from 'sweetalert2';
 })
 export class TableActividadesComponent implements OnInit {
 
-  displayedColumns: string[] = ['index', 'tecnico','actividad', 
+  displayedColumns2: string[] = ['index', 'tecnico','actividad', 
   'cuenta', 'canton', 'sector', 'medidor', 'lectura',
   'usuario', 'latitud', 'longitud', 'hora', 'novedad',
   'estadoAct', 'estadoFinal'];
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource2 = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator2: MatPaginator;
 
   ordenes:Observable<Orden[]>; 
   actividades:Observable<any[]>; 
@@ -37,7 +37,7 @@ export class TableActividadesComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  
   cargarDatos(data){
     console.log(data[0]['fecha']);
     this.fechaNombreExcel = data[0]['fecha'];
@@ -47,20 +47,20 @@ export class TableActividadesComponent implements OnInit {
                                                       data[0]['estado']);
       this.ordenes.subscribe(
         data=>{
-          console.log(data);
-          if(data.length>0){
-            this.dataSource = new MatTableDataSource(data);
-            this.dataSource.paginator = this.paginator;
-            this.view_table=true;
-            this.view_data_empty=false;
-          }else{
+          //console.log(data);
+          this.dataSource2 = new MatTableDataSource(data);
+          this.dataSource2.paginator = this.paginator2;
+          //setTimeout(() => this.dataSource2.paginator = this.paginator2)
+          this.view_table=true;
+          this.view_data_empty=false;
+          if(data.length == 0){
             this.view_table=false;
             this.view_data_empty=true;
           }
         });
   }
   applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource2.filter = filterValue.trim().toLowerCase();
   }
 
   mostrarActividades(){
