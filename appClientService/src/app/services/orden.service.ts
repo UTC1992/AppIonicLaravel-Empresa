@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Orden } from '../models/orden';
-import { HttpClient,HttpHeaders} from '@angular/common/http';
+import { HttpClient,HttpHeaders, HttpEvent, HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
@@ -29,11 +29,24 @@ export class OrdenService {
     );
   }
 
-  addCsvFiles(file:object):Observable<Orden[]>{
-      return this.http.post(this.baseUrl+"/ordenes",file)
-      .pipe(
-        map((response: any) => response),
-        catchError(e => {
+  addCsvFiles(file){
+      return this.http.post<any>(this.baseUrl+"/ordenes",file, {
+        reportProgress: true,
+      observe: 'events'
+    }).pipe(map((event) => {
+
+      switch (event.type) {
+        case HttpEventType.UploadProgress:
+          const progress = Math.round(100 * event.loaded / event.total);
+          return { status: 'progress', message: progress };
+
+        case HttpEventType.Response:
+          return event.body;
+        default:
+          return `Unhandled event: ${event.type}`;
+      }
+    }),
+    catchError(e => {
   
           if(e.status == 400){
             return throwError(e);
@@ -44,7 +57,7 @@ export class OrdenService {
           }
           return throwError(e);
         })
-      );
+    );
   }
 
   getActivitiesToDay(fecha,tecnico,actividad,estado):Observable<Orden[]>{

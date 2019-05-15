@@ -18,6 +18,8 @@ import { Ng2OrderModule } from 'ng2-order-pipe';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatChipsModule} from '@angular/material/chips';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
@@ -82,7 +84,9 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
     MatPaginatorModule,
     MatSelectModule,
     MatTooltipModule,
-    ChartsModule
+    ChartsModule,
+    MatProgressBarModule,
+    MatChipsModule
   ],
   declarations: [
     InicioComponent,

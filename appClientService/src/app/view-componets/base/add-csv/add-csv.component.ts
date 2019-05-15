@@ -34,7 +34,11 @@ export const MY_FORMATS = {
   ],
 })
 export class AddCsvComponent implements OnInit {
-
+  //subida de excel
+  error: string;
+  uploadResponse = { status: '', message: '', filePath: '' };
+  progresoMostrar: boolean = false;
+  
   @ViewChild(TableClientComponent) tablaCliente: TableClientComponent;
 
   today:Date;
@@ -69,6 +73,10 @@ export class AddCsvComponent implements OnInit {
 
   ngOnInit() {
     this.reloadTableClient();
+
+    this.form = this.fb.group({
+      archivo: ['']
+    });
   }
 
   getFechaBorrar(pickerInput: string): void {
@@ -77,19 +85,43 @@ export class AddCsvComponent implements OnInit {
   }
 
   //metodo envia file al servidor    
-  uploadCsvFile(file){
-    this.ordenService.addCsvFiles(file.archivo)
+  onSubmit(){
+    if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
+      this.showAlert('Alerta!',"Seleccione un archivo",'warning');
+      return;
+    }
+
+    let input = new FormData();
+    input.append('archivo', this.form.get('archivo').value);
+
+    this.progresoMostrar = false;
+
+    this.ordenService.addCsvFiles(input)
     .subscribe(
-      file=>console.log(file),
-      error=>console.log(<any>error)
-    );
+      response=>{
+        //console.log(response);
+        this.uploadResponse = response;
+        if(this.uploadResponse.message == '100'){
+          //this.showAlert('Éxito!',"Archivo subido correctamente",'success');
+          this.clearFile();
+          this.reloadTableClient();
+          this.progresoMostrar = true;
+        }
+        if(this.uploadResponse.message != '100'){
+          this.progresoMostrar = false;
+        }
+
+      },
+      error=>{
+        console.log(<any>error);
+        this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
+      });
   }
 
 
   reloadTableClient(){
     this.tablaCliente.cargarDatos();
   }
-
 
   createForm() {
     this.form = this.fb.group({
@@ -103,13 +135,15 @@ export class AddCsvComponent implements OnInit {
       this.form.get('archivo').setValue(file);
     }
   }
+
   prepareSave(): any {
     let input = new FormData();
     input.append('archivo', this.form.get('archivo').value);
     return input;
   }
+
   //subir archivo al servidor 
-  onSubmit() {
+  /*onSubmit1() {
     if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
       alert("Seleccione un archivo");
       return;
@@ -134,6 +168,7 @@ export class AddCsvComponent implements OnInit {
       }
     );
   }
+  */
 
   clearFile() {
     this.form.get('archivo').setValue(null);
