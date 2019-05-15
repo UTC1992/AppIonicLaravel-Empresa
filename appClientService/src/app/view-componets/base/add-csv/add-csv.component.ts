@@ -231,7 +231,7 @@ export class AddCsvComponent implements OnInit {
         result=>{
           if(result){
             console.log(result);
-            this.showAlert("Éxito!",'Actividadas borradas correctamente!',"success");
+            this.showAlert("Éxito!",'Actividades borradas correctamente!',"success");
             this.reloadTableClient();
           }else{
             this.showAlert("Alerta!",'No existen resgistros en esa fecha para borrarlos.',"warning");
