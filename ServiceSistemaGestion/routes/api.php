@@ -99,6 +99,7 @@ Route::group(['prefix' => 'mobile'], function(){
        Route::post('cortes-tecnicos-diario','Reportes\ReportesController@getEstadisticaTecnicosCortes');
        Route::post('cortes-tecnicos-mes','Reportes\ReportesController@getEstadisticaTecnicosMesCortes');
        Route::post('medidor-cortes','Reportes\ReportesController@reporteMedidorFecha');
+       Route::get('productividad-tecnico/{fecha}','Reportes\ReportesController@productividadTecnico');
 
      });
 

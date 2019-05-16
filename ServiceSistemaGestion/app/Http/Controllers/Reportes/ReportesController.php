@@ -123,6 +123,7 @@ class ReportesController extends Controller
                    ->where('T0.borrado',0)
                    ->where('T0.id_emp', $ID_EMP)
                    ->where('T1.created_at','like','%'.$fecha.'%')
+                   ->where('T0.actividad', 'cortes')
                    ->groupBy('T0.id_tecn')->get();
         $prodArray=array();
         $cont=0;

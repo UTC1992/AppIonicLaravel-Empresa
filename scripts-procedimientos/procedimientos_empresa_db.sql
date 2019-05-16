@@ -1,16 +1,18 @@
+---modificación store procedure 2019-05-15
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_estadistica_diario`(
 in empresa int,
 in inicio date,
 in fin date)
 BEGIN
-
-	select T1.n9cono, COUNT(T1.n9cono) as cantidad, IF(T1.n9cono like '%10%', "NOTIFICACIONES",IF(T1.n9cono like '%40%', "RECONEXIONES",IF(T1.n9cono like '%30%', "CORTE",IF(T1.n9cono like '%50%', "RETIRO DE MEDIDOR",NULL)))) AS actividad  from tbl_actividaddiaria as T1 
-	where (T1.estado=2 or T1.estado=3) and T1.id_emp=empresa
+	select date(T1.created_at) as fecha, T1.n9cono, COUNT(T1.n9cono) as cantidad, IF(T1.n9cono like '%10%', "NOTIFICACIONES",IF(T1.n9cono like '%40%', "RECONEXIONES",IF(T1.n9cono like '%30%', "CORTE",IF(T1.n9cono like '%50%', "RETIRO DE MEDIDOR",NULL)))) AS actividad
+	from tbl_actividaddiaria as T1 
+	where (T1.estado=2) and T1.id_emp=empresa
     and date(T1.created_at) BETWEEN  inicio and fin
-    group by T1.n9cono;
+    group by T1.n9cono,date(T1.created_at);
     END$$
 DELIMITER ;
+
 
 
 DELIMITER $$
