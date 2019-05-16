@@ -20,6 +20,9 @@ class ReportesController extends Controller
    */
   public function getEstadisticaDiariaCortes(Request $request){
     try {
+      /*$empresa=$request->empresa;
+      $inicio=$request->inicio;
+      $fin=$request->fin;*/
       $empresa=$request[0]['empresa'];
       $inicio=$request[0]['inicio'];
       $fin=$request[0]['fin'];
@@ -27,7 +30,7 @@ class ReportesController extends Controller
        if(count($reportes)>0){
          return response()->json($reportes,200);
        }
-       return response()->json('No data', 206);
+       return response()->json('No Data', 206);
     } catch (\Exception $e) {
       return response()->json("Error: ".$e,500);
     }
@@ -123,7 +126,7 @@ class ReportesController extends Controller
                    ->where('T0.borrado',0)
                    ->where('T0.id_emp', $ID_EMP)
                    ->where('T1.created_at','like','%'.$fecha.'%')
-                   ->where('T0.actividad','cortes')
+                   ->where('T0.actividad', 'cortes')
                    ->groupBy('T0.id_tecn')->get();
         $prodArray=array();
         $cont=0;

@@ -72,6 +72,10 @@ export class ActividadesTecnicoComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  displayedColumnsModal: string[] = ['index', 'fecha'];
+  dataSourceModal = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginatorModal: MatPaginator;
+
   @ViewChild('inputRef') inputRef: ElementRef;
   constructor(private tecnicoService:TecnicoService, 
               private ordenServices:OrdenService,
@@ -341,6 +345,7 @@ export class ActividadesTecnicoComponent implements OnInit {
 
     //distribuir actividades tecnico
     buildTask(){
+      this.showCargando();
       //console.log("DISTRIBUIR ACTIVIDADES");
       
       this.ordenServices.getRecManualesSinProcesar().subscribe(
@@ -519,7 +524,7 @@ export class ActividadesTecnicoComponent implements OnInit {
 
 
   eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
-    
+    this.showCargando();
     //console.log("ELIMINAR LA DISTRIBUCION ===================");
     this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad, tipoAct);
     this.distribucionDelete.subscribe(res =>{
@@ -562,6 +567,21 @@ export class ActividadesTecnicoComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.eliminarAsignacion(id_tecn, sector, cantidad, tipoAct);
+      }
+    });
+  }
+
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
       }
     });
   }

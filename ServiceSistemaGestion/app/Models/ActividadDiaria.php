@@ -98,7 +98,8 @@ class ActividadDiaria extends Model
   public function getAllActivitiesFilter($fecha,$id_tecnico,$actividad,$estado,$ID_EMP){
     return $actividad2 = DB::table('tbl_actividaddiaria as T0')
           ->leftJoin('tbl_ordentrabajo as T1','T1.id_act','=','T0.id_act')
-          ->select('T0.*','T1.observacion as observacionFin', 'T1.hora as hora')
+          ->leftJoin('tbl_tecnico as T2','T2.id_tecn','=','T1.id_tecn')
+          ->select('T0.*','T1.observacion as observacionFin', 'T1.hora as hora','T2.nombres','T2.apellidos','T2.cedula')
           ->where('T0.created_at','like','%'.$fecha.'%')
           ->where(function($query) use($id_tecnico){
             if($id_tecnico!="empty")

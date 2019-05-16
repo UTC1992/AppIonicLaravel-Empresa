@@ -38,7 +38,7 @@ export class ReportesCortes {
   }
 
   getEnviosTecnicos(fecha: string): Observable<any>{
-    return this.http.get<any>(this.baseUrl+"/reportes/envios-tecnico/"+fecha)
+    return this.http.get<any>(this.baseUrl+"/reportes/productividad-tecnico/"+fecha)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         console.error(e.error.mensaje);

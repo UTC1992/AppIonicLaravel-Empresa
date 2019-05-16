@@ -14,6 +14,7 @@ import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
 import { TableActividadesComponent } from '../table-actividades/table-actividades.component';
 import { TableEnviosComponent } from '../table-envios/table-envios.component';
+import { AddCsvComponent } from '../add-csv/add-csv.component';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -52,6 +53,7 @@ export class PanelLayoutComponent implements OnInit {
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
   @ViewChild(TableActividadesComponent) tablaActividades: TableActividadesComponent;
   @ViewChild(TableEnviosComponent) tablaEnvios: TableEnviosComponent;
+  @ViewChild(AddCsvComponent) addArchivo: AddCsvComponent;
 
   recmanualesExcel: boolean;
   actividadesExcel: boolean;
@@ -107,6 +109,7 @@ export class PanelLayoutComponent implements OnInit {
    }
 
   ngOnInit() {
+    Swal.close();
     this.tecnicos=this.tecnicoService.getTecnicosCortes();
     this.recmanualesExcel = false;
     this.actividadesExcel = false;
@@ -166,6 +169,7 @@ export class PanelLayoutComponent implements OnInit {
   consolodarActividades(){
     //console.log("fecha de consolidado ==> " + date);
     if(this.fechaConsolidar != null){
+      this.showCargando();
       var date = this.fechaConsolidar;
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
@@ -178,6 +182,7 @@ export class PanelLayoutComponent implements OnInit {
             this.id_emp=this.loginService.usuario.id_emp;
             this.exportable=true;
             //this.loading = false;
+            this.addArchivo.ngOnInit();
             this.showAlert("Éxito!","Actividades Consolidadas Correctamente", "success");
           }else{
             this.showAlert("Alert!",
@@ -185,11 +190,12 @@ export class PanelLayoutComponent implements OnInit {
             "success");
             
           }
+        }, error =>{
+          Swal.close();
         }
       );
     }else{
       this.showAlert("Alerta!", "Debe elegir una fecha.", "warning");
-      return;
     }
   }
 
@@ -215,6 +221,7 @@ export class PanelLayoutComponent implements OnInit {
 
   //exportar excel 
   exportarConsolidado(){
+    this.showCargando();
     var id_emp=sessionStorage.getItem("id_emp");
     var date = this.fechaBuscar;
     if(date==""){
@@ -291,6 +298,7 @@ export class PanelLayoutComponent implements OnInit {
       var date = this.fechaEnvio;
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      console.log(fecha);
       if(fecha){
         this.tablaEnvios.cargarDatos(fecha);
       }
@@ -300,11 +308,28 @@ export class PanelLayoutComponent implements OnInit {
   }
 
   showAlert(title, text, type){
-    Swal.fire({
+    let swal = Swal;
+    swal.fire({
       title: title,
       text: text,
       type: type,
-      allowOutsideClick: false
+      allowOutsideClick: false,
+      allowEscapeKey:false
+    });
+  }
+
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
     });
   }
 

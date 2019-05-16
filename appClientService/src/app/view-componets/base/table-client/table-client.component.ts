@@ -1,10 +1,9 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { OrdenService } from '../../../services/orden.service';
 import { Orden } from '../../../models/orden';
-import { Observable } from 'rxjs';
+
 import {Router} from "@angular/router";
 import {MatTableDataSource, MatPaginator} from '@angular/material';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-table-client',
@@ -22,9 +21,12 @@ export class TableClientComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private ordenService:OrdenService,private router:Router ) { }
+  constructor(
+    private ordenService:OrdenService,
+    private router:Router 
+    ) { }
 
-  ngOnInit() {
+  ngOnInit(){
     this.cargarDatos();
   }
 

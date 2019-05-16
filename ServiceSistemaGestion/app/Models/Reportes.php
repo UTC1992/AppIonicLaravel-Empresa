@@ -48,17 +48,17 @@ class Reportes extends Model
     /**
      * procedimiento almacenado reporte medidor
      */
-     public static function getReporteMedidor($empresa,$incio,$fin,$medidor){
+    public static function getReporteMedidor($empresa,$incio,$fin,$medidor){
        $result=  DB::select('call sp_reporte_medidor_cortes("'.$empresa.'", "'.$incio.'","'.$fin.'","'.$medidor.'")');
        return $result;
-     }
+    }
 
      /**
       * procedimiento actividades tecncio
       */
-     public static function getActividadByTecnico($tecnico,$fecha)
-     {
+    public static function getActividadByTecnico($tecnico,$fecha)
+    {
      $result=  DB::select('call sp_actividad_sector_tecnico("'.$tecnico.'","'.$fecha.'")');
      return $result;
-     }
+   }
 }

@@ -85,7 +85,7 @@ class Empresa extends Model
         return $planes = DB::table('tbl_planes as T0')
             ->join('tbl_plan_empresa as T1','T1.id_plan','=','T0.id_plan')
             ->join('tbl_empresa as T2','T2.id_emp','=','T1.id_emp')
-            ->select('*')
+            ->select('T0.nombre as plan','T0.descripcion', 'T0.num_tecnicos','T2.nombre as empresa')
             ->where('T2.id_emp',$idEmpresa)
             ->get();
       } catch (\Exception $e) {

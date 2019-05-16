@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.showCargando();
     this.loginService.login(this.usuario).subscribe(response =>{
       console.log(response);
 
@@ -67,8 +68,9 @@ export class LoginComponent implements OnInit {
             let usuario = this.loginService.usuario;
             
             this.router.navigate(['/base']);
-            Swal.fire('Login', `Hola ${usuario.name}, has iniciado sesión con éxito`, 'success');
+            //Swal.fire('Login', `Hola ${usuario.name}, has iniciado sesión con éxito`, 'success');
           }else{
+            Swal.close();
             Swal.fire('Alerta!', 'Su cuenta se encuentra bloqueada, comuníquese con soporte técnico', 'warning');
             this.loginService.logout();
           }
@@ -77,6 +79,19 @@ export class LoginComponent implements OnInit {
     }, error =>{
       if(error.status == 400 || error.status == 401){
         Swal.fire('Error Login', 'Email o clave incorrectas!', 'error');
+      }
+    });
+  }
+
+  showCargando(){
+    Swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      onOpen: () => {
+        Swal.showLoading();
       }
     });
   }

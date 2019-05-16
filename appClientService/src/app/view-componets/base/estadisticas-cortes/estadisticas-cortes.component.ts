@@ -59,27 +59,15 @@ export class EstadisticasCortesComponent implements OnInit {
     }
   };
 
-  public barChartLabels: Label[] = ['07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019',
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019', '07-05-2019', 
-                                    '07-05-2019'];
+  public barChartLabels: Label[] = ['00-00-0000'];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [pluginDataLabels];
 
   public barChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'COR' },
-    { data: [28, 48, 40, 19, 86, 27, 100], label: 'NOT' },
-    { data: [28, 48, 40, 19, 86, 27, 100], label: 'REC' }
+    { data: [], label: 'COR' },
+    { data: [], label: 'NOT' },
+    { data: [], label: 'REC' }
   ];
 
 
@@ -110,6 +98,11 @@ export class EstadisticasCortesComponent implements OnInit {
     console.log(data);
     this.reporteService.getCortesDiarios(data).subscribe(response =>{
       console.log(response);
+      for(let i = 0; i < response.length; i++){
+        this.barChartLabels[i] = response[i].fecha;
+        this.barChartData[i].data[0] = response[i].cantidad;
+      }
+       
     });
   }
 
@@ -129,19 +122,6 @@ export class EstadisticasCortesComponent implements OnInit {
 
   public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
     console.log(event, active);
-  }
-
-  public randomize(): void {
-    // Only Change 3 values
-    const data = [
-      Math.round(Math.random() * 100),
-      59,
-      80,
-      (Math.random() * 100),
-      56,
-      (Math.random() * 100),
-      40];
-    this.barChartData[0].data = data;
   }
 
 }

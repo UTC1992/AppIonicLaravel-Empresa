@@ -20,6 +20,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
@@ -86,7 +87,8 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
     MatTooltipModule,
     ChartsModule,
     MatProgressBarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     InicioComponent,
