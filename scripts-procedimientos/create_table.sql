@@ -1,11 +1,14 @@
-CREATE TABLE IF NOT EXISTS `empresa_db`.`tbl_planes` (
-  `id_plan` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(65) NULL,
-  `descripcion` VARCHAR(200) NULL,
-  `num_tecnicos` INT NULL,
-  `id_mod` INT NULL,
-  PRIMARY KEY (`id_plan`))
-ENGINE = InnoDB
+CREATE TABLE `tbl_planes` (
+  `id_plan` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(65) DEFAULT NULL,
+  `descripcion` varchar(200) DEFAULT NULL,
+  `num_tecnicos` int(11) DEFAULT NULL,
+  `id_mod` int(11) DEFAULT NULL,
+  `costo` decimal(10,2) DEFAULT NULL,
+  `tiempo_suscripcion` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id_plan`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
 
 CREATE TABLE IF NOT EXISTS `empresa_db`.`tbl_plan_empresa` (
   `id_plan_empresa` INT NOT NULL AUTO_INCREMENT,
