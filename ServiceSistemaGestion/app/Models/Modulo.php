@@ -73,7 +73,7 @@ class Modulo extends Model
       try {
         return $actividad = DB::table('tbl_modulo as T0')
               ->join('tbl_modulo_empresa as T1','T1.id_mod','=','T0.id_mod')
-              ->select('T0.nombre','T0.estado','T0.ruta')
+              ->select('T0.nombre','T0.estado','T0.ruta', 'T0.icono_menu')
               ->where('T1.id_emp',$id)
               ->get();
       } catch (\Exception $e) {
