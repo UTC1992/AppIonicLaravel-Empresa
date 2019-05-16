@@ -29,6 +29,15 @@ export class PermisosService {
     );
    }
 
-
+   getPlan():Observable<any>{
+    return this.http.get<any>(this.baseUrl+"/angular/planes")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+   }
 
 }

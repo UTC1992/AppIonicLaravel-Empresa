@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import {BsModalRef, BsModalService,  } from 'ngx-bootstrap/modal';
 import {MatTableDataSource, MatPaginator} from '@angular/material';
 import Swal from 'sweetalert2';
+import { PermisosService } from '../../../services/permisos.service';
 
 @Component({
   selector: 'app-tecnicos',
@@ -29,21 +30,29 @@ export class TecnicosComponent implements OnInit {
 
   tecnicoEdit:any;
 
+  //validar numero de tecnicos
+  tecnicosIngresados: number;
+  tecnicosPermitidos: number;
+
   constructor(
     private tecnicoService:TecnicoService,
     private formBuilder: FormBuilder,
     private modalService: BsModalService,
     public modalRef: BsModalRef,
+    private permisoService: PermisosService
   ) { 
     this.iniciarFormulario();
   }
 
   ngOnInit() {
     this.mostrarTecnicos();
+
   }
 
   mostrarTecnicos(){
     this.tecnicoService.getAllTecnicos().subscribe(res =>{
+      console.log(res.length);
+      this.tecnicosIngresados = res.length;
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
     });
@@ -98,10 +107,18 @@ export class TecnicosComponent implements OnInit {
   }
 
   openModalCreate(template: TemplateRef<any>) {
-    this.iniciarFormulario();
-    this.tipoAccion = "create";
-    this.tituloModal = "Crear un nuevo técnico";
-    this.modalRef = this.modalService.show(template);
+    this.permisoService.getPlan().subscribe(response =>{
+      this.tecnicosPermitidos = response[0].num_tecnicos;
+      if(this.tecnicosIngresados < this.tecnicosPermitidos){
+        this.iniciarFormulario();
+        this.tipoAccion = "create";
+        this.tituloModal = "Crear un nuevo técnico";
+        this.modalRef = this.modalService.show(template);
+      } else {
+        this.showAlert('Alerta!', 'Ya no puedes crear mas técnicos, comunicate con el proveedor por favor.', 'warning');
+      }
+
+    });
   }
 
   iniciarFormularioEdit(object){
