@@ -32,6 +32,12 @@
                           </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-2">Código:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="codigo" value="{{ $res->codigo }}" required>
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="control-label col-md-2">Ruta:</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" name="ruta" value="{{ $res->ruta }}" required>

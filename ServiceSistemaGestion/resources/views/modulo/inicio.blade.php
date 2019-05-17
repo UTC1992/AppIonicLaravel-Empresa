@@ -35,6 +35,9 @@
                             Nombre
                           </th>
                           <th>
+                            Código
+                          </th>
+                          <th>
                             Ruta
                           </th>
                           <th>
@@ -51,9 +54,12 @@
                     <tbody>
                       @foreach($modulos as $item)
                       <tr>
-                          <td>
-                              {{ $item->nombre }}
-                          </td>
+                        <td>
+                            {{ $item->nombre }}
+                        </td>
+                        <td>
+                            {{ $item->codigo }}
+                        </td>
                           <td>
                             {{ $item->ruta }}
                           </td>
@@ -98,6 +104,12 @@
                                   <input type="text" class="form-control" name="nombre" value="" required>
                               </div>
                           </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Código:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="codigo" value="" required>
+                            </div>
+                        </div>
                           <div class="form-group">
                             <label class="control-label col-md-2">Ruta:</label>
                             <div class="col-md-8">

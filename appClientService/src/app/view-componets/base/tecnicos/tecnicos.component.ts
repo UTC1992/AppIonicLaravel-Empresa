@@ -108,14 +108,17 @@ export class TecnicosComponent implements OnInit {
 
   openModalCreate(template: TemplateRef<any>) {
     this.permisoService.getPlan().subscribe(response =>{
-      this.tecnicosPermitidos = response[0].num_tecnicos;
+      //console.log(response);
+      let datos = response.find(x=>x.id_modulo == 'energy_cr');
+      //console.log(datos['num_tecnicos']);
+      this.tecnicosPermitidos = datos['num_tecnicos'];
       if(this.tecnicosIngresados < this.tecnicosPermitidos){
         this.iniciarFormulario();
         this.tipoAccion = "create";
         this.tituloModal = "Crear un nuevo técnico";
         this.modalRef = this.modalService.show(template);
       } else {
-        this.showAlert('Alerta!', 'Ya no puedes crear mas técnicos, comunicate con el proveedor por favor.', 'warning');
+        this.showAlert('Alerta!', 'Ya no puedes crear mas técnicos, comunicate con soporte técnico por favor.', 'warning');
       }
 
     });

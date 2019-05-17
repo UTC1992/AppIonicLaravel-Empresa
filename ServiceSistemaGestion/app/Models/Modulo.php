@@ -23,6 +23,7 @@ class Modulo extends Model
             if(!is_null($data)){
                 $modulo = new Modulo();
                 $modulo->nombre = $data->nombre;
+                $modulo->codigo = $data->codigo;
                 $modulo->estado = $data->estado;
                 $modulo->ruta = $data->ruta;
                 $modulo->icono_menu = $data->icono_menu;
@@ -51,7 +52,8 @@ class Modulo extends Model
     {
     	try {
 	        $modulo = Modulo::find($data->id_mod);
-	        $modulo->nombre = $data->nombre;
+          $modulo->nombre = $data->nombre;
+          $modulo->codigo = $data->codigo;
           $modulo->estado = $data->estado;
           $modulo->ruta = $data->ruta;
           $modulo->icono_menu = $data->icono_menu;
