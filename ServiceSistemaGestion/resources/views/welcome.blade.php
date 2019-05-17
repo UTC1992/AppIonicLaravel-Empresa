@@ -28,7 +28,7 @@
             <nav class="nav nav-masthead justify-content-center">
               <a class="nav-link active" href="/">Inicio</a>
               <!--<a class="nav-link" href="#">Ingresar</a>-->
-              <a class="nav-link" href="/admin">Admin</a>
+              <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a>
             </nav>
           </div>
         </header>

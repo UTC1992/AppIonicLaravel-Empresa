@@ -278,13 +278,30 @@ aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
 
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu" data-widget="tree">
-      <center><li class="header" style="color: #fff;">Menú Principal</li></center>
+      <li class="header" style="color: #fff;">Menú Principal</li>
       <!-- Optionally, you can add icons to the links -->
-      <li class="active"><a href="/admin"><i class="glyphicon glyphicon-home"></i> <span>Inicio</span></a></li>
-      <li><a href="/modulo"><i class="glyphicon glyphicon-folder-open"></i> <span>Módulos</span></a></li>
-      <li><a href="/empresa"><i class="glyphicon glyphicon-folder-open"></i> <span>Empresas</span></a></li>
-      <li><a href="/subscripcion"><i class="glyphicon glyphicon-folder-open"></i> <span>Subscripciones</span></a></li>
-      <li><a href="/user"><i class="glyphicon glyphicon-folder-open"></i> <span>Usuarios</span></a></li>
+      <li class="{{ Request::is('admin/inicio') ? 'active' : null }}">
+        <a href="{{ route('admin.dashboard') }}"><i class="glyphicon glyphicon-home"></i> <span>Inicio</span></a>
+      </li>
+      <li class="{{ Request::is('modulo/inicio') ? 'active' : null }}">
+        <a href="{{ route('modulo.inicio') }}">
+        <i class="glyphicon glyphicon-folder-open"></i> <span>Módulos</span></a>
+      </li>
+      <!--<li><a href="/modulo"><i class="glyphicon glyphicon-folder-open"></i> <span>Módulos</span></a></li>
+      -->
+      <li class="{{ Request::is('empresa/inicio') ? 'active' : null }}">
+        <a href="{{ route('empresa.inicio') }}"><i class="glyphicon glyphicon-folder-open"></i> <span>Empresas</span>
+      </a></li>
+      <li class="{{ Request::is('plan/inicio') ? 'active' : null }}">
+        <a href="{{ route('plan.inicio') }}">
+        <i class="glyphicon glyphicon-folder-open"></i> <span>Plan</span></a>
+      </li>
+      <li class="{{ Request::is('subscripcion/inicio') ? 'active' : null }}">
+        <a href="{{ route('subscripcion.inicio') }}"><i class="glyphicon glyphicon-folder-open"></i> <span>Subscripciones</span></a>
+      </li>
+      <li class="{{ Request::is('user/inicio') ? 'active' : null }}">
+        <a href="{{ route('user.inicio') }}"><i class="glyphicon glyphicon-folder-open"></i> <span>Usuarios</span></a>
+      </li>
       <!--<li class="treeview">
       <a href="#"><i class="glyphicon glyphicon-lock"></i> <span>Empresas</span>
       <span class="pull-right-container">
@@ -334,7 +351,7 @@ aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
 
   </div>
   <!-- Default to the left -->
-  <strong>Copyright &copy; 2018 <a target="_blank" href="#">JMC Developers</a>.</strong> Todos los derechos reservados.
+  <strong>Copyright &copy; 2019 <a target="_blank" href="#">TS - Platforms</a>.</strong> Todos los derechos reservados.
 </footer>
 
 <!-- Control Sidebar -->

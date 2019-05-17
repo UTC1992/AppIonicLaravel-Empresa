@@ -37,7 +37,7 @@ Auth::routes();
 */
 
 Route::prefix('admin')->group(function(){
-  Route::get('/', 'AdminController@index')->name('admin.dashboard');
+  Route::get('/inicio', 'AdminController@index')->name('admin.dashboard');
   Route::get('/login','Auth\AdminLoginController@showLoginForm')->name('admin.login');
   Route::post('/login','Auth\AdminLoginController@login')->name('admin.login.submit');
 
@@ -58,7 +58,7 @@ Route::prefix('admin')->group(function(){
 
 Route::prefix('empresa')->group(function(){
    //empresa
-  Route::get('/','Admin\EmpresaController@index')->name('empresa.inicio');
+  Route::get('/inicio','Admin\EmpresaController@index')->name('empresa.inicio');
   Route::post('/save','Admin\EmpresaController@guardar')->name('empresa.guardar');
   Route::get('/edit/{id}','Admin\EmpresaController@edit')->name('empresa.editar');
   Route::post('/update','Admin\EmpresaController@updateEmp')->name('empresa.update');
@@ -66,9 +66,9 @@ Route::prefix('empresa')->group(function(){
   Route::get('gestion/{id}','Admin\EmpresaController@gestion')->name('empresa.gestion');
 });
 
-Route::prefix('modulo')->group(function(){
+Route::group(['prefix' => 'modulo'], function(){
    //modulos
-  Route::get('/','Admin\ModuloController@index')->name('modulo.inicio');
+  Route::get('/inicio','Admin\ModuloController@index')->name('modulo.inicio');
   Route::post('/save','Admin\ModuloController@guardar')->name('modulo.guardar');
   Route::get('/edit/{id}','Admin\ModuloController@edit')->name('modulo.editar');
   Route::post('/update','Admin\ModuloController@updateMod')->name('modulo.update');
@@ -77,7 +77,7 @@ Route::prefix('modulo')->group(function(){
 
 Route::prefix('subscripcion')->group(function(){
    //subscripcion
-  Route::get('/','Admin\SubscripcionController@index')->name('subscripcion.inicio');
+  Route::get('/inicio','Admin\SubscripcionController@index')->name('subscripcion.inicio');
   Route::post('/save','Admin\SubscripcionController@guardar')->name('subscripcion.guardar');
   Route::get('/edit/{id}','Admin\SubscripcionController@edit')->name('subscripcion.editar');
   Route::post('/update','Admin\SubscripcionController@updateSub')->name('subscripcion.update');
@@ -86,7 +86,7 @@ Route::prefix('subscripcion')->group(function(){
 
 Route::prefix('user')->group(function(){
    //subscripcion
-  Route::get('/','Admin\UserController@index')->name('user.inicio');
+  Route::get('/inicio','Admin\UserController@index')->name('user.inicio');
   Route::post('/save','Auth\RegisterController@registerUser')->name('user.registerUser');
   Route::get('/edit/{id}','Admin\UserController@edit')->name('user.editar');
   Route::post('/update','Admin\UserController@updateUser')->name('user.update');
@@ -103,4 +103,13 @@ Route::prefix('gestion')->group(function(){
   Route::post('/configuracion/create', 'Gateway\Lecturas\ConfigController@crearConfiguracion');
   Route::get('/configuracion/validate/{id}', 'Gateway\Lecturas\ConfigController@validateTableConfig');
   Route::get('/configuracion/drop/{id}', 'Gateway\Lecturas\ConfigController@dropTable');
+});
+
+Route::prefix('plan')->group(function(){
+  //subscripcion
+  Route::get('/inicio','Admin\PlanController@index')->name('plan.inicio');
+  Route::post('/save','Admin\PlanController@guardar')->name('plan.guardar');
+  Route::get('/edit/{id}','Admin\PlanController@edit')->name('plan.editar');
+  Route::post('/update','Admin\PlanController@updatePlan')->name('plan.update');
+  Route::get('/delete/{id}','Admin\PlanController@deletePlan')->name('plan.delete');
 });

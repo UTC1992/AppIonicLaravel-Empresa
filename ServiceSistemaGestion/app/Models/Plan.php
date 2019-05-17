@@ -5,28 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
-class Modulo extends Model
+class Plan extends Model
 {
-  	protected $table="tbl_modulo";
- 	  protected $primaryKey = 'id_mod';
+  	protected $table="tbl_planes";
+    protected $primaryKey = 'id_plan';
   	protected $fillable = [
-	    'id_mod',
+	    'id_plan',
 	    'nombre',
-	    'estado',
-      'ruta',
-      'icono_menu'
+	    'descripcion',
+      'num_tecnicos'
   	];
 
   	public function guardar($data = [])
     {
         try {
             if(!is_null($data)){
-                $modulo = new Modulo();
-                $modulo->nombre = $data->nombre;
-                $modulo->estado = $data->estado;
-                $modulo->ruta = $data->ruta;
-                $modulo->icono_menu = $data->icono_menu;
-                $modulo->save();
+                $plan = new Plan();
+                $plan->nombre = $data->nombre;
+                $plan->descripcion = $data->descripcion;
+                $plan->num_tecnicos = $data->num_tecnicos;
+                $plan->save();
                 return true;
             } else
             {
@@ -37,25 +35,24 @@ class Modulo extends Model
         }
     }
 
-    public function getModulos()
+    public function getPlanes()
     {
-    	return $modulo = Modulo::all();
+    	return $plan = Plan::all();
     }
 
     public function getById($id='')
     {
-      return Modulo::find($id);
+      return Plan::find($id);
     }
 
-    public function updateModulo($data=[])
+    public function updatePlan($data=[])
     {
     	try {
-	        $modulo = Modulo::find($data->id_mod);
-	        $modulo->nombre = $data->nombre;
-          $modulo->estado = $data->estado;
-          $modulo->ruta = $data->ruta;
-          $modulo->icono_menu = $data->icono_menu;
-	        $modulo->save();
+	        $plan = Plan::find($data->id_plan);
+	        $plan->nombre = $data->nombre;
+            $plan->descripcion = $data->descripcion;
+            $plan->num_tecnicos = $data->num_tecnicos;
+	        $plan->save();
 	        return true;
       	} catch (\Exception $e) {
 	        return false;
@@ -65,7 +62,7 @@ class Modulo extends Model
     public function deleteById($id=0)
     {
     	try {
-	        return Modulo::find($id)->delete();
+	        return Plan::find($id)->delete();
       	} catch (\Exception $e) {
 	        return $e;
       	}
@@ -74,7 +71,7 @@ class Modulo extends Model
     /**
      * obtener modulos por empresa
      */
-    public function getModulosEmpresa($id){
+    /*public function getModulosEmpresa($id){
       try {
         return $actividad = DB::table('tbl_modulo as T0')
               ->join('tbl_modulo_empresa as T1','T1.id_mod','=','T0.id_mod')
@@ -84,5 +81,5 @@ class Modulo extends Model
       } catch (\Exception $e) {
         return $e;
       }
-    }
+    }*/
 }

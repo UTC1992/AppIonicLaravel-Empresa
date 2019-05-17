@@ -9,7 +9,7 @@
       <small>Inicio</small>
     </h1>
     <ol class="breadcrumb">
-      <li><a href="/admin"><i class="fa fa-home"></i>Inicio</a></li>
+      <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a></li>
       <li class="active">Aquí</li>
     </ol>
   </section>
@@ -58,8 +58,8 @@
                             {{ $item->nombreEmp }}
                           </td>
                           <td>
-                              <a class="btn btn-info" href="/user/edit/{{$item->id}}">Editar</a>
-                              <a class="btn btn-danger" href="/user/delete/{{$item->id}}">Eliminar</a>
+                              <a class="btn btn-info btn-xs" href="/user/edit/{{$item->id}}">Editar</a>
+                              <a class="btn btn-danger btn-xs" href="/user/delete/{{$item->id}}">Eliminar</a>
                           </td>
                       </tr>
                       @endforeach

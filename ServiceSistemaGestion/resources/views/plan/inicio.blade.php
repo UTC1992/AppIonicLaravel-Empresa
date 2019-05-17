@@ -5,7 +5,7 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Gestión de módulos
+      Gestión de planes
       <small>Inicio</small>
     </h1>
     <ol class="breadcrumb">
@@ -17,13 +17,13 @@
   <div class="">
     <div class="col-md-12">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-default">
-        Nuevo módulo
+        Nuevo plan
       </button>
       <br />
       <br />
       <div class="box">
           <div class="box-header with-border">
-              <h3 class="box-title"><b>Lista de módulos</b></h3>
+              <h3 class="box-title"><b>Lista de planes</b></h3>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -35,13 +35,10 @@
                             Nombre
                           </th>
                           <th>
-                            Ruta
+                            Descripción
                           </th>
                           <th>
-                              Icono
-                          </th>
-                          <th>
-                            Estado
+                              Número de usuarios
                           </th>
                           <th>
                               Acciones
@@ -49,23 +46,20 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($modulos as $item)
+                      @foreach($planes as $item)
                       <tr>
                           <td>
                               {{ $item->nombre }}
                           </td>
                           <td>
-                            {{ $item->ruta }}
+                            {{ $item->descripcion }}
                           </td>
                           <td>
-                              {{ $item->icono_menu }}
+                              {{ $item->num_tecnicos }}
                           </td>
                           <td>
-                              {{ $item->estado }}
-                          </td>
-                          <td>
-                              <a class="btn btn-info btn-xs" href="/modulo/edit/{{$item->id_mod}}">Editar</a>
-                              <a class="btn btn-danger btn-xs" href="/modulo/delete/{{$item->id_mod}}">Eliminar</a>
+                              <a class="btn btn-info btn-xs" href="/plan/edit/{{$item->id_plan}}">Editar</a>
+                              <a class="btn btn-danger btn-xs" href="/plan/delete/{{$item->id_plan}}">Eliminar</a>
                           </td>
                       </tr>
                       @endforeach
@@ -84,44 +78,31 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Crear un nuevo módulo</h4>
+          <h4 class="modal-title">Crear un nuevo plan</h4>
         </div>
-        <form method="post" action="/modulo/save">
+        <form method="post" action="/plan/save">
           @csrf
             <div class="modal-body">
               <div class="box box-primary">
                   <div class="box-body">
                       <div class="form-horizontal">
                           <div class="form-group">
-                              <label class="control-label col-md-2">Nombre:</label>
+                              <label class="control-label col-md-3">Plan:</label>
                               <div class="col-md-8">
                                   <input type="text" class="form-control" name="nombre" value="" required>
                               </div>
                           </div>
                           <div class="form-group">
-                            <label class="control-label col-md-2">Ruta:</label>
+                            <label class="control-label col-md-3">Descripción:</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="ruta" value="" required>
+                                <textarea class="form-control" name="descripcion" value="" required></textarea>
                             </div>
                           </div>
                           <div class="form-group">
-                            <label class="control-label col-md-2">Icono:</label>
+                            <label class="control-label col-md-3">Número de usuarios:</label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="icono_menu" value="" required>
+                                <input type="text" class="form-control" name="num_tecnicos" value="" required>
                             </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="control-label col-md-2">Estado:</label>
-                              <div class="col-md-8 ">
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" checked="true" type="radio" name="estado" id="inlineRadio1" value="1">
-                                  <label class="form-check-label" for="inlineRadio1">Activo</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                  <input class="form-check-input" type="radio" name="estado" id="inlineRadio2" value="0">
-                                  <label class="form-check-label" for="inlineRadio2">Inactivo</label>
-                                </div>
-                              </div>
                           </div>
                       </div>
                   </div>
@@ -138,4 +119,6 @@
   </div>
   <!-- /.modal -->
   <!--MODAL CREAR EMPRESA-->
+
 @endsection
+
