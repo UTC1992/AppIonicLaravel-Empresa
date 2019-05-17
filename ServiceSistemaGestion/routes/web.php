@@ -113,3 +113,9 @@ Route::prefix('plan')->group(function(){
   Route::post('/update','Admin\PlanController@updatePlan')->name('plan.update');
   Route::get('/delete/{id}','Admin\PlanController@deletePlan')->name('plan.delete');
 });
+
+Route::prefix('historial')->group(function(){
+  //subscripcion
+  Route::get('/inicio','Admin\HistorialController@index')->name('historial.inicio');
+  Route::post('/consultar','Admin\HistorialController@consultar')->name('historial.consultar');
+});
