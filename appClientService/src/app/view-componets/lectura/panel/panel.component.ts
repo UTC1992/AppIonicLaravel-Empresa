@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { Observable, from } from 'rxjs';
-import { LecturasService } from '../../../services/lecturas.service';
+import { LecturasService } from '../../../services-lecturas/lecturas.service';
 import { Filtro} from '../../../models/filtro';
 import { DataFilter } from "../../../models/data-filter";
 import { Tecnico } from "../../../models/tecnico";
 import { TecnicoService } from "../../../services/tecnico.service";
 
 @Component({
-  selector: 'app-lecturas',
-  templateUrl: './lecturas.component.html',
-  styleUrls: ['./lecturas.component.css']
+  selector: 'app-panel',
+  templateUrl: './panel.component.html',
+  styleUrls: ['./panel.component.css']
 })
-export class LecturasComponent implements OnInit {
+export class PanelComponent implements OnInit {
 
   form: FormGroup;
   filtrosLabel: Filtro[]=[];

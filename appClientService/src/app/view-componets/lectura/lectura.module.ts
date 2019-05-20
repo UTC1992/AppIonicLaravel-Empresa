@@ -23,31 +23,15 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 // Components Routing
-import { BaseRoutingModule } from './base-routing.module';
+import { LecturaRoutingModule } from './lectura-routing.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { InicioComponent } from './inicio/inicio.component';
 
 //componentes
-import { PanelLayoutComponent } from './panel-layout/panel-layout.component';
-import { NavClientComponent } from './nav-client/nav-client.component';
-import { TableClientComponent } from './table-client/table-client.component';
-import { AddCsvComponent } from './add-csv/add-csv.component';
-import { TecnicosComponent } from './tecnicos/tecnicos.component';
-import { FormTecnicoComponent } from './form-tecnico/form-tecnico.component';
-import { ActividadesTecnicoComponent } from './actividades-tecnico/actividades-tecnico.component';
-import { FooterComponent } from './footer/footer.component'; 
-import { NotFoundComponent } from './not-found/not-found.component';
-import { PerfilComponent } from './perfil/perfil.component';
-import { AlertaDeleteComponent } from './alerta-delete/alerta-delete.component';
-import { TableRecmanualComponent } from './table-recmanual/table-recmanual.component';
-import { ChatComponent } from './chat/chat.component';
-import { TableActividadesComponent } from './table-actividades/table-actividades.component';
+import { PanelComponent } from './panel/panel.component';
 
 //graficos ng2-charts
 import { ChartsModule } from 'ng2-charts';
-import { EstadisticasCortesComponent } from './estadisticas-cortes/estadisticas-cortes.component';
-import { TableEnviosComponent } from './table-envios/table-envios.component';
 
 
 @NgModule({
@@ -55,7 +39,7 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    BaseRoutingModule,
+    LecturaRoutingModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
@@ -90,31 +74,14 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
     MatProgressSpinnerModule
   ],
   declarations: [
-    InicioComponent,
-    PanelLayoutComponent,
-    NavClientComponent,
-    TableClientComponent,
-    AddCsvComponent,
-    TecnicosComponent,
-    FormTecnicoComponent,
-    ActividadesTecnicoComponent,
-    FooterComponent,
-    NotFoundComponent,
-    PerfilComponent,
-    AlertaDeleteComponent,
-    TableRecmanualComponent,
-    ChatComponent,
-    TableActividadesComponent,
-    EstadisticasCortesComponent,
-    TableEnviosComponent,
-    
+    PanelComponent
   ],
   exports: [
   ],
   providers: [
   ],
   entryComponents: [
-    AlertaDeleteComponent
+    
   ],
   schemas: [
     NO_ERRORS_SCHEMA, 
@@ -122,4 +89,4 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
   ]
   
 })
-export class BaseModule { }
+export class LecturaModule { }

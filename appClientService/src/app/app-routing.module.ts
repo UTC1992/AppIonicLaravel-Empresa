@@ -26,6 +26,17 @@ const routes: Routes = [
       },
     ],
     canActivate: [LoginGuard],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'lecturas',
+        loadChildren: './view-componets/lectura/lectura.module#LecturaModule'
+      },
+    ],
+    canActivate: [LoginGuard],
   }
 ];
 

@@ -10,7 +10,6 @@ import { TecnicosComponent } from './tecnicos/tecnicos.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { ChatComponent } from './chat/chat.component';
-import { LecturasComponent } from './lecturas/lecturas.component';
 
 const routes: Routes = [
   {
@@ -28,7 +27,8 @@ const routes: Routes = [
         component: PanelLayoutComponent,
         data: {
           title: 'Inicio'
-        }
+        },
+        canActivate:[LoginGuard]
       },
       {
         path:'chat',
@@ -43,11 +43,6 @@ const routes: Routes = [
       {
         path:'perfil',
         component:PerfilComponent,
-        canActivate:[LoginGuard]
-      },
-      {
-        path:'lecturas',
-        component: LecturasComponent,
         canActivate:[LoginGuard]
       },
       {
