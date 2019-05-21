@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Configuracion;
 use App\Traits\ApiResponser;
+Use App\Models\BaseDatosDecobo;
 
 class ProcesosController extends Controller
 {
@@ -116,7 +117,8 @@ class ProcesosController extends Controller
 
     private function createRegister($table,$data){
 
-        DB::table($table)->insert($data);
+      DB::table($table)->insert($data);
+      //BaseDatosDecobo::insert($data);
     }
 
     /**
@@ -243,8 +245,6 @@ class ProcesosController extends Controller
     public function downloadFileConsolidado(Request $request){
 
     }
-
-
 
     /**
      * generar location latitud y longitud

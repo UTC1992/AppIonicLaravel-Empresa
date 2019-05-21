@@ -32,6 +32,8 @@ import { PanelComponent } from './panel/panel.component';
 
 //graficos ng2-charts
 import { ChartsModule } from 'ng2-charts';
+import { LoadfileComponent } from './loadfile/loadfile.component';
+import { DistribucionComponent } from './distribucion/distribucion.component';
 
 
 @NgModule({
@@ -74,7 +76,9 @@ import { ChartsModule } from 'ng2-charts';
     MatProgressSpinnerModule
   ],
   declarations: [
-    PanelComponent
+    PanelComponent,
+    LoadfileComponent,
+    DistribucionComponent
   ],
   exports: [
   ],
