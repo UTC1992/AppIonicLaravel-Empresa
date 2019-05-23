@@ -93,3 +93,13 @@ where T0.id_tecn=tecnico and date(T1.created_at)=fecha group by  T2.n9cose,T2.n9
     END$$
 DELIMITER ;
 
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_consolidados_cortes`(
+in empresa int,
+in fecha date )
+BEGIN
+select * from tbl_actividaddiaria where date(created_at)=fecha and id_emp=empresa;
+    END$$
+DELIMITER ;
+
