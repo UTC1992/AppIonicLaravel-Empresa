@@ -13,16 +13,19 @@ class ReportesController extends Controller
 {
 
   public function __construct(){
-    //$this->middleware('auth:api');
+    $this->middleware('auth:api');
   }
   /**
    *
    */
   public function getEstadisticaDiariaCortes(Request $request){
     try {
-      $empresa=$request->empresa;
+      /*$empresa=$request->empresa;
       $inicio=$request->inicio;
-      $fin=$request->fin;
+      $fin=$request->fin;*/
+      $empresa=$request[0]['empresa'];
+      $inicio=$request[0]['inicio'];
+      $fin=$request[0]['fin'];
        $reportes=Reportes::getEstadisticaActividadesDiaria($empresa,$inicio,$fin);
        if(count($reportes)>0){
          return response()->json($reportes,200);
@@ -116,7 +119,7 @@ class ReportesController extends Controller
     public function productividadTecnico($fecha)
     {
       try {
-        $ID_EMP=2;
+        $ID_EMP=$this->getIdEmpUserAuth();
         $tecnicos = DB::table('tbl_tecnico as T0')
                    ->join('tbl_ordentrabajo as T1', 'T0.id_tecn','=','T1.id_tecn')
                    ->select('T0.nombres','T0.apellidos','T0.id_tecn','T1.created_at')
@@ -166,7 +169,7 @@ class ReportesController extends Controller
       }
 
     }
-   /*
+   
    // obtener id empresa de usuario autenticado
    private function getIdEmpUserAuth(){
      try {
@@ -176,5 +179,5 @@ class ReportesController extends Controller
      } catch (\Exception $e) {
        return response()->json("Error: ".$e);
      }
-   }*/
+   }
 }

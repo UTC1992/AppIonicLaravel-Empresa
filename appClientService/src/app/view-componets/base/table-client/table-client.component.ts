@@ -1,8 +1,9 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { OrdenService } from '../../../services/orden.service';
 import { Orden } from '../../../models/orden';
-import { Observable } from 'rxjs';
+
 import {Router} from "@angular/router";
+import {MatTableDataSource, MatPaginator} from '@angular/material';
 
 @Component({
   selector: 'app-table-client',
@@ -13,22 +14,34 @@ export class TableClientComponent implements OnInit {
  
   p:number=1;
   total:number=0;
-  ordenes:Observable<Orden[]>; 
+  ordenes:Orden[]; 
 
-  constructor(private ordenService:OrdenService,private router:Router ) { }
+  displayedColumns: string[] = ['index', 'actividad', 
+  'cuenta', 'sector', 'ruta', 'medidor','usuario', 'referencia'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  ngOnInit() {
-    
+  constructor(
+    private ordenService:OrdenService,
+    private router:Router 
+    ) { }
+
+  ngOnInit(){
     this.cargarDatos();
   }
 
   cargarDatos(){
-    this.ordenes =this.ordenService.getOrdenes();
-    this.ordenes.subscribe(
+    this.ordenService.getOrdenes().subscribe(
       result=>{
+        //console.log(result);
+        this.dataSource = new MatTableDataSource(result);
+        this.dataSource.paginator = this.paginator;
         this.total=result.length;
       });
   }
  
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
 }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Configuracion;
 use App\Traits\ApiResponser;
+Use App\Models\Procedimientos;
 
 class ProcesosController extends Controller
 {
@@ -24,6 +25,8 @@ class ProcesosController extends Controller
  */
     public function carga(Request $request){
       try {
+        $mes=0;
+        $mes=$request->mes;
         $configRow=$this->getConfigCompany($request->id);
         if(count($configRow)<=0){
           return response()->json("Error: La empresa con ID: ".$request->id." no tiene generada su configuración");
@@ -75,6 +78,7 @@ class ProcesosController extends Controller
                 $data["idEmpresa"]=$request->id;
                 $data["estado"]=false;
                 $data["created_at"]=date('Y-m-d H:i:s');
+                $data["mes"]=12;
                 $dataInsert[$contInsert]=$data;
 
                 if($contInsert>=2100){
@@ -113,10 +117,17 @@ class ProcesosController extends Controller
       return $config;
     }
 
+    private function validarExistenciaMedidor($medidor){
+    return   $result= DB::table($table)
+                    ->where('medidor',$medidor)
+                    ->whereNotNull('lectura')
+                    ->exists();
+    }
 
     private function createRegister($table,$data){
 
-        DB::table($table)->insert($data);
+      DB::table($table)->insert($data);
+      //BaseDatosDecobo::insert($data);
     }
 
     /**
@@ -243,8 +254,6 @@ class ProcesosController extends Controller
     public function downloadFileConsolidado(Request $request){
 
     }
-
-
 
     /**
      * generar location latitud y longitud
@@ -426,5 +435,80 @@ class ProcesosController extends Controller
 
        //fin funciones
 
+/**
+ *actualiza la orden de trabajo
+ */
+public function actualizarOrdenTrabajo()
+{
+  try {
+    $decobo_temp1=DB::table('decobo')
+                  ->limit(3000)
+                  ->orderByRaw('id asc')
+                  ->get();
+    $cont=0;
+    $cont_nuew=0;
+    $cont_null=0;
+    $array=array();
+
+    foreach ($decobo_temp1 as $key => $value) {
+        $data=array();
+        $data['zona']=$value->zona;
+        $data['agencia']=$value->agencia;
+        $data['sector']=$value->sector;
+        $data['ruta']=$value->ruta;
+        $data['cuenta']=$value->cuenta;
+        $data['medidor']=$value->medidor;
+        $data['lectura']=$value->lectura;
+        $res=DB::table('decobo_orden_temp')
+                 ->where('medidor',$value->medidor)->first();
+        if($res){
+            if(is_null($res->lectura) || $res->lectura==''){
+              DB::table('decobo_orden_temp')
+                  ->updateOrInsert(
+                      ['medidor' =>$value->medidor],
+                      ['lectura'=>$value->lectura]
+                  );
+              $cont_null++;
+            }
+            $cont++;
+        }else{
+          DB::table('decobo_orden_temp')->insert($data);
+          $cont_nuew++;
+        }
+        //$array[$cont]=$res;
+
+        /*
+        DB::table('decobo_orden_temp')
+            ->updateOrInsert(
+                ['medidor' => ''.$value->medidor.''],
+                $data
+            );
+    /*
+          //$result = DB::table('decobo_orden_temp')->where('medidor',''.$value->medidor.'')->whereNull('lectura')->exists();
+        if(DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->exists()){
+        //$result = DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->where('lectura',null)->get();
+            //DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura]);
+            DB::table('decobo_orden_temp')->where('id','!=',0)->where('medidor',$value->medidor)->update(['lectura'=>''.$value->lectura.'']);
+
+              $cont++;
+
+
+        }else{
+          //$cont++;
+          //DB::table('decobo_orden_temp')->create($value->all());
+        }*/
+
+    }
+    $dataRe=array();
+    $dataRe["encontrados"]=$cont;
+    $dataRe["nuevo"]=$cont_nuew;
+    $dataRe['actualizado']=$cont_null;
+    //$dataRe["data"]=$array;
+    return response()->json($dataRe);
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
 
 }

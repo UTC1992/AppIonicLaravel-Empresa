@@ -7,13 +7,41 @@ import { ExcelServiceService } from '../../../services/excel-service.service';
 import { Tecnico } from '../../../models/tecnico';
 import { Observable } from 'rxjs';
 
-import { NgxSpinnerService } from 'ngx-spinner';
+import { LoginService } from '../../../services/login.service';
+
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+
 import { TableRecmanualComponent } from '../table-recmanual/table-recmanual.component';
+import { TableActividadesComponent } from '../table-actividades/table-actividades.component';
+import { TableEnviosComponent } from '../table-envios/table-envios.component';
+import { AddCsvComponent } from '../add-csv/add-csv.component';
+
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+import Swal from 'sweetalert2';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD-MM-YYYY',
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD-MM-YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-panel-layout',
   templateUrl: './panel-layout.component.html',
-  styleUrls: ['./panel-layout.component.css']
+  styleUrls: ['./panel-layout.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 
 export class PanelLayoutComponent implements OnInit {
@@ -23,8 +51,12 @@ export class PanelLayoutComponent implements OnInit {
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
+  @ViewChild(TableActividadesComponent) tablaActividades: TableActividadesComponent;
+  @ViewChild(TableEnviosComponent) tablaEnvios: TableEnviosComponent;
+  @ViewChild(AddCsvComponent) addArchivo: AddCsvComponent;
 
   recmanualesExcel: boolean;
+  actividadesExcel: boolean;
 
   today:Date;
   fecha_consolidado='';
@@ -37,116 +69,133 @@ export class PanelLayoutComponent implements OnInit {
   id_emp='';
   fecha = new Date();
 
+  //fecha de filtro
+  fechaBuscar: string = null;
+  tecnicoBuscar: string = 'empty';
+  actividadBuscar: string = 'empty';
+  estadoBuscar: string = 'empty';
+
+  date = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
+  //consolidado
+  fechaConsolidar: string = null;
+  dateConsolidado = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
+  //consolidado
+  fechaEnvio: string = null;
+  dateEnvios = new FormControl(
+    'date', [
+      Validators.required
+    ]
+  );
+
   constructor(private ordenService:OrdenService, 
               private tecnicoService:TecnicoService,
               private excelService:ExcelServiceService,
-              private spinner: NgxSpinnerService) 
-  {
+              private adapter: DateAdapter<any>,
+              private fb: FormBuilder,
+              private loginService: LoginService
+  ){
     this.view_table=false;
     this.view_data_empty=false;
    }
 
-  ngOnInit() {  
+  ngOnInit() {
+    Swal.close();
     this.tecnicos=this.tecnicoService.getTecnicosCortes();
     this.recmanualesExcel = false;
+    this.actividadesExcel = false;
+    this.french();
   }
 
-  verActividaes(){
-    //ocultar las reconexiones manuales
-    this.tablaRecManual.ocultarRecManuales();
-    this.tablaRecManual.ocultarEmptyRecManuales();
-    //bloquear descarga de recmanual
-    this.recmanualesExcel = false;
+  french() {
+    this.adapter.setLocale('es');
+  }
 
-    var result = document.getElementById("fechaReporte");
-    var fecha=<HTMLInputElement>result["value"];
-    var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
-    var actividad = <HTMLInputElement>document.getElementById("actividades_select")["value"];
-    var estado = <HTMLInputElement>document.getElementById("estado_select")["value"];
-    if(fecha){
-      
-      this.ordenes=this.ordenService.getActivitiesToDay(fecha,tecnico,actividad,estado);
-      this.ordenes.subscribe(
-        data=>{
-          //console.log(data);
-          if(data.length>0){
-            this.view_table=true;
-            this.view_data_empty=false;
-          }else{
-            this.view_table=false;
-            this.view_data_empty=true;
-          }
-        }
-      );
-    }else{
-      this.view_table=false;
-      this.view_data_empty=false;
-      alert("Seleccione una fecha");
+  getFecha(pickerInput: string): void {
+    this.fechaBuscar = pickerInput;
+    console.log(this.fechaBuscar);
+  }
+  
+  getFechaConsolidar(pickerInput: string): void {
+    this.fechaConsolidar = pickerInput;
+    console.log(this.fechaConsolidar);
+  }
+
+  getFechaEnvios(pickerInput: string): void {
+    this.fechaEnvio = pickerInput;
+    console.log(this.fechaEnvio);
+  }
+
+  getErrorMessage(pickerInput: string): string {
+    if (!pickerInput || pickerInput === '' ) {
+      return 'Please choose a date.';
     }
-    
+    return pickerInput;
   }
+
   exportarExcelActividades(){
-    var date = document.getElementById("fechaReporte")["value"]+"";
-    var vector = date.split("-");
-    var fecha=vector[2]+"-"+vector[1]+"-"+vector[0]
-    if(this.ordenes != null && this.view_table==true){
-      let datos = Array();
-      this.ordenes.subscribe(
-        data=>{
-          for (var i = 0; i < data.length; ++i) {
-            datos.push({
-                      ACTIVIDAD:    data[i]['n9cono'],
-                      CUENTA:       data[i]['n9cocu'],
-                      CANTON:       data[i]['n9coag'],
-                      SECTOR:       data[i]['n9cose'],
-                      MEDIDOR:      data[i]['n9meco'],
-                      LECTURA:      data[i]['n9leco'],
-                      CLIENTE:      data[i]['n9nomb'],
-                      HORATAREA:    data[i]['hora'],
-                      NOVEDADES:    data[i]['observacionFin'],
-                      ESTADO:       data[i]['referencia'],
-                      CUCOON:       data[i]['cucoon'],
-                      CUCOOE:       data[i]['cucooe']
-                    });
-          }
-
-          this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
-        });
+    if(this.fechaBuscar != null){
+      console.log(this.fechaBuscar);
+      var date = this.fechaBuscar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      
+      if(this.actividadesExcel==true){
+        this.tablaActividades.exportarExcel(fecha);
+      }else if(this.recmanualesExcel==true){
+        this.tablaRecManual.exportarExcelRecManual(fecha);
+      } else {
+        this.showAlert("Información!", 
+        "Debe mostrar los datos para descargarlos.", "info");
+      }
+    } else {
+      this.showAlert("Alerta!", "Debe elegir una fecha y mostrar los datos para descargarlos.", "warning");
     }
     
-    if(this.recmanualesExcel==true){
-      this.tablaRecManual.exportarExcelRecManual(fecha);
-    }
       
   }
 
 
   //consolidar actividades diarias
   consolodarActividades(){
-    var date = document.getElementsByName("fecha")[0]["value"];
     //console.log("fecha de consolidado ==> " + date);
-    if(date!=""){
-      this.spinner.show();
+    if(this.fechaConsolidar != null){
+      this.showCargando();
+      var date = this.fechaConsolidar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
       //this.loading=true;
-      this.ordenService.consolidarActividades(date).subscribe(
+      this.ordenService.consolidarActividades(fecha).subscribe(
         result=>{
+          console.log(result);
           if(result){
-            var id_emp2=localStorage.getItem("id_emp");
-            this.fecha_consolidado=date;
-            this.id_emp=id_emp2;
+            this.fecha_consolidado=fecha;
+            this.id_emp=this.loginService.usuario.id_emp;
             this.exportable=true;
-            this.spinner.hide();
             //this.loading = false;
-            alert("Actividades Consolidadas Correctamente");
+            this.addArchivo.ngOnInit();
+            this.showAlert("Éxito!","Actividades Consolidadas Correctamente", "success");
           }else{
-            alert("Debe terminar o eliminar todas las asignaciones pendientes para consolidar los datos.");
-            this.spinner.hide();
+            this.showAlert("Alert!",
+            "Debe finalziar o eliminar todas las asignaciones pendientes para consolidar los datos.",
+            "success");
+            
           }
+        }, error =>{
+          Swal.close();
         }
       );
     }else{
-      alert("Seleccione una fecha");
-      return;
+      this.showAlert("Alerta!", "Debe elegir una fecha.", "warning");
     }
   }
 
@@ -172,39 +221,116 @@ export class PanelLayoutComponent implements OnInit {
 
   //exportar excel 
   exportarConsolidado(){
-    var id_emp=localStorage.getItem("id_emp");
-    var date = document.getElementsByName("fecha")[0]["value"];
+    this.showCargando();
+    var id_emp=sessionStorage.getItem("id_emp");
+    var date = this.fechaBuscar;
     if(date==""){
-      alert('seleccione una fecha');
+      this.showAlert("Alerta!", "Debe elegir una fecha.", "warning");
       return;
     }
     if(id_emp!=""){
-      alert('Ocurrio un error!');
+      //alert('Ocurrio un error!');
+      this.showAlert("Alerta!", "Ocurrio un error al exportar.", "warning");
       return;
     }
 
     this.url_export=this.url_export+'/'+date+'/'+id_emp;
   }
 
-  verRecManual(){
-    var result = document.getElementById("fechaReporte");
-    var fecha=<HTMLInputElement>result["value"];
-    var tecnico = <HTMLInputElement>document.getElementById("tecnicos_select")["value"];
-    if(fecha){
-      let dataRecManual={
-          'fecha':fecha,
-          'id_tecn':tecnico,
-          }
-      this.view_table=false;
-      this.view_data_empty=false;
-      this.recmanualesExcel=true;
-      this.tablaRecManual.cargarDatos(dataRecManual);
-      
+  verActividadesDiarias(){
+    //ocultar las reconexiones manuales
+    this.tablaRecManual.ocultarRecManuales();
+    this.tablaRecManual.ocultarEmptyRecManuales();
+    //bloquear descarga de recmanual
+    this.recmanualesExcel = false;
+    this.actividadesExcel = true;
+
+    if(this.fechaBuscar != null){
+      var vectorFecha = this.fechaBuscar.split('-');
+      var fecha=vectorFecha[2]+"-"+vectorFecha[1]+"-"+vectorFecha[0];
+      var tecnico = this.tecnicoBuscar;
+      var actividad = this.actividadBuscar;
+      var estado = this.estadoBuscar;
+      console.log(fecha);
+      let dataActividades:any[] = [];
+      dataActividades.push({
+        'fecha':fecha,
+        'id_tecn':tecnico,
+        'actividad':actividad,
+        'estado':estado
+      });
+      this.tablaActividades.cargarDatos(dataActividades);
+      console.log(dataActividades);
     }else{
-      alert("Seleccione una fecha");
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
     }
     
   }
 
+  verRecManual(){
+    if(this.fechaBuscar != null){
+      var date = this.fechaBuscar;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      var tecnico = this.tecnicoBuscar;
+      if(fecha){
+        let dataRecManual={
+            'fecha':fecha,
+            'id_tecn':tecnico,
+            }
+            
+        this.tablaActividades.ocultarActividades();
+        this.tablaActividades.ocultarEmptyActividades();
+        this.recmanualesExcel=true;
+        this.actividadesExcel = false;
+        this.tablaRecManual.cargarDatos(dataRecManual);
+        console.log(dataRecManual);
+    }
+
+    }else{
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
+    }
+    
+  }
+
+  mostrarEnvios(){
+    if(this.fechaEnvio != null && this.dateEnvios.valid){
+      var date = this.fechaEnvio;
+      var vector = date.split("-");
+      var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
+      console.log(fecha);
+      if(fecha){
+        this.tablaEnvios.cargarDatos(fecha);
+      }
+    }else{
+      this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
+    }
+  }
+
+  showAlert(title, text, type){
+    let swal = Swal;
+    swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false,
+      allowEscapeKey:false
+    });
+  }
+
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  }
 
 }

@@ -77,19 +77,22 @@ class Empresa extends Model
       	}
     }
 
-/**
- * obtiene plan empresa
- */
+    /**
+     * obtiene plan empresa
+     */
     public static function getPlanesEmpresa($idEmpresa){
-      try {
-        return $planes = DB::table('tbl_planes as T0')
-            ->join('tbl_plan_empresa as T1','T1.id_plan','=','T0.id_plan')
-            ->join('tbl_empresa as T2','T2.id_emp','=','T1.id_emp')
-            ->select('T0.nombre as plan','T0.descripcion', 'T0.num_tecnicos','T2.nombre as empresa')
-            ->where('T2.id_emp',$idEmpresa)
-            ->get();
-      } catch (\Exception $e) {
-
-      }
+        try {
+          return $planes = DB::table('tbl_empresa as T0')
+              ->join('tbl_modulo_empresa as T1','T1.id_emp','=','T0.id_emp')
+              ->join('tbl_modulo as T2','T2.id_mod','=','T1.id_mod')
+              ->join('tbl_planes as T3','T3.id_plan','=','T1.id_plan')
+              ->select('T2.nombre as modulo','T2.codigo as id_modulo','T3.nombre as plan','T3.descripcion', 'T3.num_tecnicos','T0.nombre as empresa','T1.fecha_inicio','T1.fecha_fin')
+              ->where('T0.id_emp',$idEmpresa)
+              ->get();
+        } catch (\Exception $e) {
+  
+        }
     }
+
+
 }

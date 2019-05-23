@@ -164,18 +164,42 @@ class OrdenTempController extends Controller
              $actividadArray[$con]['created_at']=date('Y-m-d H:i:s');
              $actividadArray[$con]['referencia']="sin asignar";
              if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
-               $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
+               $cordCucoon=$value->cucoon;
+               $corCucooe=$value->cucooe;
+               if($cordCucoon<1 || $corCucooe<1){
+                 $actividadArray[$con]['latitud']=0;
+                 $actividadArray[$con]['longitud']=0;
+               }else{
+               if(strlen($cordCucoon)<9){
+                 $cordCucoon=str_replace('.','',$cordCucoon);
+               }else{
+                 $cordCucoon=str_replace(',','.',$cordCucoon);
+               }
+
+               if(strlen($corCucooe)<8){
+                 $corCucooe=str_replace('.','',$corCucooe);
+               }else{
+                  $corCucooe=str_replace(',','.',$corCucooe);
+               }
+
+               $coordenadas=$this->changeUtmCoordinates($corCucooe,$cordCucoon,17,false);
                if($coordenadas!=false){
                  $latitud=round($coordenadas["lat"],7);
                  $longitud=round($coordenadas["lon"],6);
                  if($this->validarCoordenada($latitud) && $this->validarCoordenada($longitud)){
-                   $actividadArray[$con]['latitud']=$latitud;
-                   $actividadArray[$con]['longitud']=$longitud;
+                   if(strlen($latitud)<=11 && strlen($longitud)<=10){
+                     $actividadArray[$con]['latitud']=$latitud;
+                     $actividadArray[$con]['longitud']=$longitud;
+                   }else{
+                     $actividadArray[$con]['latitud']=0;
+                     $actividadArray[$con]['longitud']=0;
+                   }
                  }else{
                    $actividadArray[$con]['latitud']=0;
                    $actividadArray[$con]['longitud']=0;
                  }
                }
+             }
              }else{
                $actividadArray[$con]['latitud']=0;
                $actividadArray[$con]['longitud']=0;
@@ -189,7 +213,6 @@ class OrdenTempController extends Controller
              }
              $con++;
             // $actividad->save();
-
          }
          if(count($actividadArray)>0){
            $result=  DB::table('tbl_actividaddiaria')->insert($actividadArray);
@@ -198,17 +221,13 @@ class OrdenTempController extends Controller
          }
          $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
          return response()->json(true);
-
        }
        $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
        return response()->json(false);
-
-
      }else{
        $mesagge=false;
        $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
        return response()->json($mesagge);
-
      }
    } catch (\Exception $e) {
      return response()->json("Error: ".$e);
@@ -281,8 +300,21 @@ class OrdenTempController extends Controller
               $actividad->estado= false;
               $actividad->created_at=date('Y-m-d H:i:s');
               $actividad->referencia="sin asignar";
+
               if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
-                $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
+                $cordCucoon="";
+                $corCucooe="";
+                $cordCucoon=str_replace(',','.',$value->cucoon);
+                $corCucooe=str_replace(',','.',$value->cucooe);
+
+                if(strlen($cordCucoon)<11){
+                  $cordCucoon=str_replace(',',' ',$cordCucoon);
+                }
+                if(strlen($corCucooe)<10){
+                  $corCucooe=str_replace(',',' ',$corCucooe);
+                }
+
+                $coordenadas=$this->changeUtmCoordinates($corCucooe,$cordCucoon,17,false);
                 if($coordenadas!=false){
                   $latitud=round($coordenadas["lat"],7);
                   $longitud=round($coordenadas["lon"],6);
@@ -303,7 +335,7 @@ class OrdenTempController extends Controller
 
           }
           if($con>0){
-              $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
+              $this->createHistoryUser("Carga","Subida de archivo excel corecto","Cortes");
               $mesagge=true;
               return response()->json($mesagge);
           }

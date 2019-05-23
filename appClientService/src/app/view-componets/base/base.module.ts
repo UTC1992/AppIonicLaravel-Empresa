@@ -2,21 +2,25 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 //ngx
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { MatTableModule, MatToolbarModule, MatButtonModule, 
   MatSidenavModule, MatIconModule, MatListModule, 
   MatGridListModule, MatCardModule, MatMenuModule, 
-  MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatTableDataSource } from '@angular/material';
+  MatTabsModule, MatDatepickerModule, MatNativeDateModule, 
+  MatTableDataSource, MatSelectModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
-import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
@@ -38,17 +42,20 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { AlertaDeleteComponent } from './alerta-delete/alerta-delete.component';
 import { TableRecmanualComponent } from './table-recmanual/table-recmanual.component';
 import { ChatComponent } from './chat/chat.component';
-
-//MB bootstrap
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { LecturasComponent } from './lecturas/lecturas.component';
+import { TableActividadesComponent } from './table-actividades/table-actividades.component';
+
+//graficos ng2-charts
+import { ChartsModule } from 'ng2-charts';
+import { EstadisticasCortesComponent } from './estadisticas-cortes/estadisticas-cortes.component';
+import { TableEnviosComponent } from './table-envios/table-envios.component';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    MDBBootstrapModule.forRoot(),
     BaseRoutingModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -63,20 +70,25 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     MatCardModule,
     MatMenuModule,
     MatTableModule,
-    HttpModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     Ng2SearchPipeModule,
     Ng2OrderModule,
     NgxPaginationModule,
-    NgxSpinnerModule,
-    MultiselectDropdownModule,
     MatDialogModule,
     MatFormFieldModule,
     MatExpansionModule,
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatTooltipModule,
+    ChartsModule,
+    MatProgressBarModule,
+    MatChipsModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     InicioComponent,
@@ -94,10 +106,12 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     TableRecmanualComponent,
     ChatComponent,
     LecturasComponent,
+    TableActividadesComponent,
+    EstadisticasCortesComponent,
+    TableEnviosComponent,
     
   ],
   exports: [
-    MDBBootstrapModule,
   ],
   providers: [
   ],

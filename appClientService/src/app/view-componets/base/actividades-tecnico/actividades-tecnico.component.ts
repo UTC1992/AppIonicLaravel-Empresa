@@ -1,32 +1,43 @@
-import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { TecnicoService } from '../../../services/tecnico.service';
 import { OrdenService } from '../../../services/orden.service';
 import { Tecnico } from '../../../models/tecnico';
 import { Orden } from '../../../models/orden';
 import { TecnicoDistribucion } from '../../../models/tecnico-distribucion';
-import { Observable } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 import { Type } from '@angular/compiler';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 
-import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 import { Sector } from 'src/app/models/sector';
 import { SectorList } from 'src/app/models/sector-list';
-import { NgxSpinnerService } from 'ngx-spinner';
+
+import {BsModalRef, BsModalService,  } from 'ngx-bootstrap/modal';
+import {MatTableDataSource, MatPaginator} from '@angular/material';
+import Swal from 'sweetalert2';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+
 
 @Component({
   selector: 'app-actividades-tecnico',
   templateUrl: './actividades-tecnico.component.html',
-  styleUrls: ['./actividades-tecnico.component.css']
+  styleUrls: ['./actividades-tecnico.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class ActividadesTecnicoComponent implements OnInit {
   optionsModel: number[];
-  myOptions: IMultiSelectOption[];
+  myOptions: any[] = [];
   countryForm: FormGroup;
   tecnicos:Tecnico[] = [];
 
   public loading: boolean;
   res: Observable<any>;
-  actividades:Observable<any[]>;
+  actividades:any[] = [];
   public view_table:boolean;
   actividades_tecncio:Observable<any>;
   key: string = 'name'; //set default
@@ -50,18 +61,36 @@ export class ActividadesTecnicoComponent implements OnInit {
   tecnicoSeleccionado: string;
   listTecnicosSeleccionados: any[];
 
+  //asignar select con material
+  actividadSelect: String = null;
+  cantonSelect: String = null;
+  sectorSelect: number = 0;
+  formSectores = new FormControl();
+  formCanton: FormGroup;
+
+  displayedColumns: string[] = ['index', 'tecnico'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  displayedColumnsModal: string[] = ['index', 'fecha'];
+  dataSourceModal = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginatorModal: MatPaginator;
+
   @ViewChild('inputRef') inputRef: ElementRef;
   constructor(private tecnicoService:TecnicoService, 
               private ordenServices:OrdenService,
               private fb: FormBuilder,
-              private spinner: NgxSpinnerService) {
+              private modalService: BsModalService,
+              public modalRef: BsModalRef,
+              ) {
     this.loading=false;
     this.view_table=false;
     this.cantones_exists=false;
     this.sectores_exists=false;
     this.cantidad_exists=false;
     this.createForm();
-    this.spinner.show();
+    this.createFormCantones();
+    
    }
 
    
@@ -69,14 +98,62 @@ export class ActividadesTecnicoComponent implements OnInit {
   onSelection(e, list){
     this.tecnicoSeleccionado = e.option.value;
     this.listTecnicosSeleccionados = list;
-    console.log(list[0].value);
+    //console.log(list);
+    if(list.length > 0){
+      console.log(list[0].value);
+    }
+    
   }
 
   ngOnInit() {
     this.mostrarTecnicos();
-    this.actividades=this.tecnicoService.showDistribucion();
+    this.mostrarDistribucion();
     this.countActivities();
     //this.mostrarDistribucion();
+  }
+
+  mostrarDistribucion(){
+    this.tecnicoService.showDistribucion().subscribe(response =>{
+      this.actividades = response;
+      console.log(response);
+      this.agruparDistribucion();
+    });
+  }
+
+  agruparDistribucion(){
+    var dataAux: any[] = [];
+    var index = 1;
+    for (let i = 0; i < this.actividades.length; i++) {
+      var valor = dataAux.find(x=>x.id_tecn == this.actividades[i].id_tecn);
+      if(!valor){
+        dataAux.push({
+          index:index,
+          id_tecn:this.actividades[i].id_tecn,
+          tecnico:this.actividades[i].nombres+" "+this.actividades[i].apellidos,
+          data: null
+        });
+        index++;
+      }
+    }
+    var dataTecnicos : any[] = [];
+    for (let i = 0; i < dataAux.length; i++) {
+      dataTecnicos = [];
+      for (let j = 0; j < this.actividades.length; j++) {
+        if(dataAux[i].id_tecn == this.actividades[j].id_tecn){
+          dataTecnicos.push({
+            datos:this.actividades[j]
+          });
+        }
+      }
+      dataAux[i].data = dataTecnicos;
+    }
+    this.dataSource = new MatTableDataSource(dataAux);
+    this.dataSource.paginator = this.paginator;
+    console.log(dataAux);
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   mostrarTecnicos(){
@@ -94,11 +171,19 @@ export class ActividadesTecnicoComponent implements OnInit {
       }
     );
   }
+  
   createForm() {
     this.countryForm = this.fb.group({
-      actividad: "empty"
+      actividad: null
     });
   }
+
+  createFormCantones(){
+    this.formCanton = this.fb.group({
+      canton: null
+    });
+  }
+
   sort(key){
     this.key = key;
     this.reverse = !this.reverse;
@@ -107,8 +192,17 @@ export class ActividadesTecnicoComponent implements OnInit {
   // recargar componentes
   reloadComponent(){
     this.mostrarTecnicos();
-    this.actividades=this.tecnicoService.showDistribucion();
+    this.mostrarDistribucion();
     this.countActivities();
+  }
+
+  openModalDetalle(id,tipo,sector, template: TemplateRef<any>) {
+    this.verDetalleActividades(id,tipo,sector);
+    this.modalRef = this.modalService.show(template);
+  }
+
+  cerrarModal(){
+    this.modalRef.hide();
   }
  
   //ver detalle en modal 
@@ -147,15 +241,30 @@ export class ActividadesTecnicoComponent implements OnInit {
     this.tecnicoService.changeStateTecnico(id).subscribe(
       msj=>{
         if(msj){
-          alert("Técnico habilitado correctamente");
+          this.showAlert(
+            'Éxito!',
+            'El técnico ha sido habilitado.',
+            'success'
+          )
           this.reloadComponent();
         }
       }
     );
   }
 
-  getTypeActivities($event){
-    let valor=$event.target.value;
+  limpiezaSelects(){
+    this.cantones_exists=false;
+    this.sectores_exists=false;
+    this.cantidad_exists=false;
+    this.formSectores = new FormControl();
+    this.cantonSelect = "empty";
+  }
+
+  getTypeActivities(value){
+    this.limpiezaSelects();
+    this.createFormCantones();
+    let valor=value;
+    this.actividadSelect = value;
     this.cantones=this.ordenServices.getCantones(valor);
     if(valor=="empty"){
       this.cantones_exists=false;
@@ -173,10 +282,12 @@ export class ActividadesTecnicoComponent implements OnInit {
   }
 
   // obtiene sectores desde el servicio
-  getSectors($event){
-    let valor=$event.target.value;
-    var result = document.getElementsByName("actividad");
-    var actividad=<HTMLInputElement>result[0]["value"];
+  getSectors(value){
+    this.cantidad_exists=false;
+    this.formSectores = new FormControl();
+    let valor=value;
+    this.cantonSelect = value;
+    var actividad= this.actividadSelect;
     this.sectores=this.ordenServices.getSectoresService(actividad,valor);
     if(valor=="empty"){
       this.sectores_exists=false;
@@ -192,6 +303,7 @@ export class ActividadesTecnicoComponent implements OnInit {
             sector.id=element.sector;
             sector.name=element.sector;
             this.myOptions.push(sector);
+            //console.log(this.myOptions);
           });
           console.log(result);
         }
@@ -200,28 +312,26 @@ export class ActividadesTecnicoComponent implements OnInit {
   }
   // camptura sectores
   onChange() {
-    console.log(this.optionsModel);
-    var result = document.getElementsByName("actividad");
-    var actividad=<HTMLInputElement>result[0]["value"];
+    //console.log(this.formSectores.value);
+    var actividad=this.actividadSelect;
     //alert(actividad);
-    var res = document.getElementsByName("canton");
-    var canton=<HTMLInputElement>res[0]["value"];
+    var canton=this.cantonSelect;
     //alert(canton);
     
     let data={
       'actividad':actividad,
       'canton':canton,
-      'sector':this.optionsModel,
+      'sector':this.formSectores.value,
     };
     this.cantidad=this.ordenServices.getActivitiesCountSec(data);
-    if(this.optionsModel.length<=0){
+    //console.log(this.formSectores.value.length);
+    if(this.formSectores.value.length <=0){
       //this.cantidad_exists=false;
       this.num_actividades=0;
-
     }else{
-      
       this.cantidad.subscribe(
         resultado=>{
+          //console.log(resultado.length);
           this.cantidad_exists=true;
           this.num_actividades=resultado.length;
           
@@ -235,49 +345,77 @@ export class ActividadesTecnicoComponent implements OnInit {
 
     //distribuir actividades tecnico
     buildTask(){
+      this.showCargando();
       //console.log("DISTRIBUIR ACTIVIDADES");
-      this.spinner.show();
+      
       this.ordenServices.getRecManualesSinProcesar().subscribe(
         resultado=>{
           if(resultado>0){
-            alert("Aun no ha procesado las reconexiones manuales");
-            this.spinner.hide();
+            this.showAlert(
+              'Alerta!',
+              'Debes procesar las reconexiones manuales.',
+              'warning'
+            )
+            
             return;
           }else{
-            var re= document.getElementsByName("actividad");
-            var actividad=<HTMLInputElement>re[0]["value"];
+            var actividad=this.actividadSelect;
             
             if(cont_tecnicos<=0){
-              alert("Seleccione almenos un tecnico");
-              this.spinner.hide();
+              //alert("Seleccione almenos un tecnico");
+              this.showAlert(
+                'Alerta!',
+                'Debes seleccionar almenos un tecnico.',
+                'warning'
+              )
+              
               return;
             }
 
-            if(actividad+"" == "empty"){
-              alert("Seleccione una actividad");
-              this.spinner.hide();
+            if(this.actividadSelect == "empty" || this.actividadSelect == null){
+              //alert("Seleccione una actividad");
+              this.showAlert(
+                'Alerta!',
+                'Debes seleccionar una actividad.',
+                'warning'
+              )
+              
               return;
             } else {
-                var re1= document.getElementsByName("canton");
-                var actividad1=<HTMLInputElement>re1[0]["value"];
+                var actividad1=this.cantonSelect;
 
                 if(actividad1+"" == 'empty'){
-                  alert("Seleccione un cantón");
-                  this.spinner.hide();
+                  //alert("Seleccione un cantón");
+                  this.showAlert(
+                    'Alerta!',
+                    'Debes seleccionar un cantón.',
+                    'warning'
+                  )
+                  
                   return;
                 } else {
                   
-                  if(this.optionsModel.length<=0){
-                    alert("Seleccione un sector");
-                    this.spinner.hide();
+                  if(this.formSectores.value == null){
+                    //alert("Seleccione un sector");
+                    this.showAlert(
+                      'Alerta!',
+                      'Debes seleccionar un sector.',
+                      'warning'
+                    )
+                    
                     return;
                   } else {
                     var re3= document.getElementsByName("cantidad_actividades");
                     var actividad3=<HTMLInputElement>re3[0]["value"];
                     
                     if(Number(actividad3) == 0){
-                      alert("NO ha seccionado el número actividades");
-                      this.spinner.hide();
+                      //alert("NO ha seccionado el número actividades");
+                      this.showAlert(
+                        'Alerta!',
+                        'Debes seleccionar un número de actividades mayor a cero 0.',
+                        'warning'
+                      )
+                      
                       return;
                     }
                   }
@@ -291,14 +429,20 @@ export class ActividadesTecnicoComponent implements OnInit {
               msj=>{
                 //alert(msj.length);
                 if(msj.length<=0){
-                  alert("seleccione actividades a distribuir");
-                  this.spinner.hide();
+                  //alert("seleccione actividades a distribuir");
+                  this.showAlert(
+                    'Alerta!',
+                    'Debes seleccionar una actividad para distribuir',
+                    'warning'
+                  )
+                  
                   return;
                 }
               //this.loading=true;
-              //this.spinner.show();
+              //
                msj.forEach(element => {
                  array_actividades[cont]=element["id_act"];
+                 //console.log(array_actividades);
                  cont++;
                });
 
@@ -317,16 +461,32 @@ export class ActividadesTecnicoComponent implements OnInit {
                       this.cantones_exists=false;
                       this.sectores_exists=false;
                       this.cantidad_exists=false;
-                      var re= document.getElementsByName("actividad");
-                      re[0]["value"]="empty";
+                      this.createForm();
+                      this.formSectores = new FormControl();
+                      this.listTecnicosSeleccionados = [];
                       this.countActivities();
-                      this.spinner.hide();
+                      
+                      this.showAlert(
+                        'Éxito!',
+                        'La asignación fue exitosa.',
+                        'success'
+                      )
                     }else if(result==1){
-                      alert("El  número de actividades no puede ser igual o menor a cero  ");
-                      this.spinner.hide();
+                      //alert("El  número de actividades no puede ser igual o menor a cero  ");
+                      this.showAlert(
+                        'Alerta!',
+                        'Debes seleccionar un número de actividades mayor a cero 0.',
+                        'warning'
+                      )
+                      
                     }else{
-                      alert("No se asigno las actividades  ");
-                      this.spinner.hide();
+                      //alert("No se asigno las actividades  ");
+                      this.showAlert(
+                        'Alerta!',
+                        'No se asignaron las actividades.',
+                        'warning'
+                      )
+                      
                     }
                     
                  }
@@ -342,16 +502,18 @@ export class ActividadesTecnicoComponent implements OnInit {
       var array_actividades:String[]=[];
       var cont=0;
       var cont_tecnicos=0;
-      
-      for(var i=0; i < this.listTecnicosSeleccionados.length; i++){ 
-          array_tecnicos[cont_array_tecn]=this.listTecnicosSeleccionados[i].value;
-          cont_tecnicos++;
-          cont_array_tecn++;
+      if(this.listTecnicosSeleccionados != null){
+        for(var i=0; i < this.listTecnicosSeleccionados.length; i++){ 
+            array_tecnicos[cont_array_tecn]=this.listTecnicosSeleccionados[i].value;
+            cont_tecnicos++;
+            cont_array_tecn++;
+        }
       }
+      
       
     }
 
-  mostrarDistribucion(){
+  mostrarDistribucionAux(){
     console.log("MOSTRAR LA DISTRIBUCION ===================");
     this.distribucion = this.tecnicoService.showDistribucion();
     this.distribucion.subscribe(res =>{
@@ -359,8 +521,10 @@ export class ActividadesTecnicoComponent implements OnInit {
     });
   }
 
+
+
   eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
-    this.spinner.show();
+    this.showCargando();
     //console.log("ELIMINAR LA DISTRIBUCION ===================");
     this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad, tipoAct);
     this.distribucionDelete.subscribe(res =>{
@@ -368,13 +532,56 @@ export class ActividadesTecnicoComponent implements OnInit {
       if(res == true){
         //alert("Asignación eliminada correctamente");
         this.reloadComponent();
-        this.spinner.hide();
+        this.showAlert('Eliminado!',
+        'La asignación a sido eliminada.',
+        'success');
         //location.reload(true);
       } else {
-        
-        alert("Error al eliminar la asignación");
+        this.showAlert('Alerta!',
+        'La asignación No a sido eliminada.',
+        'warning');
         this.reloadComponent();
-        this.spinner.hide();
+      }
+    });
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
+
+  confirmarEliminar(id_tecn, sector, cantidad, tipoAct){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Se eliminará la asignación",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarAsignacion(id_tecn, sector, cantidad, tipoAct);
+      }
+    });
+  }
+
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
       }
     });
   }

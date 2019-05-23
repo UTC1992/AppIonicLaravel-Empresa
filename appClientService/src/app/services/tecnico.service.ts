@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Tecnico } from '../models/tecnico';
-import { Http,Response,Headers} from '@angular/http';
-import { Observable } from 'rxjs';
+import { HttpClient,HttpHeaders} from '@angular/common/http';
+import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable({
@@ -14,80 +14,207 @@ export class TecnicoService {
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
   baseUrl="http://localhost:8000/api/angular";
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
-  constructor(private http:Http) {
-    this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
+  constructor(
+    private http:HttpClient
+    ) {
    }
 
   //metodo obtiene todos los tecnicos del servidor
   getAllTecnicos():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   /**
    * obtiene tecnicos de cortes
    */
   getTecnicosCortes():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-cortes",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-cortes")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   /**
    * obtiene tecnicos de lecturas
    */
   getTecnicosLecturas():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-lecturas",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-lecturas")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   //metodo tecnicos con actividades
   getTecnicosSinActividades():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-sin-actividades",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-actividades")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
   //metodo obtien por id de tenico
   getTecnicoById(id):Observable<Tecnico>{
-    return this.http.get(this.baseUrl+"/get-tecnico/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico>(this.baseUrl+"/get-tecnico/"+id)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
   //metodo inserta nuevo tecnico en el servidor
   insertTecnico(form:Object):Observable<Tecnico[]> {
-    return this.http.post(this.baseUrl+"/tecnicos",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/tecnicos",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
   }
   //metodo edita y actualiza el técnico
   updateTecnico(form:Object){
-    return this.http.post(this.baseUrl+"/update-tecnico",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/update-tecnico",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
   }
   //metodo borra tecnico
   deleteTecnico(id){
-    return this.http.get(this.baseUrl+"/delete-tecnico/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get(this.baseUrl+"/delete-tecnico/"+id)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   //metodo obtien tecnico por tarea 
   buildTecnicoByTask(dataBuild:object):Observable<any>{
-    return this.http.post(this.baseUrl+"/build-task",dataBuild,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/build-task",dataBuild)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
   }
 
   // obtener resumen todas las actividades asignadas por tecnico
   getAllActivitiesTecnicos():Observable<any[]>{
-    return this.http.get(this.baseUrl+"/actividades-tecnicos",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<any[]>(this.baseUrl+"/actividades-tecnicos")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
   // obtiene detalle de actidades por tecnico
   getActivitiesByTecnico(id,tipo,sector):Observable<any>{
-    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo+"/"+sector,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo+"/"+sector)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   terminarProcesoAvtividades(id){
-    return this.http.get(this.baseUrl+"/finalizar/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get(this.baseUrl+"/finalizar/"+id)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
   //cambiar estado de tecnico 
   changeStateTecnico(id){
-    return this.http.get(this.baseUrl+"/cambiar-estado/"+id,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get(this.baseUrl+"/cambiar-estado/"+id)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   //mostrar detalles de la asignacion de tareas
   showDistribucion():Observable<any[]>{
-    return this.http.get(this.baseUrl+"/mostrar-distribucion",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<any[]>(this.baseUrl+"/mostrar-distribucion")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   //metodo obtien tecnico por tarea 
   deleteDistribucion(id_tecn,sector, cantidad, tipo):Observable<any>{
-    return this.http.get(this.baseUrl+"/delete-distribucion/"+id_tecn+"/"+sector+"/"+cantidad+"/"+tipo,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get(this.baseUrl+"/delete-distribucion/"+id_tecn+"/"+sector+"/"+cantidad+"/"+tipo)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
   /**
@@ -97,7 +224,14 @@ export class TecnicoService {
    * obtener técnicos de lecturas
    */
   getTecnicosLecturasSinAsignar():Observable<Tecnico[]>{
-    return this.http.get(this.baseUrl+"/tecnicos-sin-lecturas",{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-lecturas")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
   }
 
 }

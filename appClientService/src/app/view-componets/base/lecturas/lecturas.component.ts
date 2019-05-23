@@ -28,7 +28,6 @@ export class LecturasComponent implements OnInit {
   tecnicoSeleccionado: string;
   listTecnicosSeleccionados: any[];
 
-  datosAsignacion:Observable<any>;
   @ViewChild('fileInput') fileInput: ElementRef;
 
   constructor(private fb: FormBuilder,
@@ -41,7 +40,6 @@ export class LecturasComponent implements OnInit {
     this.getFiltesFields();
     this.getFirstFilterFields();
     this.getTenicosLecturas();
-    this.datosAsignacionTecnicos();
   }
 
   /**
@@ -119,6 +117,7 @@ export class LecturasComponent implements OnInit {
     this.lecturasService.getFilterFields().subscribe(
       result=>{
         this.filtrosLabel=result;
+        console.log("Filtros ==> ");
         console.log(this.filtrosLabel);
       }
     );
@@ -229,7 +228,7 @@ export class LecturasComponent implements OnInit {
   onSelection(e, list){
     let tecnico=this.tecnicoSeleccionado = e.option.value;
     //this.listTecnicosSeleccionados = list;
-    //console.log(tecnico);
+    console.log(tecnico);
   }
 
   /** 
@@ -244,19 +243,9 @@ export class LecturasComponent implements OnInit {
     };
     this.lecturasService.distribuirRutasTecnico(data).subscribe(
       result=>{
-        //console.log(result);
-        window.location.reload();
+        console.log(result);
       }
     );    
     //console.log(this.idsLecturas);
-  }
-
-  datosAsignacionTecnicos(){
-    this.lecturasService.OrdentrabajoTecnicosLecturas().subscribe(
-      result=>{
-        this.datosAsignacion=result;
-        //console.log(this.datosAsignacion);
-      }
-    );
   }
 }

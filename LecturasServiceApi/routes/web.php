@@ -30,6 +30,7 @@ $router->post('/data-first','Procesos\ProcesosController@getDataFirstFilter');
 $router->post('/data','Procesos\ProcesosController@getDataToDistribution');
 $router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOrdenTrabajoTecnicos');
 $router->get('/consolidados/{idEmpresa}/{mes}','Procesos\LecturasController@index');
+$router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTrabajo');
 /**
  * rutras de orden trabaja distribucion
  */

@@ -38,6 +38,18 @@
                               Módulo
                           </th>
                           <th>
+                              Plan
+                          </th>
+                          <th>
+                              # Usuarios
+                          </th>
+                          <th>
+                              Inicio
+                          </th>
+                          <th>
+                              Finalización
+                          </th>
+                          <th>
                               Acciones
                           </th>
                       </tr>
@@ -52,8 +64,20 @@
                               {{ $item->nombreMod }}
                           </td>
                           <td>
-                              <a class="btn btn-info" href="/subscripcion/edit/{{$item->idSubs}}">Editar</a>
-                              <a class="btn btn-danger" href="/subscripcion/delete/{{$item->idSubs}}">Eliminar</a>
+                              {{ $item->nombre }}
+                          </td>
+                          <td>
+                              {{ $item->num_tecnicos }}
+                          </td>
+                          <td>
+                              {{ $item->fecha_inicio }}
+                          </td>
+                          <td>
+                              {{ $item->fecha_fin }}
+                          </td>
+                          <td>
+                              <a class="btn btn-info btn-xs" href="/subscripcion/edit/{{$item->id_mod_emp}}">Editar</a>
+                              <a class="btn btn-danger btn-xs" href="/subscripcion/delete/{{$item->id_mod_emp}}">Eliminar</a>
                           </td>
                       </tr>
                       @endforeach
@@ -101,6 +125,29 @@
                                     @endforeach
                                   </select>
                               </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="control-label col-md-2">Planes:</label>
+                              <div class="col-md-8">
+                                  <select class="form-control" name="id_plan" required>
+                                      <option value="">--Seleccionar--</option>
+                                    @foreach($planes as $item)
+                                      <option value="{{$item->id_plan}}">{{$item->nombre}}</option>
+                                    @endforeach
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Fecha de Inicio:</label>
+                            <div class="col-md-8">
+                                <input type="date" class="form-control" name="fecha_inicio" value="" required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Fecha de Fin:</label>
+                            <div class="col-md-8">
+                                <input type="date" class="form-control" name="fecha_fin" value="" required>
+                            </div>
                           </div>
                       </div>
                   </div>

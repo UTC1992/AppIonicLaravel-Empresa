@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Subscripcion;
 use App\Models\Empresa;
 use App\Models\Modulo;
+use App\Models\Plan;
 use Auth;
 
 class SubscripcionController extends Controller
@@ -35,7 +36,10 @@ class SubscripcionController extends Controller
         $obj3 = new Modulo();
         $modulos = $obj3->getModulos();
 
-        return view('subscripcion.inicio',compact('subs','empresas', 'modulos'));
+        $obj4 = new Plan();
+        $planes = $obj4->getPlanes();
+
+        return view('subscripcion.inicio',compact('subs','empresas', 'modulos', 'planes'));
         //return response()->json($empresas);
     }
 
@@ -69,7 +73,10 @@ class SubscripcionController extends Controller
         $obj3 = new Modulo();
         $modulos = $obj3->getModulos();
 
-        return view('subscripcion.edit',compact('subs','empresas', 'modulos'));
+        $obj4 = new Plan();
+        $planes = $obj4->getPlanes();
+
+        return view('subscripcion.edit',compact('subs','empresas', 'modulos', 'planes'));
     }
 
     public function updateSub(Request $request)

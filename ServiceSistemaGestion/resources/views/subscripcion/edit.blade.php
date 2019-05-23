@@ -25,7 +25,7 @@
               <div class="box-body">
                   <div class="form-horizontal">
                           @foreach($subs as $item)
-                            <input type="hidden" name="id_mod_emp" value="{{ $item->idSubs }}">
+                            <input type="hidden" name="id_mod_emp" value="{{ $item->id_mod_emp }}">
                           @endforeach
                           <div class="form-group">
                               <label class="control-label col-md-2">Empresa:</label>
@@ -52,6 +52,35 @@
                                     @endforeach
                                   </select>
                               </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="control-label col-md-2">Planes:</label>
+                              <div class="col-md-8">
+                                  <select class="form-control" name="id_plan" required>
+                                    @foreach($subs as $item)
+                                      <option value="{{ $item->id_plan }}">{{ $item->nombre }}</option>
+                                    @endforeach
+                                    @foreach($planes as $item)
+                                      <option value="{{$item->id_plan}}">{{$item->nombre}}</option>
+                                    @endforeach
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Fecha de Inicio:</label>
+                            <div class="col-md-8">
+                              @foreach($subs as $item)
+                                <input type="date" class="form-control" name="fecha_inicio" value="{{ $item->fecha_inicio }}" required>
+                              @endforeach
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Fecha de Fin:</label>
+                            <div class="col-md-8">
+                              @foreach($subs as $item)
+                                <input type="date" class="form-control" name="fecha_fin" value="{{ $item->fecha_fin }}" required>
+                                @endforeach
+                            </div>
                           </div>
                       </div>
               </div>

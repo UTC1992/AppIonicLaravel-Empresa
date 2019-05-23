@@ -9,7 +9,7 @@
       <small>Inicio</small>
     </h1>
     <ol class="breadcrumb">
-      <li><a href="/admin"><i class="fa fa-home"></i>Inicio</a></li>
+      <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a></li>
       <li class="active">Aquí</li>
     </ol>
   </section>
@@ -32,10 +32,19 @@
                     <thead>
                       <tr>
                           <th>
-                              Nombre
+                            Nombre
                           </th>
                           <th>
-                              Estado
+                            Código
+                          </th>
+                          <th>
+                            Ruta
+                          </th>
+                          <th>
+                              Icono
+                          </th>
+                          <th>
+                            Estado
                           </th>
                           <th>
                               Acciones
@@ -45,15 +54,24 @@
                     <tbody>
                       @foreach($modulos as $item)
                       <tr>
+                        <td>
+                            {{ $item->nombre }}
+                        </td>
+                        <td>
+                            {{ $item->codigo }}
+                        </td>
                           <td>
-                              {{ $item->nombre }}
+                            {{ $item->ruta }}
+                          </td>
+                          <td>
+                              {{ $item->icono_menu }}
                           </td>
                           <td>
                               {{ $item->estado }}
                           </td>
                           <td>
-                              <a class="btn btn-info" href="/modulo/edit/{{$item->id_mod}}">Editar</a>
-                              <a class="btn btn-danger" href="/modulo/delete/{{$item->id_mod}}">Eliminar</a>
+                              <a class="btn btn-info btn-xs" href="/modulo/edit/{{$item->id_mod}}">Editar</a>
+                              <a class="btn btn-danger btn-xs" href="/modulo/delete/{{$item->id_mod}}">Eliminar</a>
                           </td>
                       </tr>
                       @endforeach
@@ -85,6 +103,24 @@
                               <div class="col-md-8">
                                   <input type="text" class="form-control" name="nombre" value="" required>
                               </div>
+                          </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Código:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="codigo" value="" required>
+                            </div>
+                        </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Ruta:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="ruta" value="" required>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-md-2">Icono:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="icono_menu" value="" required>
+                            </div>
                           </div>
                           <div class="form-group">
                               <label class="control-label col-md-2">Estado:</label>

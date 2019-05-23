@@ -1,172 +1,47 @@
-<!-- Modal -->
-<div class="modal fade" id="empresa_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Empresa</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+
+<mat-card>
+  <div class="card">
+    <div class="card-body">
+        <br>
+        <div class="d-flex justify-content-center">
+            <h5 class="">Editar información de usuario</h5>
         </div>
-        <form [formGroup]="form_empresa_edicion" (ngSubmit)="onSubmitEditEmpresa()">
-        <div class="modal-body">
-            <div class="form-group">
-              <label for="dateOfBirth">Nombre empresa</label>
-              <div class="input-group">
-                <input id="nombre_empresa" class="form-control"  formControlName="empresa">
-              </div>
-            </div>  
+        <div class="input-formulario">
+            <mat-form-field>
+              <input type="text" placeholder="Empresa" matInput [(ngModel)]="empresa" autocomplete="off" readonly>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" placeholder="Usuario" matInput [(ngModel)]="nombre_usuario" autocomplete="off" readonly>
+              </mat-form-field>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Actualizar</button>
-        </div>
-      </form>  
-      </div>
-    </div>
-  </div>
-<!--fin modal-->  
-<!-- Modal Nombre-->
-<div class="modal fade" id="nombre_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Nombre</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form [formGroup]="form_nombre_edicion" (ngSubmit)="onSubmitEditNombre()">
-        <div class="modal-body">
-            <div class="form-group">
-              <label for="dateOfBirth">Nombre Usuario</label>
-              <div class="input-group">
-                <input id="nombre_usuario" class="form-control"  formControlName="nombre">
-              </div>
-            </div>  
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Actualizar</button>
-        </div>
-      </form>  
-      </div>
-    </div>
-  </div>
-<!--fin modal-->  
-<!-- Modal email-->
-<div class="modal fade" id="email_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Email</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form [formGroup]="form_email_edicion" (ngSubmit)="onSubmitEditEmail()">
-        <div class="modal-body">
-            <div class="form-group">
-              <label for="dateOfBirth">Email</label>
-              <div class="input-group">
-                <input id="email" class="form-control"  formControlName="email">
-              </div>
-            </div>  
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Actualizar</button>
-        </div>
-      </form>  
-      </div>
-    </div>
-  </div>
-<!--fin modal-->  
-<!-- Modal Password-->
-<div class="modal fade" id="password_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Contraseña</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form [formGroup]="form_password_edicion" (ngSubmit)="onSubmitEditPassword()">
-        <div class="modal-body">
-            <div class="form-group">
-              <label for="dateOfBirth">Contraseña</label>
-              <div class="input-group">
-                <input id="password" class="form-control" type="password"
-                 formControlName="password">
-              </div>
-            </div>  
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Actualizar</button>
-        </div>
-      </form>  
-      </div>
-    </div>
-  </div>
-<!--fin modal-->  
-<div class="container">
-  <br>
-    <div class="card text-center">
-        <div class="card-header">
-            <h5 class="card-title">Información general de la cuenta</h5>
-        </div>
-        <div class="card-body">
-          
-          <div class="row">
-            <table class="table">
-              <thead>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>NOMBRE EMPRESA</th>
-                  <td>{{empresa}}</td>
-                  <td>
-                      <!--<button type="button" (click)="openModalEmpresa()" class="btn btn-link" data-toggle="modal" data-target="#empresa_modal">
-                          Editar
-                      </button>
-                    -->
-                  </td>
-                </tr>
-                <tr>
-                  <th>NOMBRE DE USUARIO</th>
-                  <td>{{nombre_usuario}}</td>
-                  <td>
-                      <button type="button" (click)="openModalNombre()" class="btn btn-link" data-toggle="modal" data-target="#nombre_modal">
-                          Editar
-                      </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th>EMAIL</th>
-                  <td>{{email}}</td>
-                  <td>
-                      <button type="button" (click)="openModalEmail()" class="btn btn-link" data-toggle="modal" data-target="#email_modal">
-                          Editar
-                      </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th>CONTRASEÑA</th>
-                  <td>*****************</td>
-                  <td>
-                      <button type="button" (click)="openModalPassword()" class="btn btn-link" data-toggle="modal" data-target="#password_modal">
-                          Editar
-                      </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <form [formGroup]="form_email_edicion" (ngSubmit)="confirmarEditarEmail()">
+          <div class="input-formulario">
+            <mat-form-field>
+              <input type="email" placeholder="Email" formControlName="email" matInput autocomplete="off" >
+              <mat-error *ngIf="form_email_edicion.get('email').hasError('required')">Requerido</mat-error>
+            </mat-form-field>
           </div>
-        </div>
-        <div class="card-footer text-muted">
-          
-        </div>
-      </div>
-</div>
+          <button mat-button type="submit" class="btn btn-info btn-sm">
+          <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+        </form>
+        <form [formGroup]="form_password_edicion" (ngSubmit)="confirmarEditarPass()">
+          <div class="input-formulario">
+            <mat-form-field>
+              <input type="password" placeholder="Contraseña" formControlName="password" matInput autocomplete="off" >
+              <mat-error *ngIf="form_password_edicion.get('password').hasError('required')">Requerido</mat-error>
+            </mat-form-field>
+          </div>
+          <button mat-button type="submit" class="btn btn-info btn-sm">
+          <mat-icon>edit</mat-icon>
+            Editar
+          </button>  
+        </form>
+        
+    </div>
+  </div>
+    
+</mat-card>
+
+  

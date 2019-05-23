@@ -8,7 +8,7 @@ import {  Modulo } from "../../models/modulo";
 import {PermisosService} from '../../services/permisos.service';
 
 import { LoginService } from '../../services/login.service';
-//import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 
 
@@ -41,10 +41,9 @@ export class LayoutComponent {
     ) {}
 
     ngOnInit(): void {
-      this.usuario = localStorage.getItem("nombre");
+      this.usuario = this.loginService.usuario.name;
       this.permisosService.getModulos().subscribe(
         result=> {
-          //console.log(result);
           this.modulos=result;
         }
       );
@@ -56,8 +55,9 @@ export class LayoutComponent {
     }
 
     logout(): void{
+      let username = this.loginService.usuario.name;
       this.loginService.logout();
-      //swal('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
+      Swal.fire('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
       this.router.navigate(['/login']);
     }
 

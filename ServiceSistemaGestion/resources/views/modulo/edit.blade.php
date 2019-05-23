@@ -9,7 +9,7 @@
       <small>Inicio</small>
     </h1>
     <ol class="breadcrumb">
-      <li><a href="/admin"><i class="fa fa-home"></i>Inicio</a></li>
+      <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a></li>
       <li class="active">Aquí</li>
     </ol>
   </section>
@@ -30,6 +30,24 @@
                           <div class="col-md-8">
                               <input type="text" class="form-control" name="nombre" value="{{ $res->nombre }}" required>
                           </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-2">Código:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="codigo" value="{{ $res->codigo }}" required>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-2">Ruta:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="ruta" value="{{ $res->ruta }}" required>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-2">Icono:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="icono_menu" value="{{ $res->icono_menu }}" required>
+                        </div>
                       </div>
                       <div class="form-group">
                           <label class="control-label col-md-2">Estado:</label>

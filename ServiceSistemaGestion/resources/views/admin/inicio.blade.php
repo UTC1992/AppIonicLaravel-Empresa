@@ -8,7 +8,7 @@
       <small>Gestionar</small>
     </h1>
     <ol class="breadcrumb">
-      <li><a href="/admin"><i class="fa fa-home"></i>Inicio</a></li>
+      <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a></li>
       <li class="active">Aquí</li>
     </ol>
   </section>

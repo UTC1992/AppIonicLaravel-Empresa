@@ -14,6 +14,7 @@ class Modulo extends Model
 	    'nombre',
 	    'estado',
       'ruta',
+      'icono_menu'
   	];
 
   	public function guardar($data = [])
@@ -22,7 +23,10 @@ class Modulo extends Model
             if(!is_null($data)){
                 $modulo = new Modulo();
                 $modulo->nombre = $data->nombre;
+                $modulo->codigo = $data->codigo;
                 $modulo->estado = $data->estado;
+                $modulo->ruta = $data->ruta;
+                $modulo->icono_menu = $data->icono_menu;
                 $modulo->save();
                 return true;
             } else
@@ -48,8 +52,11 @@ class Modulo extends Model
     {
     	try {
 	        $modulo = Modulo::find($data->id_mod);
-	        $modulo->nombre = $data->nombre;
-	        $modulo->estado = $data->estado;
+          $modulo->nombre = $data->nombre;
+          $modulo->codigo = $data->codigo;
+          $modulo->estado = $data->estado;
+          $modulo->ruta = $data->ruta;
+          $modulo->icono_menu = $data->icono_menu;
 	        $modulo->save();
 	        return true;
       	} catch (\Exception $e) {
@@ -73,7 +80,8 @@ class Modulo extends Model
       try {
         return $actividad = DB::table('tbl_modulo as T0')
               ->join('tbl_modulo_empresa as T1','T1.id_mod','=','T0.id_mod')
-              ->select('T0.nombre','T0.estado','T0.ruta')
+              ->join('tbl_planes as T2' ,'T2.id_plan','=','T1.id_plan')
+              ->select('T0.nombre','T0.estado','T0.ruta', 'T0.icono_menu')
               ->where('T1.id_emp',$id)
               ->get();
       } catch (\Exception $e) {

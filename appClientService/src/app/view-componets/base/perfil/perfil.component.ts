@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { PerfilService } from '../../../services/perfil.service';
 import { LoginService } from '../../../services/login.service';
 import { Usuario } from '../../../models/usuario';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -10,8 +12,7 @@ import { Usuario } from '../../../models/usuario';
   styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent implements OnInit {
-  form_empresa_edicion: FormGroup;
-  form_nombre_edicion: FormGroup;
+  
   form_password_edicion: FormGroup;
   form_email_edicion: FormGroup;
 
@@ -22,6 +23,7 @@ export class PerfilComponent implements OnInit {
           private perfilService:PerfilService,
           private loginServie:LoginService,
           private formBuilder: FormBuilder,
+          private router: Router
   ) { 
     this.nombre_usuario=localStorage.getItem("nombre");
     this.empresa=localStorage.getItem("empresa");
@@ -33,100 +35,23 @@ export class PerfilComponent implements OnInit {
   }
 
   createForms(){
-    this.form_empresa_edicion = this.formBuilder.group({
-      empresa: ['', Validators.required],
-    });
-    this.form_nombre_edicion = this.formBuilder.group({
-      nombre: ['', Validators.required],
-    });
+    let usuario = this.loginServie.usuario;
+    this.empresa = usuario.empresa;
+    this.nombre_usuario = usuario.name;
+    this.email = usuario.username;
+
     this.form_email_edicion = this.formBuilder.group({
-      email: ['', Validators.required],
+      email: [this.email, Validators.required],
     });
     this.form_password_edicion = this.formBuilder.group({
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
-  openModalEmpresa(){
-    this.form_empresa_edicion = this.formBuilder.group({
-      empresa: [localStorage.getItem("empresa"), Validators.required],
-    });
-  }
-
-  onSubmitEditEmpresa(){
-    let empresa=this.form_empresa_edicion.get('empresa').value;
-    if(empresa!=""){
-      let input = new FormData();
-    input.append('empresa', empresa);
-    this.perfilService.editarEmpresa(input)
-    .subscribe(
-      res=>{
-        if(res){
-          this.loginServie.getUserDataAutenticate().subscribe(
-            res_us=>{
-              if(res_us){
-                localStorage.removeItem("empresa");
-                localStorage.setItem("empresa",res_us.empresa);
-                this.empresa=localStorage.getItem("empresa");
-                location.reload();
-              }
-            }
-          );
-        }
-      }
-    );
-    }else{
-      alert("Ingrese nombre de empresa");
-      return;
-    }
-    
-  }
-
-
-  // editar nombre
-  openModalNombre(){
-    this.form_nombre_edicion = this.formBuilder.group({
-      nombre: [localStorage.getItem("nombre"), Validators.required],
-    });
-  }
-  onSubmitEditNombre(){
-    let nombre=this.form_nombre_edicion.get('nombre').value;
-    if(nombre!=""){
-      let input = new FormData();
-    input.append('nombre', nombre);
-    this.perfilService.editarNombre(input)
-    .subscribe(
-      res=>{
-        if(res){
-          this.loginServie.getUserDataAutenticate().subscribe(
-            res_us=>{
-              if(res_us){
-                localStorage.removeItem("nombre");
-                localStorage.setItem("nombre",res_us.name);
-                this.empresa=localStorage.getItem("nombre");
-                location.reload();
-              }
-            }
-          );
-        }
-      }
-    );
-    }else{
-      alert("Ingrese un nombre");
-      return;
-    }
-    
-  }
-
+ 
   // editar email
-  openModalEmail(){
-    this.form_email_edicion = this.formBuilder.group({
-      email: [localStorage.getItem("email"), Validators.required],
-    });
-  }
-
   onSubmitEditEmail(){
     let email=this.form_email_edicion.get('email').value;
-    if(email!=""){
+    if(this.form_email_edicion.valid){
       let input = new FormData();
     input.append('email', email);
     this.perfilService.editarEmail(input)
@@ -136,10 +61,9 @@ export class PerfilComponent implements OnInit {
           this.loginServie.getUserDataAutenticate().subscribe(
             res_us=>{
               if(res_us){
-                localStorage.removeItem("email");
-                localStorage.setItem("email",res_us.username);
-                this.email=localStorage.getItem("email");
-                location.reload();
+                this.showAlert("Éxito!","Email editado con éxito.","success");
+                this.loginServie.logout();
+                this.router.navigate(['/login']);
               }
             }
           );
@@ -147,46 +71,78 @@ export class PerfilComponent implements OnInit {
       }
     );
     }else{
-      alert("Ingrese un email");
+      this.showAlert("Alerta!","Ingrese un email.","warning");
       return;
     }
 
     
   }
-  // editar password
-
-  openModalPassword(){
-    this.form_password_edicion = this.formBuilder.group({
-      password: ['***********', Validators.required],
-    });
-  }
-
+  
+  //editar pass
   onSubmitEditPassword(){
-    let pass=this.form_password_edicion.get('password').value;
-    if(pass!=""){
-      let input = new FormData();
-      input.append('password',pass );
-      this.perfilService.editarPassword(input)
+    let pass=this.form_password_edicion.value;
+    console.log(pass);
+    if(this.form_password_edicion.valid){
+      this.perfilService.editarPassword(this.form_password_edicion.value)
       .subscribe(
         res=>{
+          console.log(res);
           if(res){
-            this.CerrarSesion();
+            this.showAlert("Éxito!","Contraseña editada con éxito.","success");
+            this.loginServie.logout();
+            this.router.navigate(['/login']);
           }
         }
       );
     }else{
-      alert("Ingrese una contraseña");
+      this.showAlert("Alerta!","Ingrese una contraseña con mínimo de 6 caracteres.","warning");
       return;
     }
    
   }
 
-  CerrarSesion(){
-    localStorage.removeItem("empresa");
-    localStorage.removeItem("email");
-    localStorage.removeItem("nombre");
-    localStorage.removeItem("token");
-    localStorage.removeItem("token_type");
-    location.reload();
+  confirmarEditarEmail(){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Al confirmar la edición se cerrará la sesión y deberá ingresar con el nuevo email.",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, editar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.onSubmitEditEmail();
+      }
+    });
   }
+
+  confirmarEditarPass(){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Al confirmar la edición se cerrará la sesión y deberá ingresar con la nueva contraseña.",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, editar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.onSubmitEditPassword();
+      }
+    });
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
+
+
 }

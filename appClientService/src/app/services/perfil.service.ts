@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http,Response,Headers} from '@angular/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { Usuario } from '../models/usuario';
 
@@ -15,23 +15,79 @@ export class PerfilService {
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api';
   
-  constructor(private http:Http) {
+  constructor(private http:HttpClient) {
     this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
    }
    // edit Company
    editarEmpresa(form:object){
-    return this.http.post(this.baseUrl+"/editEmpresa",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/editEmpresa",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
    }
    // edit name
    editarNombre(form:object){
-    return this.http.post(this.baseUrl+"/editNombre",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/editNombre",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
    }
    //editar email
    editarEmail(form:object){
-    return this.http.post(this.baseUrl+"/editEmail",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/editEmail",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
    }
    // editar password
    editarPassword(form:object){
-    return this.http.post(this.baseUrl+"/editPassword",form,{headers:this.headers}).pipe(map((e:Response)=> e.json()));
+    return this.http.post(this.baseUrl+"/editPassword",form)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
    }
 }

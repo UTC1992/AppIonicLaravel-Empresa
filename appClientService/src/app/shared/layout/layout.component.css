@@ -4,12 +4,24 @@
   
   .sidenav{
     width: 230px;
-    background-color: #a29da3;
+    box-shadow: 3px 0 6px rgba(0, 0, 0, .24)
   }
   
+  /*ACTIVAR ITEMS DEL MENU LATERAL*/
+  .mat-nav-list a.active {
+    background: #97989E;
+    color: white;
+  }
+
   .mat-toolbar.mat-primary{
+    background-color: #783384; 
     position: sticky;
     top: 0;
+    z-index: 9;
+  }
+
+  .mat-toolbar.mat-secondary{
+    background-color: #5D0263; color: white;
   }
   
   .example-fill-remaining-space{
@@ -43,3 +55,5 @@
   .menuLateral{
     background-color: #5D0263; color: white;
   }
+
+  
