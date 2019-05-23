@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 })
 export class LayoutComponent {
 
+  tituloModulo: string;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
   .pipe(
@@ -41,6 +42,8 @@ export class LayoutComponent {
     ) {}
 
     ngOnInit(): void {
+      //console.log(this.router.url)
+      this.cambiodeModulo(this.router.url);
       this.usuario = this.loginService.usuario.name;
       this.permisosService.getModulos().subscribe(
         result=> {
@@ -59,6 +62,20 @@ export class LayoutComponent {
       this.loginService.logout();
       Swal.fire('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
       this.router.navigate(['/login']);
+    }
+
+    cambiodeModulo(ruta): void{
+      //console.log(ruta);
+      if(ruta == "/base/inicio"){
+        this.tituloModulo = "MÓDULO DE CORTES";
+      }
+      if(ruta == "/lecturas/inicio"){
+        this.tituloModulo = "MÓDULO DE LECTURAS";
+      }
+      if(ruta == "/tecnico/inicio"){
+        this.tituloModulo = "MÓDULO DE TÉCNICOS";
+      }
+      
     }
 
   /*

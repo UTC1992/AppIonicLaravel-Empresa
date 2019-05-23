@@ -9,11 +9,11 @@ import Swal from 'sweetalert2';
 import { PermisosService } from '../../../services/permisos.service';
 
 @Component({
-  selector: 'app-tecnicos',
-  templateUrl: './tecnicos.component.html',
-  styleUrls: ['./tecnicos.component.css']
+  selector: 'app-cortes',
+  templateUrl: './cortes.component.html',
+  styleUrls: ['./cortes.component.css']
 })
-export class TecnicosComponent implements OnInit {
+export class CortesComponent implements OnInit {
   form_tecnico_edicion: FormGroup;
   loading: boolean = false;
   tecn:any;
@@ -31,8 +31,8 @@ export class TecnicosComponent implements OnInit {
   tecnicoEdit:any;
 
   //validar numero de tecnicos
-  tecnicosIngresados: number;
-  tecnicosPermitidos: number;
+  tecnicosPermitidosCortes: number;
+  tecnicosPermitidosLecturas: number;
 
   constructor(
     private tecnicoService:TecnicoService,
@@ -51,9 +51,19 @@ export class TecnicosComponent implements OnInit {
 
   mostrarTecnicos(){
     this.tecnicoService.getAllTecnicos().subscribe(res =>{
-      console.log(res.length);
-      this.tecnicosIngresados = res.length;
-      this.dataSource = new MatTableDataSource(res);
+      //console.log(res.length);
+      this.tecnicosPermitidosCortes = 0;
+      let contador = 0;
+      let teccortes = [];
+      for (let i = 0; i < res.length; i++) {
+        if(res[i]['actividad'] == 'cortes'){
+          teccortes.push(res[i]);
+          contador++;
+        }
+      }
+      this.tecnicosPermitidosCortes = contador;
+      console.log(this.tecnicosPermitidosCortes);
+      this.dataSource = new MatTableDataSource(teccortes);
       this.dataSource.paginator = this.paginator;
     });
     
@@ -111,14 +121,17 @@ export class TecnicosComponent implements OnInit {
       //console.log(response);
       let datos = response.find(x=>x.id_modulo == 'energy_cr');
       //console.log(datos['num_tecnicos']);
-      this.tecnicosPermitidos = datos['num_tecnicos'];
-      if(this.tecnicosIngresados < this.tecnicosPermitidos){
-        this.iniciarFormulario();
-        this.tipoAccion = "create";
-        this.tituloModal = "Crear un nuevo técnico";
-        this.modalRef = this.modalService.show(template);
+      if(datos == null){
+        this.showAlert('Alerta!', 'No estás suscrito al módulo de cortes.', 'warning');        
       } else {
-        this.showAlert('Alerta!', 'Ya no puedes crear mas técnicos, comunicate con soporte técnico por favor.', 'warning');
+        if(this.tecnicosPermitidosCortes < datos['num_tecnicos']){
+          this.iniciarFormulario();
+          this.tipoAccion = "create";
+          this.tituloModal = "Crear un nuevo técnico";
+          this.modalRef = this.modalService.show(template);
+        } else {
+          this.showAlert('Alerta!', 'Ya no puedes crear más técnicos, comunicate con soporte técnico por favor.', 'warning');
+        }
       }
 
     });
@@ -144,7 +157,7 @@ export class TecnicosComponent implements OnInit {
       cedula: ["", Validators.required],
       telefono: ["", Validators.required],
       email: ["", Validators.required],
-      actividad:["",Validators.required],
+      actividad:["cortes",Validators.required],
       estado:['1', Validators.required]
     });
   }

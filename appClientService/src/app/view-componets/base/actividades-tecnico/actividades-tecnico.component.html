@@ -58,28 +58,6 @@
         <h5 class="">Asignación de actividades</h5>
     </div>
     <mat-card-content>
-        <!--
-        <div class="accordion" id="accordionExample">
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <a style="text-align: center;" class="nav-link" data-toggle="collapse" data-target="#collapse2" href="#" aria-expanded="true" aria-controls="collapse2">
-                          Necesitas ayuda? Presiona AQUÍ
-                    </a>
-                </div>
-
-                <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                  <div class="card-body">
-                    <p>Para distribuir las actividades, realice los siguientes pasos:</p>
-                    <p>1.- Seleccione una actividad <strong>"Notificación"</strong>, <strong>"Corte"</strong> o <strong>"Reconexión"</strong></p>
-                    <p>2.- Seleccione un <strong>"Cantón"</strong> y el <strong>"Sector"</strong></p>
-                    <p>3.- Ingrese una cantidad de actividades o deje el valor por defecto</p>
-                    <p>4.- Seleccione uno o varios técnicos</p>
-                    <p>5.- Finalmente presione el botón <strong>"Asignar actividades"</strong></p>
-                  </div>
-                </div>
-            </div>
-        </div>
-        -->
         <mat-accordion>
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
@@ -177,7 +155,7 @@
         <mat-accordion>
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
-                Los técnicos restantes son: {{ tecnicos.length }}
+                Los técnicos disponibles son: {{ tecnicos.length }}
                 Oprima para mostralos
                 </mat-expansion-panel-header>
                 <!--<div class="col-lg-6 col-md-6" *ngFor="let tecnico of tecnicos">
@@ -188,15 +166,16 @@
                     </div>
                 -->
                 <div class="table-responsive">
-                    <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
-                    (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
-                        <div style="width: 600px;">
-                            <mat-list-option *ngFor="let tecnico of tecnicos" [value]="tecnico.id_tecn">
-                                    {{ tecnico.apellidos}} {{ tecnico.nombres}}
-                            </mat-list-option>
-                        </div>
-                    </mat-selection-list>
-                            
+                    <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">       
+                        <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
+                        (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
+                            <div style="width: 600px;">
+                                <mat-list-option *ngFor="let tecnico of tecnicos" [value]="tecnico.id_tecn">
+                                        {{ tecnico.apellidos}} {{ tecnico.nombres}}
+                                </mat-list-option>
+                            </div>
+                        </mat-selection-list>
+                    </cdk-virtual-scroll-viewport>      
                 </div>
                 <!--
                     <p>Selected:</p>
@@ -221,7 +200,9 @@
         </div>
         <mat-grid-list cols="2" rowHeight="1:0.2">
             <mat-grid-tile>
-                Información asignaciones:
+                Información de los técnicos y sus rutas:
+                <button style="margin-left: 20px;" class="btn btn-primary btn-sm" (click)="actualizarVista()">
+                    Actualizar</button>
             </mat-grid-tile>
             <mat-grid-tile>
                 <mat-form-field class="col-lg-6 col-md-6 col-sm-6">

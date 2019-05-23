@@ -1,50 +1,86 @@
 <br>
-<div class="d-flex justify-content-center">
-    <h4 class="">Distribuir rutas</h4>
+<div class="card card-body" style="margin-bottom: 10px;">
+  <div class="d-flex justify-content-center">
+      <h5 class="">Distribuir rutas</h5>
+  </div>
+  <mat-card-content>
+      <mat-accordion>
+          <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                  Expandir para asignar
+              </mat-expansion-panel-header>
+              <div class="row">  
+                <div class="col col-3" *ngFor="let filtro of filtrosLabel">
+                  <div class="input-formulario">
+                      <mat-form-field>
+                          <mat-select matNativeControl placeholder="{{filtro.value | titlecase}}" 
+                          name="actividad" id="actividad"
+                          (selectionChange)="getDataFilter($event,filtro.order)"> 
+                            <mat-option value="empty"></mat-option>
+                            <ng-template [ngIf]="filtro.order==1">
+                              <mat-option *ngFor="let value of primerFiltro" 
+                              value="{{value.agencia}}" >{{value.agencia}}</mat-option>
+                            </ng-template>
+                            <ng-template [ngIf]="filtro.order==2">
+                              <mat-option *ngFor="let value of segundoFiltro"
+                              value="{{value.sector}}" >{{value.sector}}</mat-option>
+                            </ng-template>
+                            <ng-template [ngIf]="filtro.order==3">
+                              <mat-option *ngFor="let value of tercerFiltro"
+                              value="{{value.ruta}}" >{{value.ruta}}</mat-option>
+                            </ng-template>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </div>
+                <div class="col col-3">
+                  <div class="input-formulario" *ngIf="dataCount">
+                    <mat-form-field>
+                      <input matInput type="number" placeholder="Cantidad" 
+                      name ="cantidad_lecturas" value="{{cantidad_lecturas}}">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                  <div class="text-center col col-lg-12">
+                      <button class="btn btn-success btn-sm" 
+                      (click)="asignarRutaTecnico()"
+                      mat-raised-button
+                      matTooltip="Precione para asignar actividades" >
+                      <mat-icon>check</mat-icon>    
+                      Asignar rutas
+                      </button>  
+                  </div>
+              </div>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </mat-card-content>
 </div>
-<br>
-<div class="card">
-  <div class="form-group" *ngFor="let filtro of filtrosLabel">
-    <label>{{filtro.value}}:</label>
-    <select class="form-control" id="actividad" name="actividad" (change)="getDataFilter($event,filtro.order)">
-        <option value="empty">Seleccionar</option>
-        <ng-template [ngIf]="filtro.order==1">
-          <option  value="{{value.agencia}}" *ngFor="let value of primerFiltro">{{value.agencia}}</option>
-        </ng-template>
-
-        <ng-template [ngIf]="filtro.order==2">
-          <option  value="{{value.sector}}" *ngFor="let value of segundoFiltro">{{value.sector}}</option>
-        </ng-template>
-
-        <ng-template [ngIf]="filtro.order==3">
-          <option  value="{{value.ruta}}" *ngFor="let value of tercerFiltro">{{value.ruta}}</option>
-        </ng-template>
-        
-    </select>
-</div>
-<div class="form-group">
-  <ng-template [ngIf]="dataCount">
-    <input class="form-control" type="text" name ="cantidad_lecturas" value="{{cantidad_lecturas}}">
-  </ng-template>
-</div>
-
-
-<div class="table-responsive">
-    <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
-    (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
-        <div style="width: 600px;">
-            <mat-list-option *ngFor="let tecnico of tecnicosLecturas" [value]="tecnico.id_tecn">
-                    {{ tecnico.apellidos}} {{ tecnico.nombres}}
-            </mat-list-option>
+<div class="card card-body" style="margin-bottom: 10px;">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h5 class="">Lectores disponibles</h5>    
         </div>
-    </mat-selection-list>
-            
-</div>
-<div class="form-group">
-
-    <button (click)="asignarRutaTecnico()" class="btn btn-success"> Asignar Ruta</button>
-  
-</div>
-
-
+    </div>
+    <mat-card-content>
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                Los técnicos restantes son: {{ tecnicosLecturas.length }}
+                Oprima para mostralos
+                </mat-expansion-panel-header>
+                <div class="table-responsive">
+                    <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
+                    (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
+                        <div style="width: 600px;">
+                            <mat-list-option *ngFor="let tecnico of tecnicosLecturas" [value]="tecnico.id_tecn">
+                                    {{ tecnico.apellidos}} {{ tecnico.nombres}}
+                            </mat-list-option>
+                        </div>
+                    </mat-selection-list>   
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
 </div>

@@ -23,7 +23,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 // Components Routing
-import { LecturaRoutingModule } from './lectura-routing.module';
+import { TecnicoRoutingModule } from './tecnico-routing.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 
@@ -32,8 +32,8 @@ import { PanelComponent } from './panel/panel.component';
 
 //graficos ng2-charts
 import { ChartsModule } from 'ng2-charts';
-import { LoadfileComponent } from './loadfile/loadfile.component';
-import { DistribucionComponent } from './distribucion/distribucion.component';
+import { CortesComponent } from './cortes/cortes.component';
+import { LecturasComponent } from './lecturas/lecturas.component';
 
 
 @NgModule({
@@ -41,7 +41,7 @@ import { DistribucionComponent } from './distribucion/distribucion.component';
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    LecturaRoutingModule,
+    TecnicoRoutingModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
@@ -77,8 +77,8 @@ import { DistribucionComponent } from './distribucion/distribucion.component';
   ],
   declarations: [
     PanelComponent,
-    LoadfileComponent,
-    DistribucionComponent,
+    CortesComponent,
+    LecturasComponent,
   ],
   exports: [
   ],
@@ -93,4 +93,4 @@ import { DistribucionComponent } from './distribucion/distribucion.component';
   ]
   
 })
-export class LecturaModule { }
+export class TecnicoModule { }

@@ -8,6 +8,9 @@ import { TableClientComponent } from '../table-client/table-client.component';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
+import { PermisosService } from '../../../services/permisos.service';
+import {formatDate } from '@angular/common';
+
 import Swal from 'sweetalert2';
 
 export const MY_FORMATS = {
@@ -62,7 +65,8 @@ export class AddCsvComponent implements OnInit {
   constructor(
       private ordenService:OrdenService,
       private fb: FormBuilder,
-      private dateAdapter: DateAdapter<Date>
+      private dateAdapter: DateAdapter<Date>,
+      private permisoPlan: PermisosService,
   ) {
     this.dateAdapter.setLocale('es'); 
     this.createForm();
@@ -86,36 +90,50 @@ export class AddCsvComponent implements OnInit {
 
   //metodo envia file al servidor    
   onSubmit(){
-    if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
-      this.showAlert('Alerta!',"Seleccione un archivo",'warning');
-      return;
-    }
-
-    let input = new FormData();
-    input.append('archivo', this.form.get('archivo').value);
-
-    this.progresoMostrar = false;
-
-    this.ordenService.addCsvFiles(input)
-    .subscribe(
-      response=>{
-        //console.log(response);
-        this.uploadResponse = response;
-        if(this.uploadResponse.message == '100'){
-          //this.showAlert('Éxito!',"Archivo subido correctamente",'success');
-          this.clearFile();
-          this.reloadTableClient();
-          this.progresoMostrar = true;
+    this.showCargando();
+    this.permisoPlan.getPlan().subscribe(response =>{
+      //console.log(response);
+      let datos = response.find(x=>x.id_modulo == 'energy_cr');
+      //console.log(datos['fecha_fin']);
+      let fecha = new Date();
+      //console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
+      let fechaActual = formatDate(fecha, "yyyy-MM-dd",'en');
+      if(fechaActual == datos['fecha_fin']){
+        this.showAlert('Suscripción finalizada',"El periodo de suscripción a finalizado, "
+        +"pongase en contacto con soporte técnico por favor.",'info');  
+      } else {
+        if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
+          this.showAlert('Alerta!',"Debe seleccionar un archivo para subirlo",'warning');
+          return;
         }
-        if(this.uploadResponse.message != '100'){
-          this.progresoMostrar = false;
-        }
-
-      },
-      error=>{
-        console.log(<any>error);
-        this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
-      });
+        
+        let input = new FormData();
+        input.append('archivo', this.form.get('archivo').value);
+    
+        this.progresoMostrar = false;
+    
+        this.ordenService.addCsvFiles(input).subscribe(
+          response=>{
+            //console.log(response);
+            this.uploadResponse = response;
+            if(this.uploadResponse.message == '100'){
+              this.showAlert('Éxito!',"Archivo subido correctamente",'success');
+              this.clearFile();
+              this.reloadTableClient();
+              this.progresoMostrar = true;
+            }
+            if(this.uploadResponse.message != '100'){
+              this.progresoMostrar = false;
+            }
+    
+          },
+          error=>{
+            console.log(<any>error);
+            this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
+          });
+      }
+    });
+    
   }
 
 
@@ -197,9 +215,9 @@ export class AddCsvComponent implements OnInit {
     if(this.fechaBorrado != null){
       Swal.fire({
         title: 'Alerta de ¡Borrado!',
-        text: 'Deseas borrar las actividades subidas en la fecha seleccionada,'+
-              ' también se eliminarán las asignaciones realizadas a los tecnicos,'+ 
-              ' recuerda que el borrado es permanente.',
+        html: '<p>¿ Deseas borrar las actividades subidas en la fecha seleccionada ? <br>'
+              +'Se eliminarán las asignaciones realizadas a los técnicos.<br>'
+              +'Recuerda que el borrado es permanente.</p>',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -212,7 +230,7 @@ export class AddCsvComponent implements OnInit {
         }
       });
     } else {
-      this.showAlert("","Debe elegir la fecha en que subio los datos.","warning");
+      this.showAlert("Info","Elija la fecha en que subio los datos.","info");
     }
     
   }
@@ -252,5 +270,19 @@ export class AddCsvComponent implements OnInit {
     });
   }
 
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  }
 
 }

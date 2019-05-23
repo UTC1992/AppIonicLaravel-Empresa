@@ -112,6 +112,12 @@ export class ActividadesTecnicoComponent implements OnInit {
     //this.mostrarDistribucion();
   }
 
+  actualizarVista(){
+    this.mostrarTecnicos();
+    this.mostrarDistribucion();
+    this.countActivities();
+  }
+
   mostrarDistribucion(){
     this.tecnicoService.showDistribucion().subscribe(response =>{
       this.actividades = response;

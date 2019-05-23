@@ -21,19 +21,18 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 // Components Routing
 import { BaseRoutingModule } from './base-routing.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { InicioComponent } from './inicio/inicio.component';
 
 //componentes
 import { PanelLayoutComponent } from './panel-layout/panel-layout.component';
 import { NavClientComponent } from './nav-client/nav-client.component';
 import { TableClientComponent } from './table-client/table-client.component';
 import { AddCsvComponent } from './add-csv/add-csv.component';
-import { TecnicosComponent } from './tecnicos/tecnicos.component';
 import { FormTecnicoComponent } from './form-tecnico/form-tecnico.component';
 import { ActividadesTecnicoComponent } from './actividades-tecnico/actividades-tecnico.component';
 import { FooterComponent } from './footer/footer.component'; 
@@ -87,15 +86,14 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
     ChartsModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ScrollDispatchModule
   ],
   declarations: [
-    InicioComponent,
     PanelLayoutComponent,
     NavClientComponent,
     TableClientComponent,
     AddCsvComponent,
-    TecnicosComponent,
     FormTecnicoComponent,
     ActividadesTecnicoComponent,
     FooterComponent,

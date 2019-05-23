@@ -37,6 +37,17 @@ const routes: Routes = [
       },
     ],
     canActivate: [LoginGuard],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'tecnico',
+        loadChildren: './view-componets/tecnico/tecnico.module#TecnicoModule'
+      },
+    ],
+    canActivate: [LoginGuard],
   }
 ];
 

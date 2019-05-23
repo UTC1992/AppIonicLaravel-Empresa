@@ -101,7 +101,7 @@ class OrdenTempController extends Controller
     }
   }
 
-/**
+  /**
  * metodo optimizado de subida de datos desde excel
  */
  public function store(Request $request){
@@ -164,7 +164,21 @@ class OrdenTempController extends Controller
              $actividadArray[$con]['created_at']=date('Y-m-d H:i:s');
              $actividadArray[$con]['referencia']="sin asignar";
              if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
-               $coordenadas=$this->changeUtmCoordinates(str_replace(',','.',$value->cucooe),str_replace(',','.',$value->cucoon),17,false);
+               $cordCucoon=$value->cucoon;
+               $corCucooe=$value->cucooe;
+               if(strlen($cordCucoon)<11){
+                 $cordCucoon=str_replace('.','',$cordCucoon);
+               }else{
+                 $cordCucoon=str_replace(',','.',$cordCucoon);
+               }
+
+               if(strlen($corCucooe)<10){
+                 $corCucooe=str_replace('.','',$corCucooe);
+               }else{
+                  $corCucooe=str_replace(',','.',$corCucooe);
+               }
+
+               $coordenadas=$this->changeUtmCoordinates($corCucooe,$cordCucoon,17,false);
                if($coordenadas!=false){
                  $latitud=round($coordenadas["lat"],7);
                  $longitud=round($coordenadas["lon"],6);
@@ -189,7 +203,6 @@ class OrdenTempController extends Controller
              }
              $con++;
             // $actividad->save();
-
          }
          if(count($actividadArray)>0){
            $result=  DB::table('tbl_actividaddiaria')->insert($actividadArray);
@@ -198,17 +211,13 @@ class OrdenTempController extends Controller
          }
          $this->createHistoryUser("Carga","Subida de archivo excel corerecto","Cortes");
          return response()->json(true);
-
        }
        $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
        return response()->json(false);
-
-
      }else{
        $mesagge=false;
        $this->createHistoryUser("Carga Error","Subida de archivo excel fallido","Cortes");
        return response()->json($mesagge);
-
      }
    } catch (\Exception $e) {
      return response()->json("Error: ".$e);

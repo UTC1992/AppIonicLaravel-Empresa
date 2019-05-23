@@ -26,6 +26,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 
 import {MatDialogModule, MatFormFieldModule} from "@angular/material";
 import { AppRoutingModule } from './app-routing.module';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 
 import {
   SharedModule,
@@ -89,7 +90,8 @@ import { ChartsModule } from 'ng2-charts';
     ChartsModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ScrollDispatchModule
   ],
   providers: [
     MatDatepickerModule,

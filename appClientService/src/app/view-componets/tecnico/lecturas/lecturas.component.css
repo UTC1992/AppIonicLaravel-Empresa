@@ -1,14 +1,5 @@
-.input-formulario {
-    display: flexbox;
-    flex-direction: column;
-  }
-  
-  .input-formulario > * {
-    width: 100%;
-  }
-
-  /*estilos tabla*/
-  table {
+/* Structure */
+table {
     width: 100%;
   }
   
@@ -28,7 +19,11 @@
   font-size: 10pt;
 }
 
-/*scroll vertical*/
-.example-viewport {
-  height: 480px;
+.input-formulario {
+  display: flexbox;
+  flex-direction: column;
+}
+
+.input-formulario > * {
+  width: 100%;
 }

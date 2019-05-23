@@ -6,10 +6,33 @@ import { DataFilter } from "../../../models/data-filter";
 import { Tecnico } from "../../../models/tecnico";
 import { TecnicoService } from "../../../services/tecnico.service";
 
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+import Swal from 'sweetalert2';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD-MM-YYYY',
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'DD-MM-YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
+
 @Component({
   selector: 'app-distribucion',
   templateUrl: './distribucion.component.html',
-  styleUrls: ['./distribucion.component.css']
+  styleUrls: ['./distribucion.component.css'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class DistribucionComponent implements OnInit {
 
@@ -24,13 +47,22 @@ export class DistribucionComponent implements OnInit {
   tecnicosLecturas:Tecnico[]=[];
 
   tecnicoSeleccionado: string;
-  listTecnicosSeleccionados: any[];
+  listTecnicosSeleccionados: any[] = [];
+
+  //validar seleccion
+  agenciaValidar: any = null;
+  sectorValidar: any = null;
+  rutaValidar: any = null;
+  
 
   constructor(
     private fb: FormBuilder,
     private lecturasService:LecturasService,
-    private tecnicoService:TecnicoService
-  ) { }
+    private tecnicoService:TecnicoService,
+    private dateAdapter: DateAdapter<Date>,
+  ) {
+    this.dateAdapter.setLocale('es'); 
+   }
 
   ngOnInit() {
     this.getFiltesFields();
@@ -82,13 +114,27 @@ export class DistribucionComponent implements OnInit {
    * 
    */
   getDataFilter($event,order){
-    let valor= $event.target.value;
-    if(valor=="empty"){
-      alert("selecciona algo");
+    console.log(order);
+    let valor= $event.value;
+    if(valor=="empty" && order == 1){
+      this.showAlert('Alerta!',"Seleccione una agencia",'warning');
+      this.agenciaValidar = null;
+      return;
+    }
+    if(valor=="empty" && order == 2){
+      this.showAlert('Alerta!',"Seleccione un sector",'warning');
+      this.sectorValidar = null;
+      return;
+    }
+    if(valor=="empty" && order == 3){
+      this.showAlert('Alerta!',"Seleccione una ruta",'warning');
+      this.rutaValidar = null;
       return;
     }
 
     if(order==1){
+    this.agenciaValidar = true;
+
     this.idsLecturas=[];
     this.dataCount=false;
     this.dataFilter=new DataFilter();
@@ -118,6 +164,8 @@ export class DistribucionComponent implements OnInit {
     }
 
     if(order==2){
+      this.sectorValidar = true;
+
       this.dataCount=false;
       let data2={
         'whereData':{
@@ -139,6 +187,7 @@ export class DistribucionComponent implements OnInit {
       ); 
     }
     if(order==3){
+      this.rutaValidar = true;
       let data={
         'whereData':{
           'ruta':valor
@@ -167,9 +216,9 @@ export class DistribucionComponent implements OnInit {
    * @param list 
    */
   onSelection(e, list){
-    let tecnico=this.tecnicoSeleccionado = e.option.value;
-    //this.listTecnicosSeleccionados = list;
-    console.log(tecnico);
+    this.tecnicoSeleccionado = e.option.value;
+    this.listTecnicosSeleccionados = list;
+    console.log(this.listTecnicosSeleccionados);
   }
 
   /** 
@@ -177,17 +226,64 @@ export class DistribucionComponent implements OnInit {
    */
 
   asignarRutaTecnico(){
-
-    let data={
-      'lecturas':this.idsLecturas,
-      'idTecnico':this.tecnicoSeleccionado,
-    };
-    this.lecturasService.distribuirRutasTecnico(data).subscribe(
-      result=>{
-        console.log(result);
-      }
-    );    
+    
+    if(this.agenciaValidar == null){
+      this.showAlert('Alerta!',"Seleccione una agencia",'warning');
+    } else if(this.sectorValidar == null){
+      this.showAlert('Alerta!',"Seleccione un sector",'warning');
+    } else if(this.rutaValidar == null){
+      this.showAlert('Alerta!',"Seleccione una ruta",'warning');
+    } else if(this.listTecnicosSeleccionados.length != 1){
+      this.showAlert('Alerta!',"Seleccione un solo técnico",'warning');
+    }
+    if(this.agenciaValidar && this.sectorValidar 
+      && this.rutaValidar && this.listTecnicosSeleccionados.length == 1){
+      this.showCargando();
+      let data={
+        'lecturas':this.idsLecturas,
+        'idTecnico':this.listTecnicosSeleccionados[0].value,
+      };
+      this.lecturasService.distribuirRutasTecnico(data).subscribe(
+        result=>{
+          console.log(result);
+          if(result){
+            this.getTenicosLecturas();
+            this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');
+          } else {
+            this.showAlert('Alerta!', 'No se pudo asignar la ruta', 'warning');
+          }
+        }, error => {
+          console.log(error);
+          Swal.close();
+        }
+      );
+    }
+        
     //console.log(this.idsLecturas);
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
+  }
+
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    });
   }
 
 }

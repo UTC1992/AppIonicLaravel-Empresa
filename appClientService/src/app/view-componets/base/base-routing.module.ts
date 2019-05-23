@@ -6,7 +6,6 @@ import {LoginGuard} from '../../login.guard';
 
 //componentes
 import { PanelLayoutComponent } from './panel-layout/panel-layout.component';
-import { TecnicosComponent } from './tecnicos/tecnicos.component'; 
 import { NotFoundComponent } from './not-found/not-found.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { ChatComponent } from './chat/chat.component';
@@ -33,11 +32,6 @@ const routes: Routes = [
       {
         path:'chat',
         component:ChatComponent,
-        canActivate:[LoginGuard]
-      },
-      {
-        path:'tecnicos',
-        component:TecnicosComponent,
         canActivate:[LoginGuard]
       },
       {
