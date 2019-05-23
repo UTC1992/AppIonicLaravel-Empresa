@@ -105,3 +105,5 @@ Route::group(['prefix' => 'mobile'], function(){
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');
 Route::get('export-lecturas/{idEmpresa}/{mes}','Angular\ImportController@exportarConsolidadoLecturas');
+
+Route::get('export-test/{date}/{empresa}','Angular\ImportController@test');

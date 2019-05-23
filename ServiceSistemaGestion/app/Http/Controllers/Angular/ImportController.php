@@ -13,6 +13,7 @@ use \PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Services\LecturasService;
 use App\Traits\ApiResponser;
+use App\Models\Reportes;
 
 class ImportController extends Controller
 {
@@ -33,48 +34,8 @@ class ImportController extends Controller
         $type="xlsx";
         try {
             $res = new ActividadDiaria();
-            $data=$res->select('n9sepr',
-                'n9cono',
-                'n9cocu',
-                'n9selo',
-                'n9cozo',
-                'n9coag',
-                'n9cose',
-                'n9coru',
-                'n9seru',
-                'n9vano',
-                'n9plve',
-                'n9vaca',
-                'n9esta',
-                'n9cocn',
-                'n9fech',
-                'n9meco',
-                'n9seri',
-                'n9feco',
-                'n9leco',
-                'n9manp',
-                'n9cocl',
-                'n9nomb',
-                'n9cedu',
-                'n9prin',
-                'n9nrpr',
-                'n9refe',
-                'n9tele',
-                'n9medi',
-                'n9fecl',
-                'n9lect',
-                'n9cobs',
-                'n9cob2',
-                'n9ckd1',
-                'n9ckd2',
-                'cusecu',
-                'cupost',
-                'cucoon',
-                'cucooe',
-                'cuclas',
-                'cuesta',
-                'cutari')->where('created_at','like','%'.$date.'%')->where('id_emp',$id_emp)->get();
-
+            $data=array();
+            $data=Reportes::getConsolidadoCortes($id_emp,$date);
             $spreadsheet = new Spreadsheet();
             $spreadsheet->getActiveSheet()->setTitle('CONSOLIDADO');
             $spreadsheet->setActiveSheetIndex(0)
@@ -120,64 +81,65 @@ class ImportController extends Controller
                         ->setCellValue("AN1",'CUESTA')
                         ->setCellValue("AO1",'CUTARI');
             $x= 2;
+
             foreach($data as $item){
 
                 $spreadsheet->setActiveSheetIndex(0)
-                        ->setCellValue("A$x",$item['n9sepr'])
-                        ->setCellValue("B$x",$item['n9cono'])
-                        ->setCellValue("C$x",$item['n9cocu'])
-                        ->setCellValue("D$x",$item['n9selo'])
-                        ->setCellValue("E$x",$item['n9cozo'])
-                        ->setCellValue("F$x",$item['n9coag'])
-                        ->setCellValue("G$x",$item['n9cose'])
-                        ->setCellValue("H$x",$item['n9coru'])
-                        ->setCellValue("I$x",$item['n9seru'])
-                        ->setCellValue("J$x",$item['n9vano'])
-                        ->setCellValue("K$x",$item['n9plve'])
-                        ->setCellValue("L$x",$item['n9vaca'])
-                        ->setCellValue("M$x",$item['n9esta'])
-                        ->setCellValue("N$x",$item['n9cocn'])
-                        ->setCellValue("O$x",$item['n9fech'])
-                        ->setCellValue("P$x",$item['n9meco'])
-                        ->setCellValue("Q$x",$item['n9seri'])
-                        ->setCellValue("R$x",$item['n9feco'])
-                        ->setCellValue("S$x",$item['n9leco'])
-                        ->setCellValue("T$x",$item['n9manp'])
-                        ->setCellValue("U$x",$item['n9cocl'])
-                        ->setCellValue("V$x",$item['n9nomb'])
-                        ->setCellValue("W$x",$item['n9cedu'])
-                        ->setCellValue("X$x",$item['n9prin'])
-                        ->setCellValue("Y$x",$item['n9nrpr'])
-                        ->setCellValue("Z$x",$item['n9refe'])
-                        ->setCellValue("AA$x",$item['n9tele'])
-                        ->setCellValue("AB$x",$item['n9medi'])
-                        ->setCellValue("AC$x",$item['n9fecl'])
-                        ->setCellValue("AD$x",$item['n9lect'])
-                        ->setCellValue("AE$x",$item['n9cobs'])
-                        ->setCellValue("AF$x",$item['n9cob2'])
-                        ->setCellValue("AG$x",$item['n9ckd1'])
-                        ->setCellValue("AH$x",$item['n9ckd2'])
-                        ->setCellValue("AI$x",$item['cusecu'])
-                        ->setCellValue("AJ$x",$item['cupost'])
-                        ->setCellValue("AK$x",$item['cucoon'])
-                        ->setCellValue("AL$x",$item['cucooe'])
-                        ->setCellValue("AM$x",$item['cuclas'])
-                        ->setCellValue("AN$x",$item['cuesta'])
-                        ->setCellValue("AO$x",$item['cutari']);
+                        ->setCellValue("A$x",$item->n9sepr)
+                        ->setCellValue("B$x",$item->n9cono)
+                        ->setCellValue("C$x",$item->n9cocu)
+                        ->setCellValue("D$x",$item->n9selo)
+                        ->setCellValue("E$x",$item->n9cozo)
+                        ->setCellValue("F$x",$item->n9coag)
+                        ->setCellValue("G$x",$item->n9cose)
+                        ->setCellValue("H$x",$item->n9coru)
+                        ->setCellValue("I$x",$item->n9seru)
+                        ->setCellValue("J$x",$item->n9vano)
+                        ->setCellValue("K$x",$item->n9plve)
+                        ->setCellValue("L$x",$item->n9vaca)
+                        ->setCellValue("M$x",$item->n9esta)
+                        ->setCellValue("N$x",$item->n9cocn)
+                        ->setCellValue("O$x",$item->n9fech)
+                        ->setCellValue("P$x",$item->n9meco)
+                        ->setCellValue("Q$x",$item->n9seri)
+                        ->setCellValue("R$x",$item->n9feco)
+                        ->setCellValue("S$x",$item->n9leco)
+                        ->setCellValue("T$x",$item->n9manp)
+                        ->setCellValue("U$x",$item->n9cocl)
+                        ->setCellValue("V$x",$item->n9nomb)
+                        ->setCellValue("W$x",$item->n9cedu)
+                        ->setCellValue("X$x",$item->n9prin)
+                        ->setCellValue("Y$x",$item->n9nrpr)
+                        ->setCellValue("Z$x",$item->n9refe)
+                        ->setCellValue("AA$x",$item->n9tele)
+                        ->setCellValue("AB$x",$item->n9medi)
+                        ->setCellValue("AC$x",$item->n9fecl)
+                        ->setCellValue("AD$x",$item->n9lect)
+                        ->setCellValue("AE$x",$item->n9cobs)
+                        ->setCellValue("AF$x",$item->n9cob2)
+                        ->setCellValue("AG$x",$item->n9ckd1)
+                        ->setCellValue("AH$x",$item->n9ckd2)
+                        ->setCellValue("AI$x",$item->cusecu)
+                        ->setCellValue("AJ$x",$item->cupost)
+                        ->setCellValue("AK$x",$item->cucoon)
+                        ->setCellValue("AL$x",$item->cucooe)
+                        ->setCellValue("AM$x",$item->cuclas)
+                        ->setCellValue("AN$x",$item->cuesta)
+                        ->setCellValue("AO$x",$item->cutari);
 
                 $spreadsheet->getActiveSheet()->setCellValueExplicit(
                             'H'.$x,
-                            $item['n9coru'],
+                            $item->n9coru,
                             \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
                         );
                 $spreadsheet->getActiveSheet()->setCellValueExplicit(
                             'Y'.$x,
-                            $item['n9nrpr'],
+                            $item->n9nrpr,
                             \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
                         );
                 $spreadsheet->getActiveSheet()->setCellValueExplicit(
                             'Q'.$x,
-                            $item['n9seri'],
+                            $item->n9seri,
                             \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
                         );
                 $x++;
