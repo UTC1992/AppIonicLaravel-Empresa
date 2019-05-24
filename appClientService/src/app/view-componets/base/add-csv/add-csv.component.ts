@@ -248,9 +248,16 @@ export class AddCsvComponent implements OnInit {
       this.ordenService.deleteActivities(data).subscribe(
         result=>{
           if(result){
-            console.log(result);
-            this.showAlert("Éxito!",'Actividades borradas correctamente!',"success");
-            this.reloadTableClient();
+            if(result == 'yaconsolidado'){
+              console.log(result);
+              this.showAlert("Alerta!",'No se puede eliminar la ruta porque ya ha sido consolidada.',"warning");
+              this.reloadTableClient();
+            } else {
+              console.log(result);
+              this.showAlert("Éxito!",'Actividades borradas correctamente',"success");
+              this.reloadTableClient();
+            }
+            
           }else{
             this.showAlert("Alerta!",'No existen resgistros en esa fecha para borrarlos.',"warning");
             this.reloadTableClient();

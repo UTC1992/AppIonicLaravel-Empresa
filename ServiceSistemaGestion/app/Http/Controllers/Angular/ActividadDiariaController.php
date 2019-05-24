@@ -257,7 +257,7 @@ class ActividadDiariaController extends Controller
         $actividad_diaria1=new ActividadDiaria();
         $res1=$actividad_diaria1->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('estado',3)->get();
         if(count($res1)>0){
-          $message="Error: No se puede eliminar,  la ruta ya ha sido consolidada!!";
+          $message="yaconsolidado";
             return response()->json($message);
         }
         $actividad_diaria=new ActividadDiaria();

@@ -70,6 +70,7 @@ export class OrdenService {
     })
     );
   }
+
   getCantones(tipo):Observable<Orden[]>{
     return this.http.get<Orden[]>(this.baseUrl+"/cantones/"+tipo)
     .pipe(catchError( e => {
@@ -154,7 +155,7 @@ export class OrdenService {
     );
   }
   // borrar actividades del dia
-  deleteActivities(fecha:object):Observable<Orden[]>{
+  deleteActivities(fecha:object):Observable<any>{
     return this.http.post(this.baseUrl+"/delete-activities",fecha)
     .pipe(
       map((response: any) => response),

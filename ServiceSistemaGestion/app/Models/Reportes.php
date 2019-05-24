@@ -61,4 +61,12 @@ class Reportes extends Model
      $result=  DB::select('call sp_actividad_sector_tecnico("'.$tecnico.'","'.$fecha.'")');
      return $result;
    }
+
+  /**
+   * obtener consolidado
+   */
+   public static function getConsolidadoCortes($empresa,$fecha){
+     $result=  DB::select('call sp_consolidados_cortes("'.$empresa.'","'.$fecha.'")');
+     return $result;
+   }
 }

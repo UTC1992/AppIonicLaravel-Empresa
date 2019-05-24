@@ -22,21 +22,17 @@ class HistorialController extends Controller
     {
         $obj2 = new Empresa();
         $empresas = $obj2->getEmpresasByAdmin(Auth::user()->id_admin);
-
-        $historial = new Historial();
-        $historiales = $historial->getHistoriales();
-
+        $historiales = [];
         return view('historial.inicio',compact('historiales', 'empresas'));
-        //return response()->json($empresas);
     }
 
     public function consultar(Request $request)
-    {   
+    {
+        $obj2 = new Empresa();
+        $empresas = $obj2->getEmpresasByAdmin(Auth::user()->id_admin);
         $historial = new Historial();
         $historiales = $historial->getByEmpresa($request);
-        //return response()->json($historiales);
-        $datos = "hola";
-        return redirect()->action('Admin\HistorialController@index', compact('datos'));
+        return view('historial.inicio',compact('historiales', 'empresas'));
     }
 
 }

@@ -47,7 +47,7 @@ export const MY_FORMATS = {
 export class PanelLayoutComponent implements OnInit {
   //url_export='http://pruebas.tiendanaturalecuador.online/api/export';
   //url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
-  url_export='http://localhost:8000/api/export';
+  url_export='http://192.168.1.4:8000/api/export';
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
