@@ -76,6 +76,9 @@ export class ActividadesTecnicoComponent implements OnInit {
   dataSourceModal = new MatTableDataSource();
   @ViewChild(MatPaginator) paginatorModal: MatPaginator;
 
+  //variable para seleccionar el tipo de actividades
+  actividad: any;
+
   @ViewChild('inputRef') inputRef: ElementRef;
   constructor(private tecnicoService:TecnicoService, 
               private ordenServices:OrdenService,
@@ -98,9 +101,9 @@ export class ActividadesTecnicoComponent implements OnInit {
   onSelection(e, list){
     this.tecnicoSeleccionado = e.option.value;
     this.listTecnicosSeleccionados = list;
-    //console.log(list);
+    ////console.log(list);
     if(list.length > 0){
-      console.log(list[0].value);
+      //console.log(list[0].value);
     }
     
   }
@@ -121,7 +124,7 @@ export class ActividadesTecnicoComponent implements OnInit {
   mostrarDistribucion(){
     this.tecnicoService.showDistribucion().subscribe(response =>{
       this.actividades = response;
-      console.log(response);
+      //console.log(response);
       this.agruparDistribucion();
     });
   }
@@ -155,7 +158,7 @@ export class ActividadesTecnicoComponent implements OnInit {
     }
     this.dataSource = new MatTableDataSource(dataAux);
     this.dataSource.paginator = this.paginator;
-    console.log(dataAux);
+    //console.log(dataAux);
   }
 
   applyFilter(filterValue: string) {
@@ -164,7 +167,7 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   mostrarTecnicos(){
     this.tecnicoService.getTecnicosSinActividades().subscribe(res =>{
-      //console.log(res);
+      ////console.log(res);
       this.tecnicos = res;
     });
   }
@@ -218,22 +221,22 @@ export class ActividadesTecnicoComponent implements OnInit {
     switch (tipo) {
       case "Notificaciones":
         this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '010',sector);
-        console.log(this.actividades_tecncio);
+        //console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
       case "Corte":
         this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '030',sector);
-        console.log(this.actividades_tecncio);
+        //console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
       case "Reconexiones":
         this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '040',sector);
-        console.log(this.actividades_tecncio);
+        //console.log(this.actividades_tecncio);
         this.view_table=true;
         break;
       case "Retiro de medidor":
         this.actividades_tecncio=this.tecnicoService.getActivitiesByTecnico(id, '050',sector);
-        console.log(this.actividades_tecncio);
+        //console.log(this.actividades_tecncio);
         this.view_table=true;
       default:
         // code...
@@ -281,7 +284,7 @@ export class ActividadesTecnicoComponent implements OnInit {
         result=>{
           this.cantones_exists=true;
           this.num_cantones=result.length;
-          //console.log(result);
+          ////console.log(result);
         }
       );
     }  
@@ -309,16 +312,16 @@ export class ActividadesTecnicoComponent implements OnInit {
             sector.id=element.sector;
             sector.name=element.sector;
             this.myOptions.push(sector);
-            //console.log(this.myOptions);
+            ////console.log(this.myOptions);
           });
-          console.log(result);
+          //console.log(result);
         }
       );
     }
   }
   // camptura sectores
   onChange() {
-    //console.log(this.formSectores.value);
+    ////console.log(this.formSectores.value);
     var actividad=this.actividadSelect;
     //alert(actividad);
     var canton=this.cantonSelect;
@@ -330,21 +333,21 @@ export class ActividadesTecnicoComponent implements OnInit {
       'sector':this.formSectores.value,
     };
     this.cantidad=this.ordenServices.getActivitiesCountSec(data);
-    //console.log(this.formSectores.value.length);
+    ////console.log(this.formSectores.value.length);
     if(this.formSectores.value.length <=0){
       //this.cantidad_exists=false;
       this.num_actividades=0;
     }else{
       this.cantidad.subscribe(
         resultado=>{
-          //console.log(resultado.length);
+          ////console.log(resultado.length);
           this.cantidad_exists=true;
           this.num_actividades=resultado.length;
           
         }
       );
       
-      //console.log("actividades: "+this.cantidad);
+      ////console.log("actividades: "+this.cantidad);
     }
     
   }
@@ -352,7 +355,7 @@ export class ActividadesTecnicoComponent implements OnInit {
     //distribuir actividades tecnico
     buildTask(){
       this.showCargando();
-      //console.log("DISTRIBUIR ACTIVIDADES");
+      ////console.log("DISTRIBUIR ACTIVIDADES");
       
       this.ordenServices.getRecManualesSinProcesar().subscribe(
         resultado=>{
@@ -448,7 +451,7 @@ export class ActividadesTecnicoComponent implements OnInit {
               //
                msj.forEach(element => {
                  array_actividades[cont]=element["id_act"];
-                 //console.log(array_actividades);
+                 ////console.log(array_actividades);
                  cont++;
                });
 
@@ -520,10 +523,10 @@ export class ActividadesTecnicoComponent implements OnInit {
     }
 
   mostrarDistribucionAux(){
-    console.log("MOSTRAR LA DISTRIBUCION ===================");
+    //console.log("MOSTRAR LA DISTRIBUCION ===================");
     this.distribucion = this.tecnicoService.showDistribucion();
     this.distribucion.subscribe(res =>{
-      console.log(res);
+      //console.log(res);
     });
   }
 
@@ -531,10 +534,10 @@ export class ActividadesTecnicoComponent implements OnInit {
 
   eliminarAsignacion(id_tecn, sector, cantidad, tipoAct){
     this.showCargando();
-    //console.log("ELIMINAR LA DISTRIBUCION ===================");
+    ////console.log("ELIMINAR LA DISTRIBUCION ===================");
     this.distribucionDelete = this.tecnicoService.deleteDistribucion(id_tecn, sector, cantidad, tipoAct);
     this.distribucionDelete.subscribe(res =>{
-      //console.log(res);
+      ////console.log(res);
       if(res == true){
         //alert("Asignación eliminada correctamente");
         this.reloadComponent();

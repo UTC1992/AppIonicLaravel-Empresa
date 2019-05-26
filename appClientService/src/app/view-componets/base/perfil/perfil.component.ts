@@ -81,12 +81,12 @@ export class PerfilComponent implements OnInit {
   //editar pass
   onSubmitEditPassword(){
     let pass=this.form_password_edicion.value;
-    console.log(pass);
+    //console.log(pass);
     if(this.form_password_edicion.valid){
       this.perfilService.editarPassword(this.form_password_edicion.value)
       .subscribe(
         res=>{
-          console.log(res);
+          //console.log(res);
           if(res){
             this.showAlert("Éxito!","Contraseña editada con éxito.","success");
             this.loginServie.logout();

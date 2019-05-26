@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.usuario = this.loginForm.value;
-    console.log(this.usuario);
+    //console.log(this.usuario);
     if(this.usuario.username == null || this.usuario.password == null){
       Swal.fire('Alerta!', 'Email o password están vacios!', 'warning');
       return;
@@ -49,11 +49,11 @@ export class LoginComponent implements OnInit {
 
     this.showCargando();
     this.loginService.login(this.usuario).subscribe(response =>{
-      console.log(response);
+      //console.log(response);
 
       //conversion a objeto para acceder a los datos del token
       //let datosToken = JSON.parse(atob(response.access_token.split(".")[1]));
-      //console.log(datosToken);
+      ////console.log(datosToken);
 
       
       this.loginService.guardarToken(response.access_token, response.token_type);
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       this.loginService.getUserDataAutenticate().subscribe(
         res=>{
           if(res){
-            console.log(res);
+            //console.log(res);
             this.loginService.guardarUsuario(res);
             //obtenemos el usuario
             let usuario = this.loginService.usuario;
@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit {
                   localStorage.setItem("empresa",res.empresa);
                   localStorage.setItem("email",res.username);
                   localStorage.setItem("id_emp",res.id_emp);
-                  //console.log("respuesta "+res.username);
+                  ////console.log("respuesta "+res.username);
                   this.router.navigate(['/base']);
                 }else{
                   alert("Su cuenta se encuentra bloqueada, comuníquese con soporte técnico");
@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit {
           }
         },  
         error=>{
-          console.log(error);
+          //console.log(error);
         }
       );
     }

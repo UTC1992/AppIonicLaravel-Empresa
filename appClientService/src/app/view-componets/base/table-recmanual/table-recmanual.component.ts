@@ -39,7 +39,7 @@ export class TableRecmanualComponent implements OnInit {
 	    this.recmanuales =this.ordenService.getRecManual(data);
 	    this.ordenService.getRecManual(data).subscribe(
 	    	data => {
-					console.log(data);
+					//console.log(data);
 					if(!data){
 						this.existenRecManual = false;
 					}
@@ -77,7 +77,7 @@ export class TableRecmanualComponent implements OnInit {
 	    if(this.recmanuales != null && this.view_tableRecmanual==true){
 				this.recmanuales.subscribe(
 	        data=>{
-						console.log(data);
+						//console.log(data);
 						for (var i = 0; i < data.length; ++i) {
 	            datos.push({
 												TECNICO:      data[i]['nombres']+" "+data[i]['apellidos'],

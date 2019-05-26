@@ -51,7 +51,7 @@ export class CortesComponent implements OnInit {
 
   mostrarTecnicos(){
     this.tecnicoService.getAllTecnicos().subscribe(res =>{
-      //console.log(res.length);
+      ////console.log(res.length);
       this.tecnicosPermitidosCortes = 0;
       let contador = 0;
       let teccortes = [];
@@ -62,7 +62,7 @@ export class CortesComponent implements OnInit {
         }
       }
       this.tecnicosPermitidosCortes = contador;
-      console.log(this.tecnicosPermitidosCortes);
+      //console.log(this.tecnicosPermitidosCortes);
       this.dataSource = new MatTableDataSource(teccortes);
       this.dataSource.paginator = this.paginator;
     });
@@ -78,7 +78,7 @@ export class CortesComponent implements OnInit {
     .subscribe(
       resp=>{
         if(resp){
-          console.log(resp);
+          //console.log(resp);
           this.showAlert(
             'Eliminado!',
             'El técnico a sido eliminado.',
@@ -86,7 +86,7 @@ export class CortesComponent implements OnInit {
           )
           this.mostrarTecnicos();   
         } else {
-          console.log(resp);
+          //console.log(resp);
           this.showAlert(
             'Alerta!',
             'El técnico No a sido eliminado.',
@@ -118,9 +118,9 @@ export class CortesComponent implements OnInit {
 
   openModalCreate(template: TemplateRef<any>) {
     this.permisoService.getPlan().subscribe(response =>{
-      //console.log(response);
+      ////console.log(response);
       let datos = response.find(x=>x.id_modulo == 'energy_cr');
-      //console.log(datos['num_tecnicos']);
+      ////console.log(datos['num_tecnicos']);
       if(datos == null){
         this.showAlert('Alerta!', 'No estás suscrito al módulo de cortes.', 'warning');        
       } else {
@@ -163,7 +163,7 @@ export class CortesComponent implements OnInit {
   }
 
   private prepareSave(): any {
-    console.log("APELLIDOS"+this.formData.get('apellidos').value);
+    //console.log("APELLIDOS"+this.formData.get('apellidos').value);
     let input = new FormData();
     input.append('id_tecn', this.formData.get('id').value);
     input.append('nombres', this.formData.get('nombres').value);
@@ -182,18 +182,18 @@ export class CortesComponent implements OnInit {
   }
 
   enviarDatos(){
-    console.log(this.formData.value);
-    console.log("Tipo de accion ==> "+this.tipoAccion);
+    //console.log(this.formData.value);
+    //console.log("Tipo de accion ==> "+this.tipoAccion);
     if(this.tipoAccion == "create"){
       this.tecnicoService.insertTecnico(this.formData.value).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if(response){
-          console.log('Tecnico guardado');
+          //console.log('Tecnico guardado');
           this.mostrarTecnicos();
           this.cerrarModal();
           this.showAlert('Éxito', 'Técnico creado con exito!', 'success');
         } else {
-          console.log('Tecnico no guardado');
+          //console.log('Tecnico no guardado');
           this.showAlert('Alerta!', 'La cédula ya existe!', 'warning');
         }
       });
@@ -202,18 +202,18 @@ export class CortesComponent implements OnInit {
       const formModel = this.prepareSave();
       //this.loading = true;
       this.tecnicoService.updateTecnico(formModel).subscribe( response =>{
-        console.log(response);
+        //console.log(response);
         if(response){
-          console.log('Tecnico editado');
+          //console.log('Tecnico editado');
           this.mostrarTecnicos();
           this.cerrarModal();
           this.showAlert('Éxito', 'Técnico editado con exito!', 'success');
         } else {
-          console.log('Tecnico error al guardar');
+          //console.log('Tecnico error al guardar');
           this.showAlert('Alerta!', 'Técnico no editado', 'warning');
         }
       },error=>{
-        console.log(<any>error)
+        //console.log(<any>error)
       });
     }
   }

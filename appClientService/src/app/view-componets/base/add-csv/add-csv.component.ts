@@ -85,18 +85,18 @@ export class AddCsvComponent implements OnInit {
 
   getFechaBorrar(pickerInput: string): void {
     this.fechaBorrado = pickerInput;
-    //console.log(this.fechaBuscar);
+    ////console.log(this.fechaBuscar);
   }
 
   //metodo envia file al servidor    
   onSubmit(){
     this.showCargando();
     this.permisoPlan.getPlan().subscribe(response =>{
-      //console.log(response);
+      ////console.log(response);
       let datos = response.find(x=>x.id_modulo == 'energy_cr');
-      //console.log(datos['fecha_fin']);
+      ////console.log(datos['fecha_fin']);
       let fecha = new Date();
-      //console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
+      ////console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
       let fechaActual = formatDate(fecha, "yyyy-MM-dd",'en');
       if(fechaActual == datos['fecha_fin']){
         this.showAlert('Suscripción finalizada',"El periodo de suscripción a finalizado, "
@@ -114,7 +114,7 @@ export class AddCsvComponent implements OnInit {
     
         this.ordenService.addCsvFiles(input).subscribe(
           response=>{
-            //console.log(response);
+            ////console.log(response);
             this.uploadResponse = response;
             if(this.uploadResponse.message == '100'){
               this.showAlert('Éxito!',"Archivo subido correctamente",'success');
@@ -128,7 +128,7 @@ export class AddCsvComponent implements OnInit {
     
           },
           error=>{
-            console.log(<any>error);
+            //console.log(<any>error);
             this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
           });
       }
@@ -249,11 +249,11 @@ export class AddCsvComponent implements OnInit {
         result=>{
           if(result){
             if(result == 'yaconsolidado'){
-              console.log(result);
+              //console.log(result);
               this.showAlert("Alerta!",'No se puede eliminar la ruta porque ya ha sido consolidada.',"warning");
               this.reloadTableClient();
             } else {
-              console.log(result);
+              //console.log(result);
               this.showAlert("Éxito!",'Actividades borradas correctamente',"success");
               this.reloadTableClient();
             }

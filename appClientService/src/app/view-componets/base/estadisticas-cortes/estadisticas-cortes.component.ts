@@ -95,9 +95,9 @@ export class EstadisticasCortesComponent implements OnInit {
       'inicio': fechaInicio,
       'fin': fechaFin
     });
-    console.log(data);
+    //console.log(data);
     this.reporteService.getCortesDiarios(data).subscribe(response =>{
-      console.log(response);
+      //console.log(response);
       for(let i = 0; i < response.length; i++){
         this.barChartLabels[i] = response[i].fecha;
         this.barChartData[i].data[0] = response[i].cantidad;
@@ -117,11 +117,11 @@ export class EstadisticasCortesComponent implements OnInit {
 
   // events
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
+    //console.log(event, active);
   }
 
   public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
+    //console.log(event, active);
   }
 
 }

@@ -32,7 +32,7 @@ export class LecturasService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -46,7 +46,7 @@ export class LecturasService {
     return this.http.get<Filtro[]>(this.baseUrl+"/filtros")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -60,7 +60,7 @@ export class LecturasService {
     return this.http.get<Filtro[]>(this.baseUrl+"/data-first")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -81,7 +81,7 @@ export class LecturasService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -102,7 +102,7 @@ export class LecturasService {
           }
   
           if(e.error.mensaje){
-            console.error(e.error.mensaje);
+            //console.error(e.error.mensaje);
           }
           return throwError(e);
         })
@@ -123,7 +123,7 @@ export class LecturasService {
           }
   
           if(e.error.mensaje){
-            console.error(e.error.mensaje);
+            //console.error(e.error.mensaje);
           }
           return throwError(e);
         })

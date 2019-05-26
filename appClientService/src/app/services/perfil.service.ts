@@ -3,20 +3,23 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { Usuario } from '../models/usuario';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerfilService {
-  headers=new Headers();
   
+  url: Url = new Url();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api';
-  baseUrl="http://192.168.1.4:8000/api";
+  baseUrl: string;
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api';
   
-  constructor(private http:HttpClient) {
-    this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
+  constructor(
+    private http:HttpClient,
+    ) {
+      this.baseUrl = this.url.base;
    }
    // edit Company
    editarEmpresa(form:object){
@@ -30,7 +33,7 @@ export class PerfilService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -48,7 +51,7 @@ export class PerfilService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -66,7 +69,7 @@ export class PerfilService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -84,7 +87,7 @@ export class PerfilService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })

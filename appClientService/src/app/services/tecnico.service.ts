@@ -3,20 +3,22 @@ import { Tecnico } from '../models/tecnico';
 import { HttpClient,HttpHeaders} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TecnicoService {
 
-  headers=new Headers();
+  url: Url = new Url();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
-  baseUrl="http://192.168.1.4:8000/api/angular";
+  baseUrl: string;
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
-    private http:HttpClient
+    private http:HttpClient,
     ) {
+      this.baseUrl = this.url.base;
    }
 
   //metodo obtiene todos los tecnicos del servidor
@@ -24,7 +26,7 @@ export class TecnicoService {
     return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -38,7 +40,7 @@ export class TecnicoService {
     return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-cortes")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -52,7 +54,7 @@ export class TecnicoService {
     return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-lecturas")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -64,7 +66,7 @@ export class TecnicoService {
     return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-actividades")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -75,7 +77,7 @@ export class TecnicoService {
     return this.http.get<Tecnico>(this.baseUrl+"/get-tecnico/"+id)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -93,7 +95,7 @@ export class TecnicoService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -111,7 +113,7 @@ export class TecnicoService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -122,7 +124,7 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/delete-tecnico/"+id)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -141,7 +143,7 @@ export class TecnicoService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -153,7 +155,7 @@ export class TecnicoService {
     return this.http.get<any[]>(this.baseUrl+"/actividades-tecnicos")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -164,7 +166,7 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/actividades-tecnico/"+id+"/"+tipo+"/"+sector)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -175,7 +177,7 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/finalizar/"+id)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -186,7 +188,7 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/cambiar-estado/"+id)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -198,7 +200,7 @@ export class TecnicoService {
     return this.http.get<any[]>(this.baseUrl+"/mostrar-distribucion")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -210,7 +212,7 @@ export class TecnicoService {
     return this.http.get(this.baseUrl+"/delete-distribucion/"+id_tecn+"/"+sector+"/"+cantidad+"/"+tipo)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -227,7 +229,7 @@ export class TecnicoService {
     return this.http.get<Tecnico[]>(this.baseUrl+"/tecnicos-sin-lecturas")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })

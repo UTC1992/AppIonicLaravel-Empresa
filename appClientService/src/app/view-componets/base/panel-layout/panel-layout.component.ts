@@ -20,6 +20,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import Swal from 'sweetalert2';
+import { Url } from '../../../models/Url';
 
 export const MY_FORMATS = {
   parse: {
@@ -45,9 +46,10 @@ export const MY_FORMATS = {
 })
 
 export class PanelLayoutComponent implements OnInit {
+  url:Url= new Url();
   //url_export='http://pruebas.tiendanaturalecuador.online/api/export';
   //url_export='http://gestiondcyk.tecnosolutionscorp.com/api/export';
-  url_export='http://192.168.1.4:8000/api/export';
+  url_export=this.url.baseDescargaExcel;
   //url_export='http://pruebascortes.tecnosolutionscorp.com/api/export';
   
   @ViewChild(TableRecmanualComponent) tablaRecManual: TableRecmanualComponent;
@@ -122,17 +124,17 @@ export class PanelLayoutComponent implements OnInit {
 
   getFecha(pickerInput: string): void {
     this.fechaBuscar = pickerInput;
-    console.log(this.fechaBuscar);
+    //console.log(this.fechaBuscar);
   }
   
   getFechaConsolidar(pickerInput: string): void {
     this.fechaConsolidar = pickerInput;
-    console.log(this.fechaConsolidar);
+    //console.log(this.fechaConsolidar);
   }
 
   getFechaEnvios(pickerInput: string): void {
     this.fechaEnvio = pickerInput;
-    console.log(this.fechaEnvio);
+    //console.log(this.fechaEnvio);
   }
 
   getErrorMessage(pickerInput: string): string {
@@ -144,7 +146,7 @@ export class PanelLayoutComponent implements OnInit {
 
   exportarExcelActividades(){
     if(this.fechaBuscar != null){
-      console.log(this.fechaBuscar);
+      //console.log(this.fechaBuscar);
       var date = this.fechaBuscar;
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
@@ -167,7 +169,7 @@ export class PanelLayoutComponent implements OnInit {
 
   //consolidar actividades diarias
   consolodarActividades(){
-    //console.log("fecha de consolidado ==> " + date);
+    ////console.log("fecha de consolidado ==> " + date);
     if(this.fechaConsolidar != null){
       this.showCargando();
       var date = this.fechaConsolidar;
@@ -176,7 +178,7 @@ export class PanelLayoutComponent implements OnInit {
       //this.loading=true;
       this.ordenService.consolidarActividades(fecha).subscribe(
         result=>{
-          console.log(result);
+          //console.log(result);
           if(result){
             this.fecha_consolidado=fecha;
             this.id_emp=this.loginService.usuario.id_emp;
@@ -206,7 +208,7 @@ export class PanelLayoutComponent implements OnInit {
     var date = document.getElementsByName("fecha")[0]["value"]+"";
     var vector = date.split("-");
     var nombre_consolidado=vector[2]+"-"+vector[1]+"-"+vector[0]+"_Consolidado"
-    //console.log("fecha de consolidado ==> " + nombre_consolidado);
+    ////console.log("fecha de consolidado ==> " + nombre_consolidado);
     this.ordenService.obtenerCosolidadosDelDia(date).subscribe(
       result=>{
         //this.loading = false;
@@ -251,7 +253,7 @@ export class PanelLayoutComponent implements OnInit {
       var tecnico = this.tecnicoBuscar;
       var actividad = this.actividadBuscar;
       var estado = this.estadoBuscar;
-      console.log(fecha);
+      //console.log(fecha);
       let dataActividades:any[] = [];
       dataActividades.push({
         'fecha':fecha,
@@ -260,7 +262,7 @@ export class PanelLayoutComponent implements OnInit {
         'estado':estado
       });
       this.tablaActividades.cargarDatos(dataActividades);
-      console.log(dataActividades);
+      //console.log(dataActividades);
     }else{
       this.showAlert("Alerta!", "Debe elegir una fecha para mostrar los datos.", "warning");
     }
@@ -284,7 +286,7 @@ export class PanelLayoutComponent implements OnInit {
         this.recmanualesExcel=true;
         this.actividadesExcel = false;
         this.tablaRecManual.cargarDatos(dataRecManual);
-        console.log(dataRecManual);
+        //console.log(dataRecManual);
     }
 
     }else{
@@ -298,7 +300,7 @@ export class PanelLayoutComponent implements OnInit {
       var date = this.fechaEnvio;
       var vector = date.split("-");
       var fecha=vector[2]+"-"+vector[1]+"-"+vector[0];
-      console.log(fecha);
+      //console.log(fecha);
       if(fecha){
         this.tablaEnvios.cargarDatos(fecha);
       }

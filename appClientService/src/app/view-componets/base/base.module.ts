@@ -30,10 +30,8 @@ import { MatInputModule } from '@angular/material/input';
 
 //componentes
 import { PanelLayoutComponent } from './panel-layout/panel-layout.component';
-import { NavClientComponent } from './nav-client/nav-client.component';
 import { TableClientComponent } from './table-client/table-client.component';
 import { AddCsvComponent } from './add-csv/add-csv.component';
-import { FormTecnicoComponent } from './form-tecnico/form-tecnico.component';
 import { ActividadesTecnicoComponent } from './actividades-tecnico/actividades-tecnico.component';
 import { FooterComponent } from './footer/footer.component'; 
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -91,10 +89,8 @@ import { TableEnviosComponent } from './table-envios/table-envios.component';
   ],
   declarations: [
     PanelLayoutComponent,
-    NavClientComponent,
     TableClientComponent,
     AddCsvComponent,
-    FormTecnicoComponent,
     ActividadesTecnicoComponent,
     FooterComponent,
     NotFoundComponent,

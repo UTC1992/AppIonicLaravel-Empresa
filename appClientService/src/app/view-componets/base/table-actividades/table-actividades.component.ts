@@ -39,7 +39,7 @@ export class TableActividadesComponent implements OnInit {
   }
   
   cargarDatos(data){
-    console.log(data[0]['fecha']);
+    //console.log(data[0]['fecha']);
     this.fechaNombreExcel = data[0]['fecha'];
     this.ordenes=this.ordenService.getActivitiesToDay(data[0]['fecha'],
                                                       data[0]['id_tecn'],
@@ -47,7 +47,7 @@ export class TableActividadesComponent implements OnInit {
                                                       data[0]['estado']);
       this.ordenes.subscribe(
         data=>{
-          //console.log(data);
+          ////console.log(data);
           this.dataSource2 = new MatTableDataSource(data);
           this.dataSource2.paginator = this.paginator2;
           //setTimeout(() => this.dataSource2.paginator = this.paginator2)
@@ -98,7 +98,7 @@ export class TableActividadesComponent implements OnInit {
                         CUCOOE:       data[i]['cucooe']
                       });
             }
-            console.log(data);
+            //console.log(data);
             this.excelService.exportAsExcelFile(datos,fecha+'_Actividades');
             
           });

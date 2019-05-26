@@ -2,20 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportesCortes {
 
-  headers=new Headers();
+  url: Url = new Url();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
-  baseUrl="http://192.168.1.4:8000/api";
+  baseUrl: string;
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
-      private http:HttpClient
+    private http:HttpClient,
     ) {
+      this.baseUrl = this.url.baseReportes;
    }
 
    //metodo edita y actualiza el técnico
@@ -30,7 +32,7 @@ export class ReportesCortes {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -41,7 +43,7 @@ export class ReportesCortes {
     return this.http.get<any>(this.baseUrl+"/reportes/productividad-tecnico/"+fecha)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })

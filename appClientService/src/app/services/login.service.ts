@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { Token } from '../models/token';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +14,17 @@ export class LoginService {
   private _usuario: Usuario;
   private _token: string;
 
+  url: Url = new Url();
+
   //baseUrl='http://pruebas.tiendanaturalecuador.online/';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
-  baseUrl='http://192.168.1.4:8000/';
+  baseUrl: string;
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
   constructor(
-    private http:HttpClient
-  ) { 
-    
-  }
+    private http:HttpClient,
+    ) {
+      this.baseUrl = this.url.baseLogin;
+   }
 
   public get usuario(): Usuario{
     if(this._usuario != null){
@@ -87,7 +90,7 @@ export class LoginService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -100,7 +103,7 @@ export class LoginService {
     return this.http.get<Usuario>(this.baseUrl +'api/usuarioAutenticado')
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -114,7 +117,7 @@ export class LoginService {
     return this.http.get<Usuario>(this.baseUrl +'api/empresaActiva')
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })

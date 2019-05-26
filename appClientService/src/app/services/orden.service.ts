@@ -3,26 +3,29 @@ import { Orden } from '../models/orden';
 import { HttpClient,HttpHeaders, HttpEvent, HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdenService {
-  headers=new Headers();
   
+  url: Url = new Url();
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
-  baseUrl='http://192.168.1.4:8000/api/angular';
+  baseUrl: string;
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
-  constructor(private http:HttpClient) {
-    this.headers.append('Authorization','Bearer '+localStorage.getItem("token"));
+  constructor(
+    private http:HttpClient,
+    ) {
+    this.baseUrl = this.url.base;
    }
 
   getOrdenes():Observable<Orden[]>{
     return this.http.get<Orden[]>(this.baseUrl+"/ordenes")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -53,7 +56,7 @@ export class OrdenService {
           }
   
           if(e.error.mensaje){
-            console.error(e.error.mensaje);
+            //console.error(e.error.mensaje);
           }
           return throwError(e);
         })
@@ -64,7 +67,7 @@ export class OrdenService {
     return this.http.get<Orden[]>(this.baseUrl+"/actividades-fecha/"+fecha+"/"+tecnico+"/"+actividad+"/"+estado)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -75,7 +78,7 @@ export class OrdenService {
     return this.http.get<Orden[]>(this.baseUrl+"/cantones/"+tipo)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -86,7 +89,7 @@ export class OrdenService {
     return this.http.get<Orden[]>(this.baseUrl+"/sectores/"+tipo+"/"+canton)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -104,7 +107,7 @@ export class OrdenService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -115,7 +118,7 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/validar-rec")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -126,7 +129,7 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/cont-rec")
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -137,7 +140,7 @@ export class OrdenService {
     return this.http.get(this.baseUrl+"/consolidar-actividades/"+date)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -148,7 +151,7 @@ export class OrdenService {
     return this.http.get<Orden[]>(this.baseUrl+"/actividades-consolidadas/"+date)
     .pipe(catchError( e => {
       if(e.error.mensaje){
-        console.error(e.error.mensaje);
+        //console.error(e.error.mensaje);
       }
       return throwError(e);
     })
@@ -166,7 +169,7 @@ export class OrdenService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })
@@ -184,7 +187,7 @@ export class OrdenService {
         }
 
         if(e.error.mensaje){
-          console.error(e.error.mensaje);
+          //console.error(e.error.mensaje);
         }
         return throwError(e);
       })

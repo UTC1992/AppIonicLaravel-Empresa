@@ -30,7 +30,7 @@ export class TableEnviosComponent implements OnInit {
 
   cargarDatos(fecha: string){
     this.reporteService.getEnviosTecnicos(fecha).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       
