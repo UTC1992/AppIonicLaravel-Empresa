@@ -114,18 +114,10 @@ export class AddCsvComponent implements OnInit {
     
         this.ordenService.addCsvFiles(input).subscribe(
           response=>{
-            ////console.log(response);
-            this.uploadResponse = response;
-            if(this.uploadResponse.message == '100'){
+            //console.log(response);
               this.showAlert('Éxito!',"Archivo subido correctamente",'success');
               this.clearFile();
               this.reloadTableClient();
-              this.progresoMostrar = true;
-            }
-            if(this.uploadResponse.message != '100'){
-              this.progresoMostrar = false;
-            }
-    
           },
           error=>{
             //console.log(<any>error);
@@ -217,6 +209,8 @@ export class AddCsvComponent implements OnInit {
         title: 'Alerta de ¡Borrado!',
         html: '<p>¿ Deseas borrar las actividades subidas en la fecha seleccionada ? <br>'
               +'Se eliminarán las asignaciones realizadas a los técnicos.<br>'
+              +'Se eliminarán los envios realizados por los técnicos.<br>'
+              +'NO se borraran las actividades que ya fueron consolidadas.<br>'
               +'Recuerda que el borrado es permanente.</p>',
         type: 'warning',
         showCancelButton: true,
@@ -230,7 +224,7 @@ export class AddCsvComponent implements OnInit {
         }
       });
     } else {
-      this.showAlert("Info","Elija la fecha en que subio los datos.","info");
+      this.showAlert("Info","Elija la fecha en que subio los datos.","warning");
     }
     
   }
@@ -247,8 +241,12 @@ export class AddCsvComponent implements OnInit {
       }
       this.ordenService.deleteActivities(data).subscribe(
         result=>{
+          //console.log(result);
           if(result){
-            if(result == 'yaconsolidado'){
+            this.showAlert("Éxito!",'Actividades borradas correctamente',"success");
+            this.reloadTableClient();
+            //console.log(result);
+            /*if(result == 'yaconsolidado'){
               //console.log(result);
               this.showAlert("Alerta!",'No se puede eliminar la ruta porque ya ha sido consolidada.',"warning");
               this.reloadTableClient();
@@ -256,7 +254,7 @@ export class AddCsvComponent implements OnInit {
               //console.log(result);
               this.showAlert("Éxito!",'Actividades borradas correctamente',"success");
               this.reloadTableClient();
-            }
+            }*/
             
           }else{
             this.showAlert("Alerta!",'No existen resgistros en esa fecha para borrarlos.',"warning");

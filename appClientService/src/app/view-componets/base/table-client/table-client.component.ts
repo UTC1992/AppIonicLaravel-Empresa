@@ -17,7 +17,7 @@ export class TableClientComponent implements OnInit {
   ordenes:Orden[]; 
 
   displayedColumns: string[] = ['index', 'actividad', 
-  'cuenta', 'sector', 'ruta', 'medidor','usuario', 'referencia'];
+  'cuenta', 'sector', 'ruta', 'medidor','usuario', 'referencia', 'fechasubida'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

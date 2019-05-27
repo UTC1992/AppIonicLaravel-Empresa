@@ -1,19 +1,14 @@
 <mat-card>
     <mat-tab-group mat-align-tabs="start">
         <mat-tab label="Subir Archivo">
-          <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">
             <app-add-csv>
             </app-add-csv>
-          </cdk-virtual-scroll-viewport>
         </mat-tab>
         <mat-tab label="Distribuir actividades">
-          <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">
             <app-actividades-tecnico>
             </app-actividades-tecnico>
-          </cdk-virtual-scroll-viewport>
         </mat-tab>
         <mat-tab label="Consultas">
-          <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">
             <br>
             <div class="card" style="margin-bottom: 10px;">
               <div class="card-body" >
@@ -26,7 +21,7 @@
                       Expandir para consultar actividades
                     </mat-expansion-panel-header>
                     <div class="row">
-                      <div class="col col-lg-2">
+                      <div class="col col-lg-3">
                           <div class="input-formulario">
                             <mat-form-field>
                               <input matInput #pickerInput1 [matDatepicker]="picker" 
@@ -48,7 +43,7 @@
                               </mat-form-field>
                           </div>
                       </div>
-                      <div class="col col-lg-2">
+                      <div class="col col-lg-3">
                           <div class="input-formulario">
                               <mat-form-field>
                                   <mat-select matNativeControl placeholder="Actitividad" 
@@ -62,7 +57,7 @@
                               </mat-form-field>
                           </div>
                       </div>
-                      <div class="col col-lg-2">
+                      <div class="col col-lg-3">
                           <div class="input-formulario">
                               <mat-form-field>
                                   <mat-select matNativeControl placeholder="Estado" 
@@ -143,10 +138,8 @@
                 </nat-accordion>
               </div>
             </div>
-          </cdk-virtual-scroll-viewport>
         </mat-tab>
         <mat-tab label="Consolidado">
-          <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">
             <br>
             <div class="card">
               <div class="card-body">
@@ -196,7 +189,6 @@
                 </div>
               </div>
             </div>
-          </cdk-virtual-scroll-viewport>
         </mat-tab>
     <!--<mat-tab label="Estadísticas">
           <app-estadisticas-cortes>
