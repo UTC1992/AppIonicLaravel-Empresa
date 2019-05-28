@@ -29,7 +29,6 @@ class MobileController extends Controller
                         ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
                         ->where($tablaLecturasCompany.'.estado', 1)
                         ->where('orden_trabajo.id_tecnico', $idTecnico)
-                        ->limit(50)
                         ->get();
 
         return response()->json($rutas);

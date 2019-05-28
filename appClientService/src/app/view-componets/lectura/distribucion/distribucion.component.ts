@@ -239,6 +239,7 @@ export class DistribucionComponent implements OnInit {
     if(this.agenciaValidar && this.sectorValidar 
       && this.rutaValidar && this.listTecnicosSeleccionados.length == 1){
       this.showCargando();
+      console.log(this.listTecnicosSeleccionados[0].value);
       let data={
         'lecturas':this.idsLecturas,
         'idTecnico':this.listTecnicosSeleccionados[0].value,
@@ -247,7 +248,7 @@ export class DistribucionComponent implements OnInit {
         result=>{
           console.log(result);
           if(result){
-            this.getTenicosLecturas();
+            //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');
           } else {
             this.showAlert('Alerta!', 'No se pudo asignar la ruta', 'warning');
