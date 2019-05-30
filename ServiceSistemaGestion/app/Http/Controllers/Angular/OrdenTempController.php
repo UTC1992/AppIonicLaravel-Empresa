@@ -163,6 +163,7 @@ class OrdenTempController extends Controller
              $actividadArray[$con]['estado']= false;
              $actividadArray[$con]['created_at']=date('Y-m-d H:i:s');
              $actividadArray[$con]['referencia']="sin asignar";
+             $actividadArray[$con]['consolidado']=0;
              if(($value->cucooe!="0" && $value->cucoon!="0") && (!is_null($value->cucooe) && !is_null($value->cucoon))){
                $cordCucoon=$value->cucoon;
                $corCucooe=$value->cucooe;

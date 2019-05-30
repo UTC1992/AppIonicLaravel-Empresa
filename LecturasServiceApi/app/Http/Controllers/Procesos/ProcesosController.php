@@ -71,10 +71,26 @@ class ProcesosController extends Controller
                     $tabla= $value->value;
                   }
                 }
+
+                  if(($data["este"]!="0" && $data["norte"]!="0") && (!is_null($data["este"]) && !is_null($data["norte"]))){
+                    $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
+                    $longitud=round($coordenadas["lon"],6);
+                    $latitud=round($coordenadas["lat"],7);
+                     if($this->validarCoordenada($latitud) && $this->validarCoordenada($longitud)){
+                       if(strlen($latitud)<=11 && strlen($longitud)<=10){
+                         $data["longitud"]=$longitud;
+                         $data["latitud"]=$latitud;
+                       }else{
+                         $data["longitud"]=0;
+                         $data["latitud"]=0;
+                       }
+                    }
+                  }else{
+                    $data["longitud"]=0;
+                    $data["latitud"]=0;
+                  }
                 //echo(" data : ".$data["este"]);
-                $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
-                $data["longitud"]=round($coordenadas["lon"],6);
-                $data["latitud"]=round($coordenadas["lat"],7);
+
                 $data["idEmpresa"]=$request->id;
                 $data["estado"]=false;
                 $data["created_at"]=date('Y-m-d H:i:s');
@@ -254,6 +270,7 @@ class ProcesosController extends Controller
     public function downloadFileConsolidado(Request $request){
 
     }
+
 
     /**
      * generar location latitud y longitud
@@ -441,15 +458,8 @@ class ProcesosController extends Controller
 public function actualizarOrdenTrabajo()
 {
   try {
-    $decobo_temp1=DB::table('decobo')
-                  ->limit(3000)
-                  ->orderByRaw('id asc')
-                  ->get();
+    $decobo_temp1=DB::table('decobo')->get();
     $cont=0;
-    $cont_nuew=0;
-    $cont_null=0;
-    $array=array();
-
     foreach ($decobo_temp1 as $key => $value) {
         $data=array();
         $data['zona']=$value->zona;
@@ -458,52 +468,44 @@ public function actualizarOrdenTrabajo()
         $data['ruta']=$value->ruta;
         $data['cuenta']=$value->cuenta;
         $data['medidor']=$value->medidor;
+        $data['campo_a']=$value->campo_a;
+        $data['campo_n']=$value->campo_n;
         $data['lectura']=$value->lectura;
+        $data['campo_0']=$value->campo_0;
+        $data['secuencia']=$value->columna2;
+        $data['columna2']=$value->campo_n;
+        $data['fechaultimalec']=$value->fechaultimalec;
+        $data['equipo']=$value->equipo;
+        $data['lector']=$value->lector;
+        $data['esferas']=$value->esferas;
+        $data['tarifa']=$value->tarifa;
+        $data['nombre']=$value->nombre;
+        $data['direccion']=$value->direccion;
+        $data['campo10']=$value->campo10;
+        $data['columna4']=$value->columna4;
+        $data['este']=$value->este;
+        $data['norte']=$value->norte;
+        $data['estado']=$value->estado;
+        $data['longitud']=$value->longitud;
+        $data['latitud']=$value->latitud;
+        $data['idEmpresa']=$value->idEmpresa;
+        $data['mes']=$value->mes;
         $res=DB::table('decobo_orden_temp')
                  ->where('medidor',$value->medidor)->first();
         if($res){
             if(is_null($res->lectura) || $res->lectura==''){
               DB::table('decobo_orden_temp')
-                  ->updateOrInsert(
-                      ['medidor' =>$value->medidor],
-                      ['lectura'=>$value->lectura]
-                  );
-              $cont_null++;
+                  ->where('medidor',$value->medidor)
+                  ->update($data);
             }
-            $cont++;
         }else{
           DB::table('decobo_orden_temp')->insert($data);
-          $cont_nuew++;
         }
-        //$array[$cont]=$res;
-
-        /*
-        DB::table('decobo_orden_temp')
-            ->updateOrInsert(
-                ['medidor' => ''.$value->medidor.''],
-                $data
-            );
-    /*
-          //$result = DB::table('decobo_orden_temp')->where('medidor',''.$value->medidor.'')->whereNull('lectura')->exists();
-        if(DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->exists()){
-        //$result = DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->where('lectura',null)->get();
-            //DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura]);
-            DB::table('decobo_orden_temp')->where('id','!=',0)->where('medidor',$value->medidor)->update(['lectura'=>''.$value->lectura.'']);
-
-              $cont++;
-
-
-        }else{
-          //$cont++;
-          //DB::table('decobo_orden_temp')->create($value->all());
-        }*/
-
+        $cont++;
     }
+
     $dataRe=array();
-    $dataRe["encontrados"]=$cont;
-    $dataRe["nuevo"]=$cont_nuew;
-    $dataRe['actualizado']=$cont_null;
-    //$dataRe["data"]=$array;
+    $dataRe["total procesados"]=$cont;
     return response()->json($dataRe);
   } catch (\Exception $e) {
     return response()->json("error: ".$e);

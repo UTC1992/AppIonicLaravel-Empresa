@@ -12,7 +12,7 @@ export class PermisosService {
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
   private baseUrl="http://localhost:8000/api";
-  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
+  //baseUrl='http://pruebascortes.tecnhttp://localhost:8000osolutionscorp.com/api/angular';
   constructor(
     private http:HttpClient
     ) {

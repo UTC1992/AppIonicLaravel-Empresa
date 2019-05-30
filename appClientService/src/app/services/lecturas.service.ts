@@ -12,8 +12,9 @@ export class LecturasService {
   
   //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
-  baseUrl='http://localhost:8000/api/angular';
+  //baseUrl='http://localhost:8000/api/angular';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
+   baseUrl='http://localhost:8000/api/angular';
   constructor(
     private http:HttpClient,
     private route: Router,
