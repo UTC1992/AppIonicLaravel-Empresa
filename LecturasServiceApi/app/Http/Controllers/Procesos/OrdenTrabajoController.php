@@ -149,4 +149,6 @@ class OrdenTrabajoController extends Controller
 
   }
 
+
+
 }

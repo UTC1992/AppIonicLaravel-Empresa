@@ -13,7 +13,7 @@ class Catastros extends Model
     protected $table="catastros";
     protected $primaryKey = 'idcatastro';
     protected $fillable = [
-        'estado','fecha','idEmpresa','medidor','observacion','lectura','latitud','longitud','id_tecnico'
+        'estado','fecha','idEmpresa','medidor','observacion','lectura','latitud','longitud','id_tecnico','hora','foto','estado','mes'
     ];
 
     protected $hidden = [

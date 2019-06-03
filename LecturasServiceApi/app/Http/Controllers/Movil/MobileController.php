@@ -152,9 +152,25 @@ class MobileController extends Controller
    */
   public function insertCatastros(Request $request){
     try {
-      $input= $request->all();
-      $res= Catastros::create($input);
-      return $this->ApiResponser($res);
+      if($request){
+
+        $catastro= new Catastros();
+        $catastro->idEmpresa=$request->idEmpresa;
+        $catastro->medidor=$request->medidor;
+        $catastro->observacion=$request->observacion;
+        $catastro->lectura=$request->lectura;
+        $catastro->fecha=$request->fecha;
+        $catastro->latitud=$request->latitud;
+        $catastro->longitud=$request->longitud;
+        $catastro->longitud=$request->longitud;
+        $catastro->estado=0;
+        $catastro->id_tecnico=$request->id_tecnico;
+        $catastro->hora=$request->hora;
+        $catastro->foto=$request->foto;
+        $res=$catastro->save();
+        return $this->ApiResponser($res);
+      }
+
     } catch (\Exception $e) {
         return response()->json("error: ".$e);
     }

@@ -126,6 +126,7 @@ class LecturasController extends Controller
        }
 
      }
+
      // obtener id empresa de usuario autenticado
      private function getIdEmpUserAuth(){
        try {
@@ -148,7 +149,58 @@ class LecturasController extends Controller
         } catch (\Exception $e) {
           return response()->json("Error :".$e);
         }
-
       }
+
+    /**
+     * servicio de proceso de catastros decobo
+     */
+    public function procesarCatastros(){
+      try {
+        $ID_EMP=$this->getIdEmpUserAuth();
+        $result=$this->lecturasService->procesarCatastrosService();
+        return response($result)->header('Content-Type', 'applicationIjson');
+      } catch (\Exception $e) {
+          return response()->json("Error :".$e);
+      }
+
+    }
+/**
+ *Proesar de orden temporal con nuevo archivo
+ */
+    public function procesarActualizarOrdenTemporal(){
+      try {
+        $ID_EMP=$this->getIdEmpUserAuth();
+        $result=$this->lecturasService->procesarOrdenTemporalService();
+        return response($result)->header('Content-Type', 'applicationIjson');
+      } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+      }
+    }
+
+/**
+ *gaudar historial de lecturas
+ */
+  public function guardarHistorial(){
+    try {
+      $ID_EMP=$this->getIdEmpUserAuth();
+      $result=$this->lecturasService->guardarHistorialService();
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+  }
+
+/**
+ *servicio generar orden de trabajo temporal
+ */
+  public function generarOrdenTrabajo($mes){
+    try {
+      $ID_EMP=$this->getIdEmpUserAuth();
+      $result=$this->lecturasService->generarOrdenTempService($mes);
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+  }
 
 }

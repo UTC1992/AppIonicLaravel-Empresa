@@ -68,8 +68,14 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('data-distribution','Gateway\Lecturas\LecturasController@getDataDistribution');
     Route::post('distribution','Gateway\Lecturas\LecturasController@distribuirRuta');
     Route::get('orden-trabajo','Gateway\Lecturas\LecturasController@getOrdenTrabajoTecnicosLecturas');
+    Route::get('catastros/proceso','Gateway\Lecturas\LecturasController@procesarCatastros');
+    Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
+    Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
+    Route::get('procesos/orden-trabajo/{mes}','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
 
 
+
+    // ibservaciones
     Route::get('observaciones','AuthApi\PermisosController@getObservacionesEmpresa');
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');

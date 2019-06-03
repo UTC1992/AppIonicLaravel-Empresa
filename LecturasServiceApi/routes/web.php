@@ -40,8 +40,13 @@ $router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTra
 $router->post('/upload','Procesos\ProcesosController@carga');
 
 
-
-
+/**
+ * rutas de procesos
+ */
+$router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros');
+$router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
+$router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
+$router->get('/procesos/oden-temp/{mes}','Procesos\ProcesosController@generarOrdenTemp');
 
 /**
  * rutas de app móvil
