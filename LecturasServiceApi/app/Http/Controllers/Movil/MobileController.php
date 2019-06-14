@@ -54,12 +54,15 @@ class MobileController extends Controller
         foreach ($data as $key => $value) {
           // code...
           // data lecturas
-          $dataProcArray=array();
-          $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
-          $dataProcArray["estado"]=$value["estado"];
-          DB::table($tablaLecturasCompany)
+          if($value["estado"]==2){
+            $dataProcArray=array();
+            $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+            $dataProcArray["estado"]=$value["estado"];
+            DB::table($tablaLecturasCompany)
                  ->where('id',$value["id"])
                  ->update($dataProcArray);
+          }
+          
           //orden trabajo
           $dataOrdenTrabajo=array();
           $dataOrdenTrabajo["fecha_lectura"]=$value["fechatarea"];
