@@ -14,7 +14,7 @@ export class LecturasService {
   //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
   //baseUrl='http://localhost:8000/api/angular';
   //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
-   baseUrl='http://localhost:8000/api/angular';
+   baseUrl='http://192.168.38.2:8000/api/angular';
   constructor(
     private http:HttpClient,
     private route: Router,

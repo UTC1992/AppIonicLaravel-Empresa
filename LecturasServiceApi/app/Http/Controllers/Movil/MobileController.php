@@ -29,7 +29,6 @@ class MobileController extends Controller
                         ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
                         ->where($tablaLecturasCompany.'.estado', 1)
                         ->where('orden_trabajo.id_tecnico', $idTecnico)
-                        ->limit(50)
                         ->get();
 
         return response()->json($rutas);
@@ -44,47 +43,58 @@ class MobileController extends Controller
      */
     public function recibirLecturas(Request $request){
       try {
-        //$input=$request->json()->all();
-        $data=$request->listTareas;
-        $idEmpresa=$request->id_emp;
-        $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+     //$input=$request->json()->all();
 
-        $cont=0;
-        foreach ($data as $key => $value) {
-          // data lecturas
-          $dataProcArray=array();
-          $dataProcArray["nueva_lectura"]="886";
-          $dataProcArray["estado"]="2";//$value["estado"];
-          DB::table($tablaLecturasCompany)
-                 ->where('id',$value["id"])
-                 ->update($dataProcArray);
-          //orden trabajo
-          $dataOrdenTrabajo=array();
-          $dataOrdenTrabajo["fecha_lectura"]="123";//$value["fechatarea"];
-          $dataOrdenTrabajo["hora"]="12344";//$value["hora"];
-          $dataOrdenTrabajo["lat"]=$value["latitud"];
-          $dataOrdenTrabajo["lon"]=$value["longitud"];
-          $dataOrdenTrabajo["observacion"]="observacion de prueba";
-          $dataOrdenTrabajo["foto"]="foto";
-          $dataOrdenTrabajo["estado"]=1;
-          DB::table('orden_trabajo')
-                 ->where('id_lectura',$value["id"])
-                 ->update($dataOrdenTrabajo);
-          $cont++;
-        }
-        $data= array();
-        if($cont>0){
-          $data["mensaje"]="Lecturas recibidas correctamente";
-          $data["cantidad"]=$cont;
-          $data["status"]=true;
-        }else{
-          $data["mensaje"]="Ocurrio un error al actualizar registros";
-          $data["status"]=false;
-        }
-        return response()->json($data);
-      } catch (\Exception $e) {
-        return response()->json("error: ".$e);
-      }
+     //$input=$request->json()->all();
+     $data=json_decode($request->listTareas, true);
+     $idEmpresa=$request->id_emp;
+     $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+
+     $cont=0;
+     foreach ($data as $key => $value) {
+       // code...
+       // data lecturas
+       if($value["estado"]==2){
+         $dataProcArray=array();
+         $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+         $dataProcArray["estado"]=$value["estado"];
+         DB::table($tablaLecturasCompany)
+              ->where('id',$value["id"])
+              ->update($dataProcArray);
+       }
+
+       //orden trabajo
+       $dataOrdenTrabajo=array();
+       $dataOrdenTrabajo["fecha_lectura"]=$value["fechatarea"];
+       $dataOrdenTrabajo["hora"]=$value["hora"];
+       $dataOrdenTrabajo["lat"]=$value["lat_lectura"];
+       $dataOrdenTrabajo["lon"]=$value["lon_lectura"];
+       $dataOrdenTrabajo["observacion"]=$value["observacion"];;
+       $dataOrdenTrabajo["foto"]=$value["foto"];
+
+       if($value["estado"]!=0){
+         $dataOrdenTrabajo["estado"]=$value["estado"];
+       }
+
+       DB::table('orden_trabajo')
+              ->where('id_lectura',$value["id"])
+              ->update($dataOrdenTrabajo);
+       $cont++;
+     }
+
+     if($cont>0){
+       $data["mensaje"]="Lecturas recibidas correctamente";
+       $data["cantidad"]=$cont;
+       $data["status"]=true;
+     }else{
+       $data["mensaje"]="Ocurrio un error al actualizar registros";
+       $data["status"]=false;
+     }
+
+     return response()->json($data);
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
 
     }
 
@@ -152,24 +162,41 @@ class MobileController extends Controller
    */
   public function insertCatastros(Request $request){
     try {
-      if($request){
 
-        $catastro= new Catastros();
-        $catastro->idEmpresa=$request->idEmpresa;
-        $catastro->medidor=$request->medidor;
-        $catastro->observacion=$request->observacion;
-        $catastro->lectura=$request->lectura;
-        $catastro->fecha=$request->fecha;
-        $catastro->latitud=$request->latitud;
-        $catastro->longitud=$request->longitud;
-        $catastro->longitud=$request->longitud;
-        $catastro->estado=0;
-        $catastro->id_tecnico=$request->id_tecnico;
-        $catastro->hora=$request->hora;
-        $catastro->foto=$request->foto;
-        $res=$catastro->save();
+
+        $data= $request->json()->all();
+        $dataInsert= array();
+        $contador=0;
+        foreach ($data as $key => $value) {
+          $result=DB::table("catastros")->where("mes",$value["mes"])->where("medidor",$value["medidor"])->exists();
+          if(!$result){
+            $dataInsert[$contador]["idEmpresa"]=$value["idEmpresa"];
+            $dataInsert[$contador]["medidor"]=$value["medidor"];
+            $dataInsert[$contador]["observacion"]=$value["observacion"];
+            $dataInsert[$contador]["lectura"]=$value["lectura"];
+            $dataInsert[$contador]["fecha"]=$value["fecha"];
+            $dataInsert[$contador]["latitud"]=$value["latitud"];
+            $dataInsert[$contador]["longitud"]=$value["longitud"];
+            $dataInsert[$contador]["estado"]=0;
+            $dataInsert[$contador]["id_tecnico"]=$value["id_tecnico"];
+            $dataInsert[$contador]["hora"]=$value["hora"];
+            $dataInsert[$contador]["foto"]=$value["foto"];
+            $dataInsert[$contador]["mes"]=$value["mes"];
+            if($contador==1200){
+              DB::table("catastros")->insert($dataInsert);
+              $contador=0;
+              $dataInsert=array();
+            }
+            $contador++;
+          }
+        }
+        if($contador>0){
+          DB::table("catastros")->insert($dataInsert);
+        }
+
+        $res=true;
         return $this->ApiResponser($res);
-      }
+
 
     } catch (\Exception $e) {
         return response()->json("error: ".$e);

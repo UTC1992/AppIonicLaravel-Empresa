@@ -126,39 +126,35 @@ class ActividadDiariaController extends Controller
       try {
 
         $actividad=new ActividadDiaria();
-        $result=$actividad->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('n9cono','=','040')->get();
-        $reconexion=new ReconexionManual();
-        $result_rec=$reconexion->where('estado',0)->where('id_emp',$this->getIdEmpUserAuth())->get();
+        $ID_EMP=$this->getIdEmpUserAuth();
+        $result=$actividad->where('estado',0)->where('id_emp',$ID_EMP)->where('n9cono','=','040')->get();
         foreach ($result as $key => $value) {
-          foreach ($result_rec as $key => $value_rec) {
-              if($value->n9meco==$value_rec->medidor){
-                  $act=ActividadDiaria::find($value->id_act);
-                  if($value_rec->observacion=='Sin novedad'){
-                    $act->n9leco=$value_rec->lectura;
-                    $act->n9lect=$value_rec->lectura;
-                    $act->n9feco=date('Y')."".date('m')."".date('d');
-                    $act->n9fecl=date('Y')."".date('m')."".date('d');
-                    $act->estado=2;
-                  }else{
-                    $act->estado=3;
-                  }
-                  $act->save();
-                  // insertar registro orden trabajo tecnico
-                  $ordenTrabajo=new OrdenTrabajo();
-                  $ordenTrabajo->id_tecn=$value_rec->id_tecn;
-                  $ordenTrabajo->id_act=$value->id_act;
-                  $ordenTrabajo->estado=1;
-                  $ordenTrabajo->fecha=date('Y-m-d');
-                  $ordenTrabajo->observacion=$value_rec->observacion;
-                  $ordenTrabajo->tipo_actividad="40";
-                  $ordenTrabajo->save();
-              }
-              //actualiza estado rec manuales
-              $rec=ReconexionManual::find($value_rec->id_rec);
-              $rec->estado=1;
-              $rec->save();
+          $result_rec=ReconexionManual::where('estado',0)->where('id_emp',$ID_EMP)->where('medidor',$value->n9meco)->where('observacion','Sin novedad')->first();
+          if(!is_null($result_rec)){
+              $act=ActividadDiaria::find($value->id_act);
+              $act->n9leco=$value_rec->lectura;
+              $act->n9lect=$value_rec->lectura;
+              $act->n9feco=date('Y')."".date('m')."".date('d');
+              $act->n9fecl=date('Y')."".date('m')."".date('d');
+              $act->estado=2;
+              $act->referencia='Finalizado';
+              $act->save();
+            // insertar registro orden trabajo tecnico
+              $ordenTrabajo=new OrdenTrabajo();
+              $ordenTrabajo->id_tecn=$value_rec->id_tecn;
+              $ordenTrabajo->id_act=$value->id_act;
+              $ordenTrabajo->estado=1;
+              $ordenTrabajo->fecha=date('Y-m-d');
+              $ordenTrabajo->observacion=$value_rec->observacion;
+              $ordenTrabajo->tipo_actividad="40";
+              $ordenTrabajo->save();
+
+              ReconexionManual::where('id_rec',$value_rec->id_rec)->update(['estado'=>1]);
+
+            }
           }
-        }
+          //actualiza estado rec manuales
+        ReconexionManual::where('estado',0)->update(['estado'=>1]);
         $this->createHistoryUser("Actividades Manuales","Valida Actividades manuales","Cortes");
         return response()->json(true);
       } catch (\Exception $e) {

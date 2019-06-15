@@ -571,12 +571,11 @@ private function validarLecturas($medidor,$lecturaNueva,$mes){
       }
       return false;
     }
-
-
   } catch (\Exception $e) {
     return response()->json("error: ".$e);
   }
 }
+
 
 /**
  *
@@ -591,7 +590,6 @@ public function  procesarCatastros(){
         DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
       }
     }
-
     return response()->json(true);
   } catch (\Exception $e) {
     return response()->json("error: ".$e);
