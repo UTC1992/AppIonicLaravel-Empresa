@@ -137,4 +137,31 @@ class LecturasService
   public function lecturasConsolidadasService($idEmpresa,$mes){
     return $this->performRequest('GET',"/consolidados/{$idEmpresa}/{$mes}");
   }
+
+  /**
+   * procesar catatros del mes
+   */
+  public function procesarCatastrosService(){
+    return $this->performRequest('GET',"/catastros/proceso");
+  }
+/**
+ * procesar y actualizar ordn de trabajo temporal
+ */
+  public function procesarOrdenTemporalService(){
+    return $this->performRequest('GET',"/procesos/actualiar");
+  }
+
+/**
+ *generar historial
+ */
+  public function guardarHistorialService(){
+    return $this->performRequest('GET',"/procesos/historial");
+  }
+
+/**
+ * generar orden de trabajo para lecturas 
+ */
+  public function generarOrdenTempService($mes){
+    return $this->performRequest('GET',"/procesos/oden-temp/{$mes}");
+  }
 }

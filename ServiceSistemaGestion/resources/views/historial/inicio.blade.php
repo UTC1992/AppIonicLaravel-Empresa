@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('content')
-  
+
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
@@ -17,7 +17,7 @@
   <div class="">
     <div class="col-md-12">
         <div class="box box-primary box-body form-horizontal">
-            <form method="post" action="/historial/consultar">
+            <form method="post" action="/historial/inicio">
                 @csrf
                 <div class="form-group">
                     <label class="control-label col-lg-2">Empresa:</label>
@@ -37,10 +37,10 @@
                         Buscar
                     </button>
                 </div>
-                
+
             </form>
         </div>
-        
+
       <div class="box">
           <div class="box-header with-border">
               <h3 class="box-title"><b>Acciones realizadas</b></h3>

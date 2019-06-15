@@ -117,5 +117,5 @@ Route::prefix('plan')->group(function(){
 Route::prefix('historial')->group(function(){
   //subscripcion
   Route::get('/inicio','Admin\HistorialController@index')->name('historial.inicio');
-  Route::post('/consultar','Admin\HistorialController@consultar')->name('historial.consultar');
+  Route::post('/inicio','Admin\HistorialController@consultar')->name('historial.consultar');
 });

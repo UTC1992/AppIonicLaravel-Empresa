@@ -29,6 +29,7 @@ class MobileController extends Controller
                         ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
                         ->where($tablaLecturasCompany.'.estado', 1)
                         ->where('orden_trabajo.id_tecnico', $idTecnico)
+                        ->limit(50)
                         ->get();
 
         return response()->json($rutas);
@@ -101,6 +102,7 @@ class MobileController extends Controller
 
 
 
+
     /**
      * calcular consumo mensual por de cliente
      */
@@ -162,9 +164,46 @@ class MobileController extends Controller
    */
   public function insertCatastros(Request $request){
     try {
-      $input= $request->all();
-      $res= Catastros::create($input);
-      return $this->ApiResponser($res);
+
+
+        $data= $request->all();
+
+        $dataInsert= array();
+        $contador=0;
+        foreach ($data as $key => $value) {
+
+          $result=DB::table("catastros")->where("mes",$value["mes"])->where("medidor",$value["medidor"])->exists();
+          if(!$result){
+            $dataInsert[$contador]["idEmpresa"]=$value["idEmpresa"];
+            $dataInsert[$contador]["medidor"]=$value["medidor"];
+            $dataInsert[$contador]["observacion"]=$value["observacion"];
+            $dataInsert[$contador]["lectura"]=$value["lectura"];
+            $dataInsert[$contador]["fecha"]=$value["fecha"];
+            $dataInsert[$contador]["latitud"]=$value["latitud"];
+            $dataInsert[$contador]["longitud"]=$value["longitud"];
+            $dataInsert[$contador]["estado"]=0;
+            $dataInsert[$contador]["id_tecnico"]=$value["id_tecnico"];
+            $dataInsert[$contador]["hora"]=$value["hora"];
+            $dataInsert[$contador]["foto"]=$value["foto"];
+            $dataInsert[$contador]["mes"]=$value["mes"];
+            $dataInsert[$contador]["created_at"]=date('Y-m-d');
+            if($contador==1200){
+              DB::table("catastros")->insert($dataInsert);
+              $contador=0;
+              $dataInsert=array();
+            }
+            $contador++;
+          }
+        }
+
+        if($contador>0){
+          DB::table("catastros")->insert($dataInsert);
+        }
+
+        $res=true;
+        return response()->json($res);
+
+
     } catch (\Exception $e) {
         return response()->json("error: ".$e);
     }

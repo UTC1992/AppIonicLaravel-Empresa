@@ -95,7 +95,7 @@ class LecturasAppController extends Controller
       public function insertarCatastros(Request $request){
         try {
           if(!is_null($request)){
-            $result= $this->lecturasAppServices->insertarCatastrosAService($request);
+            $result= $this->lecturasAppServices->insertarCatastrosService($request->all());
             return response($result)->header('Content-Type', 'application/json');
           }
         } catch (\Exception $e) {

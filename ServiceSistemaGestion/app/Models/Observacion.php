@@ -14,6 +14,7 @@ class Observacion extends Model
     'descripcion',
     'tipo',
     'codigo',
-    'created_at'
+    'created_at',
+    'updated_at'
   ];
 }

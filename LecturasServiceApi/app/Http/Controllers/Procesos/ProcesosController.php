@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Models\Configuracion;
 use App\Traits\ApiResponser;
-Use App\Models\BaseDatosDecobo;
+Use App\Models\Procedimientos;
 
 class ProcesosController extends Controller
 {
@@ -25,6 +25,8 @@ class ProcesosController extends Controller
  */
     public function carga(Request $request){
       try {
+        $mes=0;
+        $mes=$request->mes;
         $configRow=$this->getConfigCompany($request->id);
         if(count($configRow)<=0){
           return response()->json("Error: La empresa con ID: ".$request->id." no tiene generada su configuración");
@@ -69,13 +71,30 @@ class ProcesosController extends Controller
                     $tabla= $value->value;
                   }
                 }
+
+                  if(($data["este"]!="0" && $data["norte"]!="0") && (!is_null($data["este"]) && !is_null($data["norte"]))){
+                    $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
+                    $longitud=round($coordenadas["lon"],6);
+                    $latitud=round($coordenadas["lat"],7);
+                     if($this->validarCoordenada($latitud) && $this->validarCoordenada($longitud)){
+                       if(strlen($latitud)<=11 && strlen($longitud)<=10){
+                         $data["longitud"]=$longitud;
+                         $data["latitud"]=$latitud;
+                       }else{
+                         $data["longitud"]=0;
+                         $data["latitud"]=0;
+                       }
+                    }
+                  }else{
+                    $data["longitud"]=0;
+                    $data["latitud"]=0;
+                  }
                 //echo(" data : ".$data["este"]);
-                $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
-                $data["longitud"]=round($coordenadas["lon"],6);
-                $data["latitud"]=round($coordenadas["lat"],7);
+
                 $data["idEmpresa"]=$request->id;
                 $data["estado"]=false;
                 $data["created_at"]=date('Y-m-d H:i:s');
+                $data["mes"]=12;
                 $dataInsert[$contInsert]=$data;
 
                 if($contInsert>=2100){
@@ -114,6 +133,12 @@ class ProcesosController extends Controller
       return $config;
     }
 
+    private function validarExistenciaMedidor($medidor){
+    return   $result= DB::table($table)
+                    ->where('medidor',$medidor)
+                    ->whereNotNull('lectura')
+                    ->exists();
+    }
 
     private function createRegister($table,$data){
 
@@ -245,6 +270,7 @@ class ProcesosController extends Controller
     public function downloadFileConsolidado(Request $request){
 
     }
+
 
     /**
      * generar location latitud y longitud
@@ -426,5 +452,65 @@ class ProcesosController extends Controller
 
        //fin funciones
 
+/**
+ *actualiza la orden de trabajo
+ */
+public function actualizarOrdenTrabajo()
+{
+  try {
+    $decobo_temp1=DB::table('decobo')->get();
+    $cont=0;
+    foreach ($decobo_temp1 as $key => $value) {
+        $data=array();
+        $data['zona']=$value->zona;
+        $data['agencia']=$value->agencia;
+        $data['sector']=$value->sector;
+        $data['ruta']=$value->ruta;
+        $data['cuenta']=$value->cuenta;
+        $data['medidor']=$value->medidor;
+        $data['campo_a']=$value->campo_a;
+        $data['campo_n']=$value->campo_n;
+        $data['lectura']=$value->lectura;
+        $data['campo_0']=$value->campo_0;
+        $data['secuencia']=$value->columna2;
+        $data['columna2']=$value->campo_n;
+        $data['fechaultimalec']=$value->fechaultimalec;
+        $data['equipo']=$value->equipo;
+        $data['lector']=$value->lector;
+        $data['esferas']=$value->esferas;
+        $data['tarifa']=$value->tarifa;
+        $data['nombre']=$value->nombre;
+        $data['direccion']=$value->direccion;
+        $data['campo10']=$value->campo10;
+        $data['columna4']=$value->columna4;
+        $data['este']=$value->este;
+        $data['norte']=$value->norte;
+        $data['estado']=$value->estado;
+        $data['longitud']=$value->longitud;
+        $data['latitud']=$value->latitud;
+        $data['idEmpresa']=$value->idEmpresa;
+        $data['mes']=$value->mes;
+        $res=DB::table('decobo_orden_temp')
+                 ->where('medidor',$value->medidor)->first();
+        if($res){
+            if(is_null($res->lectura) || $res->lectura==''){
+              DB::table('decobo_orden_temp')
+                  ->where('medidor',$value->medidor)
+                  ->update($data);
+            }
+        }else{
+          DB::table('decobo_orden_temp')->insert($data);
+        }
+        $cont++;
+    }
+
+    $dataRe=array();
+    $dataRe["total procesados"]=$cont;
+    return response()->json($dataRe);
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
 
 }

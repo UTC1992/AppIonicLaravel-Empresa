@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Angular;
 
 use Illuminate\Http\Request;
@@ -13,6 +12,9 @@ use App\Models\OrdenTrabajo;
 
 class ActividadDiariaController extends Controller
 {
+
+
+
   public function __construct(){
     $this->middleware('auth:api');
   }
@@ -24,9 +26,9 @@ class ActividadDiariaController extends Controller
       } catch (\Exception $e) {
 
       }
-
-
     }
+
+
     public function getActivitiesTecnico($id_tecnico, $tipo,$sector){
       $orden=new ActividadDiaria();
       $result=$orden->getDataActividadesTecnicoDetalle($id_tecnico, $tipo,$sector,$this->getIdEmpUserAuth());
@@ -184,8 +186,11 @@ class ActividadDiariaController extends Controller
         return response()->json(false);
       }else{
         $actividad= new ActividadDiaria();
-        $result=$actividad->where('estado',0)->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
+        $result=$actividad->where('created_at','like','%'.$date.'%')->where('id_emp',$this->getIdEmpUserAuth())->get();
         foreach ($result as $key => $value) {
+		        $act1=ActividadDiaria::find($value->id_act);
+          	$act1->consolidado=1;
+          	$act1->save();
           if($value->estado==0){
             $act=ActividadDiaria::find($value->id_act);
             $act->estado=3;
@@ -254,14 +259,8 @@ class ActividadDiariaController extends Controller
 
         }
 
-        $actividad_diaria1=new ActividadDiaria();
-        $res1=$actividad_diaria1->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('estado',3)->get();
-        if(count($res1)>0){
-          $message="yaconsolidado";
-            return response()->json($message);
-        }
         $actividad_diaria=new ActividadDiaria();
-        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->delete();
+        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('consolidado','!=',1)->delete();
         if($res>0){
             $this->createHistoryUser("Eliminar Ruta","Se elimina actividades de la fecha: ".$fecha." e ID_EMP: ".$ID_EMP."","Cortes");
           return response()->json(true);
