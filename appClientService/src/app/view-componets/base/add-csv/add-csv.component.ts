@@ -94,14 +94,25 @@ export class AddCsvComponent implements OnInit {
     this.permisoPlan.getPlan().subscribe(response =>{
       ////console.log(response);
       let datos = response.find(x=>x.id_modulo == 'energy_cr');
-      ////console.log(datos['fecha_fin']);
+      console.log(datos['fecha_fin']);
       let fecha = new Date();
-      ////console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
+      console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
       let fechaActual = formatDate(fecha, "yyyy-MM-dd",'en');
-      if(fechaActual == datos['fecha_fin']){
+      //obtener datos anio mes dia separados 
+      let vectorActual = fechaActual.split('-');
+      let vectorSuscripcion = datos['fecha_fin'].split('-');
+
+      let fechaActualFormato = vectorActual[2]+"-"+vectorActual[1]+"-"+vectorActual[0];
+      let fechaSuscripcionFormato = vectorSuscripcion[2]+"-"+vectorSuscripcion[1]+"-"+vectorSuscripcion[0];
+      if(this.validate_fechaSuscripcion(fechaActualFormato,fechaSuscripcionFormato))
+      {
+        //console.log(this.validate_fechaSuscripcion(fechaActualFormato,fechaSuscripcionFormato));
+        console.log("La fecha actual "+fechaActualFormato+" es superior a la fecha de suscripción "+fechaSuscripcionFormato);
         this.showAlert('Suscripción finalizada',"El periodo de suscripción a finalizado, "
-        +"pongase en contacto con soporte técnico por favor.",'info');  
-      } else {
+        +"pongase en contacto con soporte técnico por favor.",'info'); 
+        return
+      }else{
+        console.log("La fecha actual "+fechaActualFormato+" NO es superior a la fecha de suscripcion "+fechaSuscripcionFormato);
         if(this.form.get('archivo').value==null || this.form.get('archivo').value==""){
           this.showAlert('Alerta!',"Debe seleccionar un archivo para subirlo",'warning');
           return;
@@ -112,22 +123,37 @@ export class AddCsvComponent implements OnInit {
     
         this.progresoMostrar = false;
     
-        this.ordenService.addCsvFiles(input).subscribe(
-          response=>{
-            //console.log(response);
-              this.showAlert('Éxito!',"Archivo subido correctamente",'success');
-              this.clearFile();
-              this.reloadTableClient();
-          },
-          error=>{
-            //console.log(<any>error);
-            this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
-          });
+        this.ordenService.addCsvFiles(input).subscribe( response=>{
+          //console.log(response);
+          this.showAlert('Éxito!',"Archivo subido correctamente",'success');
+          this.clearFile();
+          this.reloadTableClient();
+        },
+        error=>{
+          //console.log(<any>error);
+          this.showAlert('Alerta!',"Error, No se pudo subir el archivo", 'warning');
+        });
       }
+
     });
     
   }
 
+  validate_fechaSuscripcion(fechaActual,fechaSuscripcion) {
+      let valuesActual = fechaActual.split("-");
+      let valuesSuscripcion = fechaSuscripcion.split("-");
+
+      // Verificamos que la fecha no sea posterior a la actual
+      let dateActual = new Date(valuesActual[2],(valuesActual[1]-1),valuesActual[0]);
+      //console.log(dateActual)
+      let dateSuscripcion = new Date(valuesSuscripcion[2],(valuesSuscripcion[1]-1),valuesSuscripcion[0]);
+      //console.log(dateSuscripcion)
+      if(dateActual > dateSuscripcion)
+      {
+          return true;
+      }
+      return false;
+  }
 
   reloadTableClient(){
     this.tablaCliente.cargarDatos();
