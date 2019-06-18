@@ -56,7 +56,7 @@ class ProcesosController extends Controller
                 }
 
                 $cont=0;
-                $data=array();
+                $data=array();z
                 $config=$configRow;
                 foreach ($config as $key => $value) {
                   if($cont>=count($lineArrayFilter)){
@@ -132,6 +132,8 @@ class ProcesosController extends Controller
       $config = DB::table('configuraciones')->where('idEmpresa', $idCompany)->get();
       return $config;
     }
+
+
 
     private function validarExistenciaMedidor($medidor){
     return   $result= DB::table($table)

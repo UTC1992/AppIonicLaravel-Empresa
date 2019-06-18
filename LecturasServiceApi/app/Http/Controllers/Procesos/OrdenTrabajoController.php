@@ -20,6 +20,45 @@ class OrdenTrabajoController extends Controller
 
     }
 
+
+    /**
+     * obtiene rutas a distribuir a los tecnicos
+     */
+    public function getRutasElepco(){
+      try {
+        $result= DB::table("rutas_elepco")->get();
+        return response()->json($result);
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+
+    }
+
+
+/**
+ * distrinuir rutas a tecnicos
+ */
+    public function distribuirRutasTecnicos(Request $request){
+      try {
+
+        $tecnico=$request->idTecnico;
+        $rutasArray=$request->rutas;
+
+        if(count($rutasArray)>0){
+          foreach ($rutasArray as $key => $value) {
+            $dataInsert=array();
+            $dataInsert["tecnico_id"]=$tecnico;
+            $dataInsert["ruta"]=$value["ruta"];
+            DB::table("rutas_tecnico_elepco")->insert($dataInsert);
+          }
+          return response()->json(true);
+        }
+        return response()->json($rutasArray);
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+    }
+
     // metodo devuelve actividades del dia por idempresa y paginado
     public function getAllRutasByEmpresa(Request $request){
       try {

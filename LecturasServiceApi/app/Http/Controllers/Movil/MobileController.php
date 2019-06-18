@@ -25,10 +25,9 @@ class MobileController extends Controller
     public function index($idEmpresa,$idTecnico){
       try {
         $tablaLecturasCompany= $this->getTableCompany($idEmpresa);
-        $rutas = DB::table($tablaLecturasCompany)
-                        ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
-                        ->where($tablaLecturasCompany.'.estado', 1)
-                        ->where('orden_trabajo.id_tecnico', $idTecnico)
+        $rutas = DB::table('decobo_orden_temp as T0')
+                        ->join('rutas_tecnicos_decobo as T1', 'T1.ruta', '=', 'T0.ruta')
+                        ->where('T1.id_tecnico', $idTecnico)
                         ->get();
 
         return response()->json($rutas);
@@ -57,6 +56,7 @@ class MobileController extends Controller
        if($value["estado"]==2){
          $dataProcArray=array();
          $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+         $dataProcArray["lectura_actual"]=$value["lectura_actual"];
          $dataProcArray["estado"]=$value["estado"];
          DB::table($tablaLecturasCompany)
               ->where('id',$value["id"])
@@ -165,9 +165,11 @@ class MobileController extends Controller
 
 
         $data= $request->json()->all();
+
         $dataInsert= array();
         $contador=0;
         foreach ($data as $key => $value) {
+
           $result=DB::table("catastros")->where("mes",$value["mes"])->where("medidor",$value["medidor"])->exists();
           if(!$result){
             $dataInsert[$contador]["idEmpresa"]=$value["idEmpresa"];
@@ -182,6 +184,7 @@ class MobileController extends Controller
             $dataInsert[$contador]["hora"]=$value["hora"];
             $dataInsert[$contador]["foto"]=$value["foto"];
             $dataInsert[$contador]["mes"]=$value["mes"];
+            $dataInsert[$contador]["created_at"]= date('Y-m-d');
             if($contador==1200){
               DB::table("catastros")->insert($dataInsert);
               $contador=0;
@@ -190,12 +193,13 @@ class MobileController extends Controller
             $contador++;
           }
         }
+
         if($contador>0){
           DB::table("catastros")->insert($dataInsert);
         }
 
         $res=true;
-        return $this->ApiResponser($res);
+        return response()->json($res);
 
 
     } catch (\Exception $e) {

@@ -31,6 +31,8 @@ $router->post('/data','Procesos\ProcesosController@getDataToDistribution');
 $router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOrdenTrabajoTecnicos');
 $router->get('/consolidados/{idEmpresa}/{mes}','Procesos\LecturasController@index');
 $router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTrabajo');
+$router->get('/rutas/elepco','Procesos\OrdenTrabajoController@getRutasElepco');
+$router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRutasTecnicos');
 /**
  * rutras de orden trabaja distribucion
  */
