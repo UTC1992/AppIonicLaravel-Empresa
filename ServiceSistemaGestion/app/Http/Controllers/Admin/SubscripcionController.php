@@ -77,6 +77,7 @@ class SubscripcionController extends Controller
         $planes = $obj4->getPlanes();
 
         return view('subscripcion.edit',compact('subs','empresas', 'modulos', 'planes'));
+        //return response()->json($subs);
     }
 
     public function updateSub(Request $request)
