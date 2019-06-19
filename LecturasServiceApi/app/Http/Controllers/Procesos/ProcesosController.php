@@ -56,7 +56,7 @@ class ProcesosController extends Controller
                 }
 
                 $cont=0;
-                $data=array();z
+                $data=array();
                 $config=$configRow;
                 foreach ($config as $key => $value) {
                   if($cont>=count($lineArrayFilter)){
@@ -460,7 +460,7 @@ class ProcesosController extends Controller
 public function generarGuardarHistorialDecobo(){
   try {
     $data=array();
-    $tabla='decobo';
+    $tabla='decobo_orden_temp';
     $decobo_temp=DB::table('decobo_orden_temp')->where('lectura','is null')->exists();
     if($decobo_temp){
       $data['mensaje']="No se puede guardar el historial por que existen lecturas sin procesar";
@@ -485,6 +485,11 @@ public function generarGuardarHistorialDecobo(){
 public function generarOrdenTemp($mes){
   try {
     Procedimientos::generarOrdenTempDecobo($mes);
+    $ordenes_temp= DB::table("decobo_orden_temp")->get();
+    foreach ($ordenes_temp as $key => $value) {
+      DB::table("decobo_orden_temp")->where("id",$value->id)->update(["lectura"=>$value->nueva_lectura]);
+    }
+    $res=DB::table("decobo_orden_temp")->where("id","!=",0)->update(["nueva_lectura"=>null]);
     $data=array();
     $data['mensaje']="Oden de trabajo temporal  ha sido generado con exito";
     $data['status']=true;
@@ -561,7 +566,7 @@ public function actualizarOrdenTrabajo()
 /**
  *
  */
-private function validarLecturas($medidor,$lecturaNueva,$mes){
+private function validarConsumos($medidor,$lecturaNueva,$mes){
   try {
     $res=DB::table('decobo_historial')
              ->where('medidor',$medidor)
@@ -598,6 +603,7 @@ public function  procesarCatastros(){
   }
 
 }
+
 
 
 

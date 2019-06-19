@@ -101,13 +101,10 @@ class LecturasController extends Controller
 
      public function distribuirRuta(Request $request){
        try {
-         $data= array();
-         $data["lecturas"]= $request->lecturas;
-         $data["idTecnico"]= $request->idTecnico;
-         $data["idEmpresa"]= $this->getIdEmpUserAuth();
-         $result=$this->lecturasService->distribuirRutaService($data);
+
+         $result=$this->lecturasService->distribuirRutaService($request->all());
          $this->changeEstadoTecnicoLecturas($request->idTecnico);
-         return response($result);
+         return response($result)->header('Content-Type', 'applicationIjson');
        } catch (\Exception $e) {
           return response()->json("Error :".$e);
        }
@@ -201,6 +198,40 @@ class LecturasController extends Controller
     } catch (\Exception $e) {
       return response()->json("Error :".$e);
     }
+  }
+
+/**
+ * obtien rutas
+ */
+  public function obtenerRutasDecobo()
+  {
+    try {
+      $result=$this->lecturasService->obtenerRutasDecobo();
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+    }
+
+  }
+
+  public function obtenerRutasAsignadas(){
+    try {
+      $result=$this->lecturasService->obtenerRutasAsignadasTecnicos();
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
+  }
+
+  public function asignarRutas(Request $request){
+    try {
+      $result=$this->lecturasService->obtenerRutasAsignadasTecnicos($request);
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
   }
 
 }

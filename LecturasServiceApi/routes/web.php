@@ -33,6 +33,8 @@ $router->get('/consolidados/{idEmpresa}/{mes}','Procesos\LecturasController@inde
 $router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTrabajo');
 $router->get('/rutas/elepco','Procesos\OrdenTrabajoController@getRutasElepco');
 $router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRutasTecnicos');
+$router->get('/rutas','Procesos\OrdenTrabajoController@obtenerRutasDecobo');
+$router->get('/rutas/tecnicos','Procesos\OrdenTrabajoController@obtenerDistribucionTecnicos');
 /**
  * rutras de orden trabaja distribucion
  */
@@ -49,6 +51,7 @@ $router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros
 $router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
 $router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
 $router->get('/procesos/oden-temp/{mes}','Procesos\ProcesosController@generarOrdenTemp');
+
 
 /**
  * rutas de app móvil

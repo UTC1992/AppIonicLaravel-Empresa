@@ -56,29 +56,19 @@ class MobileController extends Controller
        if($value["estado"]==2){
          $dataProcArray=array();
          $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
-         $dataProcArray["lectura_actual"]=$value["lectura_actual"];
+         $dataProcArray["estado"]=$value["estado"];
+         $dataProcArray["fecha_lectura"]=$value["fechatarea"];
+         $dataProcArray["hora"]=$value["hora"];
+         $dataProcArray["lat"]=$value["lat_lectura"];
+         $dataProcArray["lon"]=$value["lon_lectura"];
+         $dataProcArray["observacion"]=$value["observacion"];;
+         $dataProcArray["foto"]=$value["foto"];
          $dataProcArray["estado"]=$value["estado"];
          DB::table($tablaLecturasCompany)
               ->where('id',$value["id"])
               ->update($dataProcArray);
        }
 
-       //orden trabajo
-       $dataOrdenTrabajo=array();
-       $dataOrdenTrabajo["fecha_lectura"]=$value["fechatarea"];
-       $dataOrdenTrabajo["hora"]=$value["hora"];
-       $dataOrdenTrabajo["lat"]=$value["lat_lectura"];
-       $dataOrdenTrabajo["lon"]=$value["lon_lectura"];
-       $dataOrdenTrabajo["observacion"]=$value["observacion"];;
-       $dataOrdenTrabajo["foto"]=$value["foto"];
-
-       if($value["estado"]!=0){
-         $dataOrdenTrabajo["estado"]=$value["estado"];
-       }
-
-       DB::table('orden_trabajo')
-              ->where('id_lectura',$value["id"])
-              ->update($dataOrdenTrabajo);
        $cont++;
      }
 
