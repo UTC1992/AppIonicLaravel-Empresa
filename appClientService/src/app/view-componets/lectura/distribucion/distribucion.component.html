@@ -10,17 +10,26 @@
                   Expandir para asignar
               </mat-expansion-panel-header>
               <div class="row">  
-                <div class="col col-3" *ngFor="let filtro of filtrosLabel">
+                <div class="col col-3" >
                   <div class="input-formulario">
                       <mat-form-field>
+                          <mat-select matNativeControl placeholder="Agencia" 
+                          name="agencia" id="agencia"
+                          (selectionChange)="getSectores($event)"> 
+                            <mat-option value="empty"></mat-option>
+                              
+                            <mat-option *ngFor="let value of primerFiltro" value="{{value.agencia}}" >
+                              {{value.agencia}}</mat-option>
+                          </mat-select>
+                          <!--
                           <mat-select matNativeControl placeholder="{{filtro.value | titlecase}}" 
                           name="actividad" id="actividad"
                           (selectionChange)="getDataFilter($event,filtro.order)"> 
                             <mat-option value="empty"></mat-option>
-                            <ng-template [ngIf]="filtro.order==1">
-                              <mat-option *ngFor="let value of primerFiltro" 
+                              
+                            <mat-option *ngFor="let value of primerFiltro" 
                               value="{{value.agencia}}" >{{value.agencia}}</mat-option>
-                            </ng-template>
+
                             <ng-template [ngIf]="filtro.order==2">
                               <mat-option *ngFor="let value of segundoFiltro"
                               value="{{value.sector}}" >{{value.sector}}</mat-option>
@@ -30,11 +39,36 @@
                               value="{{value.ruta}}" >{{value.ruta}}</mat-option>
                             </ng-template>
                           </mat-select>
+                          -->
                       </mat-form-field>
                   </div>
                 </div>
+                <div class="col col-3" >
+                    <div class="input-formulario form-group" *ngIf="mostrarFiltro2">
+                        <mat-form-field>
+                            <mat-select matNativeControl placeholder="Sector" 
+                            name="sector" id="sector"
+                            (selectionChange)="getRutas($event)"> 
+                              <mat-option value="empty"></mat-option>
+                              <mat-option *ngFor="let value of segundoFiltro" value="{{value.sector}}" >
+                                {{value.sector}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col col-3" >
+                    <div class="input-formulario form-group" *ngIf="mostrarFiltro3">
+                        <mat-form-field>
+                            <mat-select [formControl]="formRutas"  placeholder="Ruta" multiple>
+                              <mat-option (click)="getCantidad(value.ruta)"
+                               *ngFor="let value of tercerFiltro" [value]="value.ruta" >
+                                {{value.ruta}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="col col-3">
-                  <div class="input-formulario" *ngIf="dataCount">
+                  <div class="input-formulario form-group" *ngIf="mostrarCantidad" >
                     <mat-form-field>
                       <input matInput type="number" placeholder="Cantidad" 
                       name ="cantidad_lecturas" value="{{cantidad_lecturas}}">
@@ -71,14 +105,16 @@
                 Oprima para mostralos
                 </mat-expansion-panel-header>
                 <div class="table-responsive">
-                    <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
-                    (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
-                        <div style="width: 600px;">
-                            <mat-list-option *ngFor="let tecnico of tecnicosLecturas" [value]="tecnico.id_tecn">
-                                    {{ tecnico.apellidos}} {{ tecnico.nombres}}
-                            </mat-list-option>
-                        </div>
-                    </mat-selection-list>   
+                    <cdk-virtual-scroll-viewport itemSize="100" class="example-viewport"> 
+                      <mat-selection-list class="col-lg-12 col-md-12 col-sm-12" #tecnico 
+                      (selectionChange)="onSelection($event, tecnico.selectedOptions.selected)">
+                          <div style="width: 600px;">
+                              <mat-list-option *ngFor="let tecnico of tecnicosLecturas" [value]="tecnico.id_tecn">
+                                      {{ tecnico.apellidos}} {{ tecnico.nombres}}
+                              </mat-list-option>
+                          </div>
+                      </mat-selection-list>
+                    </cdk-virtual-scroll-viewport>   
                 </div>
             </mat-expansion-panel>
         </mat-accordion>

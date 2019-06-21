@@ -11,28 +11,12 @@
 
         <!--tab de consultas-->
         <mat-tab label="Consultas">
-          <br>
-          <div class="d-flex justify-content-center">
-              <h4 class="">Consultas sobre actividades</h4>
-          </div>
-          <br>
-      
+          <app-consultas></app-consultas>
         </mat-tab>
 
         <!--tab de consolidados-->
-        <mat-tab label="Consolidado">
-   
-              <div class="card-body">
-                  <div class="d-flex justify-content-center">
-                      <h4 class="">Generar consolidado</h4>
-                  </div>
-                  <br>
-                  <div class="card">
-                    <div class="card-body">
-                     
-                    </div>
-                  </div>
-              </div>
+        <mat-tab label="Reportes">
+            <app-reporte></app-reporte>
         </mat-tab>
     </mat-tab-group>
 </mat-card>

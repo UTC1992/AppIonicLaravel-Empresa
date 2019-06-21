@@ -50,16 +50,13 @@ class Subscripcion extends Model
 
     public function getById($id='')
     {
-      $subs = Subscripcion::find($id);
+      //return Subscripcion::find($id);
       return $sub = DB::select('select T1.nombre as nombreEmp, T1.id_emp as idEmp, 
       T2.nombre as nombreMod, T2.id_mod as idMod, T0.*, T3.* 
       from tbl_modulo_empresa as T0, tbl_empresa as T1, 
       tbl_modulo as T2, tbl_planes as T3 
       where T0.id_emp=T1.id_emp and 
-      T0.id_mod=T2.id_mod and T0.id_mod_emp=:id 
-      and T0.id_plan=:id_plan1 and T3.id_plan=:id_plan2', 
-      ['id' => $id, 'id_plan1' => $subs->id_plan, 'id_plan2' => $subs->id_plan]);
-      
+      T0.id_mod=T2.id_mod and T0.id_mod_emp=:id', ['id' => $id]);
     }
 
     public function updateSubscripcion($data=[])

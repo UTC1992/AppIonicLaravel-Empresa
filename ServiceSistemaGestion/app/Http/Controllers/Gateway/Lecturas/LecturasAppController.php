@@ -56,36 +56,36 @@ class LecturasAppController extends Controller
      */
      public function updateLecturas(Request $request){
        try {
-         
-         if(!$request->listTareas){
-           $data=array();
-           $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
-           $data["status"]=false;
-           return response($data,404)->header('Content-Type', 'application/json');
-         }
-         
-         $id_tecnico= $request->id_tecn;
 
-         $data = array(
-            'id_tecn' => $request->id_tecn,
-            'id_emp' => $request->id_emp,
-            'listTareas' => json_encode($request->listTareas, true)
-           );
+        if(!$request->listTareas){
+          $data=array();
+          $data["mensaje"]="Debe enviar por lo menos una lectura para procesar";
+          $data["status"]=false;
+          return response($data,404)->header('Content-Type', 'application/json');
+        }
 
-         $result= json_decode($this->lecturasAppServices->updateLecturasService($data), true);
+        $id_tecnico= $request->id_tecn;
 
-         if($result["status"]){
-           $tecnico= Tecnico::find($id_tecnico);
-           $tecnico->asignado=0;
-           $tecnico->save();
-           return response($result)->header('Content-Type', 'application/json');
-         }
+        $data = array(
+           'id_tecn' => $request->id_tecn,
+           'id_emp' => $request->id_emp,
+           'listTareas' => json_encode($request->listTareas, true)
+          );
 
-         return response($result)->header('Content-Type', 'application/json');
-         //return response(count($input["listTareas"]));
-       } catch (\Exception $e) {
-         return response()->json("Error :".$e);
-       }
+        $result= json_decode($this->lecturasAppServices->updateLecturasService($data), true);
+
+        if($result["status"]){
+          $tecnico= Tecnico::find($id_tecnico);
+          $tecnico->asignado=0;
+          $tecnico->save();
+          return response($result)->header('Content-Type', 'application/json');
+        }
+
+        return response($result)->header('Content-Type', 'application/json');
+        //return response(count($input["listTareas"]));
+      } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+      }
 
      }
 

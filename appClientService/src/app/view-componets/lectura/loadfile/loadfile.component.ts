@@ -114,6 +114,12 @@ export class LoadfileComponent implements OnInit {
     }
   }
 
+  enviarDatosATemporal(){
+    this.lecturaService.procesarDatosSubidos().subscribe(response => {
+      console.log(response);
+    });
+  }
+
   showAlert(title, text, type){
     Swal.fire({
       title: title,
@@ -122,5 +128,6 @@ export class LoadfileComponent implements OnInit {
       allowOutsideClick: false
     });
   }
+  
 
 }

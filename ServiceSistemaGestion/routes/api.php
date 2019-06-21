@@ -61,12 +61,20 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('planes','AuthApi\PermisosController@getPlanEmpresa');
 
     // gateway routes
+
+    Route::get('rutas','Gateway\Lecturas\LecturasController@obtenerRutasDecobo');
+    Route::get('rutas/asignadas','Gateway\Lecturas\LecturasController@obtenerRutasAsignadas');
+    Route::get('rutas/create','Gateway\Lecturas\LecturasController@asignarRutas');
+    Route::post('rutas/distribucion','Gateway\Lecturas\LecturasController@distribuirRuta');
+
+
     Route::post('upload','Gateway\Lecturas\LecturasController@uploadFile');
     Route::get('filtros','Gateway\Lecturas\LecturasController@getFilterFiels');
     Route::get('data-first','Gateway\Lecturas\LecturasController@getFirstFilterFields');
     Route::post('data','Gateway\Lecturas\LecturasController@getDataFilter');
     Route::post('data-distribution','Gateway\Lecturas\LecturasController@getDataDistribution');
-    Route::post('distribution','Gateway\Lecturas\LecturasController@distribuirRuta');
+
+
     Route::get('orden-trabajo','Gateway\Lecturas\LecturasController@getOrdenTrabajoTecnicosLecturas');
     Route::get('catastros/proceso','Gateway\Lecturas\LecturasController@procesarCatastros');
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
@@ -75,7 +83,7 @@ Route::group(['prefix' => 'angular'], function(){
 
 
 
-    // ibservaciones
+    // observaciones
     Route::get('observaciones','AuthApi\PermisosController@getObservacionesEmpresa');
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');

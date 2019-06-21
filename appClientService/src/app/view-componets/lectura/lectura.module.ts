@@ -34,6 +34,8 @@ import { PanelComponent } from './panel/panel.component';
 import { ChartsModule } from 'ng2-charts';
 import { LoadfileComponent } from './loadfile/loadfile.component';
 import { DistribucionComponent } from './distribucion/distribucion.component';
+import { ConsultasComponent } from './consultas/consultas.component';
+import { ReporteComponent } from './reporte/reporte.component';
 
 
 @NgModule({
@@ -79,6 +81,8 @@ import { DistribucionComponent } from './distribucion/distribucion.component';
     PanelComponent,
     LoadfileComponent,
     DistribucionComponent,
+    ConsultasComponent,
+    ReporteComponent,
   ],
   exports: [
   ],

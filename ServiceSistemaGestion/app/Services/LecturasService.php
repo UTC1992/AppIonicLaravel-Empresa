@@ -121,7 +121,7 @@ class LecturasService
     */
 
     public function distribuirRutaService($data){
-      return $this->performRequest('POST',"/distribuir",$data);
+      return $this->performRequest('POST',"/rutas/distribuir",$data);
     }
 
     /**
@@ -159,9 +159,23 @@ class LecturasService
   }
 
 /**
- * generar orden de trabajo para lecturas 
+ * generar orden de trabajo para lecturas
  */
   public function generarOrdenTempService($mes){
     return $this->performRequest('GET',"/procesos/oden-temp/{$mes}");
   }
+
+  /**
+   * generar orden de trabajo para lecturas
+   */
+    public function obtenerRutasDecobo(){
+      return $this->performRequest('GET',"/rutas");
+    }
+
+    /**
+     * obtiene rutas tecnicos decobo
+     */
+    public function obtenerRutasAsignadasTecnicos(){
+      return $this->performRequest('GET',"/rutas/tecnicos");
+    }
 }

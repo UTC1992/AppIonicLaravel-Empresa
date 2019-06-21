@@ -20,6 +20,48 @@ class OrdenTrabajoController extends Controller
 
     }
 
+
+    /**
+     * obtiene rutas a distribuir a los tecnicos
+     */
+    public function getRutasElepco(){
+      try {
+        $result= DB::table("rutas_elepco")->get();
+        return response()->json($result);
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+
+    }
+
+
+/**
+ * distrinuir rutas a tecnicos
+ */
+    public function distribuirRutasTecnicos(Request $request){
+      try {
+
+        $dataInsert=array();
+        $dataInsert["tecnico_id"]=$request->idTecnico;
+        $dataInsert["agencia"]=$request->agencia;
+        $dataInsert["sector"]=$request->sector;
+        $dataInsert["ruta"]=$request->ruta;
+        $res= DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
+        $dataResponse=array();
+
+        if($res){
+          $dataResponse["mensaje"]= "Ruta asignada correctamente al tecnico con ID: ".$request->idTecnico;
+          $dataResponse["status"]= true;
+          return response()->json($dataResponse);
+        }
+        $dataResponse["mensaje"]= "Error no se pudo asignar la ruta al tecnico con ID: ".$request->idTecnico;
+        $dataResponse["status"]= false;
+        return response()->json($dataResponse);
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+    }
+
     // metodo devuelve actividades del dia por idempresa y paginado
     public function getAllRutasByEmpresa(Request $request){
       try {
@@ -148,5 +190,35 @@ class OrdenTrabajoController extends Controller
     }
 
   }
+
+
+  public function obtenerRutasDecobo(){
+    try {
+      $result=DB::table("decobo_orden_temp")
+                  ->select('agencia','sector','ruta',DB::raw('count(*) as cantidad'))
+                  ->groupBy('agencia')
+                  ->groupBy('sector')
+                  ->groupBy('ruta')
+                  ->get();
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+
+  }
+
+  public function obtenerDistribucionTecnicos(){
+    try {
+      $result= DB::table("rutas_tecnicos_decobo")->get();
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+
+  }
+
+
+
+
 
 }

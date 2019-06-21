@@ -25,11 +25,9 @@ class MobileController extends Controller
     public function index($idEmpresa,$idTecnico){
       try {
         $tablaLecturasCompany= $this->getTableCompany($idEmpresa);
-        $rutas = DB::table($tablaLecturasCompany)
-                        ->join('orden_trabajo', 'orden_trabajo.id_lectura', '=', $tablaLecturasCompany.'.id')
-                        ->where($tablaLecturasCompany.'.estado', 1)
-                        ->where('orden_trabajo.id_tecnico', $idTecnico)
-                        ->limit(50)
+        $rutas = DB::table('decobo_orden_temp as T0')
+                        ->join('rutas_tecnicos_decobo as T1', 'T1.ruta', '=', 'T0.ruta')
+                        ->where('T1.id_tecnico', $idTecnico)
                         ->get();
 
         return response()->json($rutas);
@@ -44,61 +42,51 @@ class MobileController extends Controller
      */
     public function recibirLecturas(Request $request){
       try {
-        //$input=$request->json()->all();
-        
-        //$input=$request->json()->all();
-        $data=json_decode($request->listTareas, true);
-        $idEmpresa=$request->id_emp;
-        $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+     //$input=$request->json()->all();
 
-        $cont=0;
-        foreach ($data as $key => $value) {
-          // code...
-          // data lecturas
-          if($value["estado"]==2){
-            $dataProcArray=array();
-            $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
-            $dataProcArray["estado"]=$value["estado"];
-            DB::table($tablaLecturasCompany)
-                 ->where('id',$value["id"])
-                 ->update($dataProcArray);
-          }
-          
-          //orden trabajo
-          $dataOrdenTrabajo=array();
-          $dataOrdenTrabajo["fecha_lectura"]=$value["fechatarea"];
-          $dataOrdenTrabajo["hora"]=$value["hora"];
-          $dataOrdenTrabajo["lat"]=$value["lat_lectura"];
-          $dataOrdenTrabajo["lon"]=$value["lon_lectura"];
-          $dataOrdenTrabajo["observacion"]=$value["observacion"];;
-          $dataOrdenTrabajo["foto"]=$value["foto"];
+     //$input=$request->json()->all();
+     $data=json_decode($request->listTareas, true);
+     $idEmpresa=$request->id_emp;
+     $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
 
-          if($value["estado"]!=0){
-            $dataOrdenTrabajo["estado"]=$value["estado"];
-          }
-          
-          DB::table('orden_trabajo')
-                 ->where('id_lectura',$value["id"])
-                 ->update($dataOrdenTrabajo);
-          $cont++;
-        }
+     $cont=0;
+     foreach ($data as $key => $value) {
+       // code...
+       // data lecturas
+       if($value["estado"]==2){
+         $dataProcArray=array();
+         $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+         $dataProcArray["estado"]=$value["estado"];
+         $dataProcArray["fecha_lectura"]=$value["fechatarea"];
+         $dataProcArray["hora"]=$value["hora"];
+         $dataProcArray["lat"]=$value["lat_lectura"];
+         $dataProcArray["lon"]=$value["lon_lectura"];
+         $dataProcArray["observacion"]=$value["observacion"];;
+         $dataProcArray["foto"]=$value["foto"];
+         $dataProcArray["estado"]=$value["estado"];
+         DB::table($tablaLecturasCompany)
+              ->where('id',$value["id"])
+              ->update($dataProcArray);
+       }
 
-        if($cont>0){
-          $data["mensaje"]="Lecturas recibidas correctamente";
-          $data["cantidad"]=$cont;
-          $data["status"]=true;
-        }else{
-          $data["mensaje"]="Ocurrio un error al actualizar registros";
-          $data["status"]=false;
-        }
-        
-        return response()->json($data);
-      } catch (\Exception $e) {
-        return response()->json("error: ".$e);
-      }
+       $cont++;
+     }
+
+     if($cont>0){
+       $data["mensaje"]="Lecturas recibidas correctamente";
+       $data["cantidad"]=$cont;
+       $data["status"]=true;
+     }else{
+       $data["mensaje"]="Ocurrio un error al actualizar registros";
+       $data["status"]=false;
+     }
+
+     return response()->json($data);
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
 
     }
-
 
 
 
@@ -166,7 +154,7 @@ class MobileController extends Controller
     try {
 
 
-        $data= $request->all();
+        $data= $request->json()->all();
 
         $dataInsert= array();
         $contador=0;
@@ -186,7 +174,7 @@ class MobileController extends Controller
             $dataInsert[$contador]["hora"]=$value["hora"];
             $dataInsert[$contador]["foto"]=$value["foto"];
             $dataInsert[$contador]["mes"]=$value["mes"];
-            $dataInsert[$contador]["created_at"]=date('Y-m-d');
+            $dataInsert[$contador]["created_at"]= date('Y-m-d');
             if($contador==1200){
               DB::table("catastros")->insert($dataInsert);
               $contador=0;

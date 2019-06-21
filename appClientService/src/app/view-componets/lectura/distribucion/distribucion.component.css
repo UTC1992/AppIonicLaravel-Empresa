@@ -12,3 +12,8 @@ mat-list-option[aria-selected="true"] {
 .input-formulario > * {
   width: 100%;
 }
+
+/*scroll vertical*/
+.example-viewport {
+  height: 250px;
+}

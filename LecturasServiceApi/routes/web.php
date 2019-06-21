@@ -31,6 +31,10 @@ $router->post('/data','Procesos\ProcesosController@getDataToDistribution');
 $router->get('/orden-trabajo/{idEmpresa}','Procesos\OrdenTrabajoController@getOrdenTrabajoTecnicos');
 $router->get('/consolidados/{idEmpresa}/{mes}','Procesos\LecturasController@index');
 $router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTrabajo');
+$router->get('/rutas/elepco','Procesos\OrdenTrabajoController@getRutasElepco');
+$router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRutasTecnicos');
+$router->get('/rutas','Procesos\OrdenTrabajoController@obtenerRutasDecobo');
+$router->get('/rutas/tecnicos','Procesos\OrdenTrabajoController@obtenerDistribucionTecnicos');
 /**
  * rutras de orden trabaja distribucion
  */
@@ -40,7 +44,13 @@ $router->get('/actualizar-orden','Procesos\ProcesosController@actualizarOrdenTra
 $router->post('/upload','Procesos\ProcesosController@carga');
 
 
-
+/**
+ * rutas de procesos
+ */
+$router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros');
+$router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
+$router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
+$router->get('/procesos/oden-temp/{mes}','Procesos\ProcesosController@generarOrdenTemp');
 
 
 /**

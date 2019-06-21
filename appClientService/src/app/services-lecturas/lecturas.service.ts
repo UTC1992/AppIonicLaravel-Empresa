@@ -2,18 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders} from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
 import { map, filter, catchError, mergeMap } from 'rxjs/operators';
-import { Filtro } from "../models/filtro";
+import { Filtro } from "../modelos-lec/filtro";
 import { Router } from '@angular/router';
+import { Url } from '../models/Url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LecturasService {
+  url: Url = new Url();
+  baseUrl= this.url.base;
   
-  //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
-  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/api/angular';
-  baseUrl='http://192.168.1.4:8000/api/angular';
-  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
     private http:HttpClient,
     private route: Router,
@@ -42,8 +41,8 @@ export class LecturasService {
    /** 
     * obtiene campos filtro de distribucion
     */
-   getFilterFields():Observable<Filtro[]>{
-    return this.http.get<Filtro[]>(this.baseUrl+"/filtros")
+   getFilterFields():Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/rutas")
     .pipe(catchError( e => {
       if(e.error.mensaje){
         //console.error(e.error.mensaje);
@@ -129,5 +128,27 @@ export class LecturasService {
         })
       );
     }
+
+  getRutasAll(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/rutas")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
+  procesarDatosSubidos(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/orden-temp")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
   
 }

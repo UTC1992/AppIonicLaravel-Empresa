@@ -28,5 +28,18 @@ public static function procesarOrdenTemp(){
   return $result=  DB::select('call sp_test_update()');
 }
 
+/**
+ * guardar historial de rutas
+ */
+public static function guardarHistorialDecobo($tabla){
+  return $result=  DB::select('call ps_guardar_historial_decobo("'.$tabla.'")');
+}
+
+/**
+ * generar orden temporal
+ */
+public static function generarOrdenTempDecobo($mes){
+  return $result=  DB::select('call ps_generar_orden_temp("'.$mes.'")');
+}
 
 }

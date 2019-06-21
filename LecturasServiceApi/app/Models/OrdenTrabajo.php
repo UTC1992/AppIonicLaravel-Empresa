@@ -35,4 +35,6 @@ public static function getLecturasConsolidadas($tabla,$mes){
   return $result=  DB::select('call ps_consolidado_lecturas("'.$tabla.'","'.$mes.'")');
 }
 
+
+
 }

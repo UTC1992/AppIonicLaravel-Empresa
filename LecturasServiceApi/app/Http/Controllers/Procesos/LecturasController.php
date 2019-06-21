@@ -55,4 +55,21 @@ class LecturasController extends Controller
 
         }
 
+
+      public function validarConsumosDecobo(){
+        try {
+          $datalecturas= DB::table("decobo_orden_temp")->get();
+          foreach ($datalecturas as $key => $value) {
+            if($value->nueva_lectura > $value->lectura){
+              DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["alerta"=>1]);
+            }
+            if(){
+              
+            }
+          }
+        } catch (\Exception $e) {
+          return response()->json("error: ".$e);
+        }
+
+      }
 }

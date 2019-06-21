@@ -20,7 +20,7 @@ class ProcesosController extends Controller
 
     }
 
-/**
+  /**
  * metodo carga archivo txt
  */
     public function carga(Request $request){
@@ -84,6 +84,9 @@ class ProcesosController extends Controller
                          $data["longitud"]=0;
                          $data["latitud"]=0;
                        }
+                    }else {
+                      $data["longitud"]=0;
+                      $data["latitud"]=0;
                     }
                   }else{
                     $data["longitud"]=0;
@@ -132,6 +135,8 @@ class ProcesosController extends Controller
       $config = DB::table('configuraciones')->where('idEmpresa', $idCompany)->get();
       return $config;
     }
+
+
 
     private function validarExistenciaMedidor($medidor){
     return   $result= DB::table($table)
@@ -453,6 +458,54 @@ class ProcesosController extends Controller
        //fin funciones
 
 /**
+ *
+ */
+public function generarGuardarHistorialDecobo(){
+  try {
+    $data=array();
+    $tabla='decobo_orden_temp';
+    $decobo_temp=DB::table('decobo_orden_temp')->where('lectura','is null')->exists();
+    if($decobo_temp){
+      $data['mensaje']="No se puede guardar el historial por que existen lecturas sin procesar";
+      $data['status']=false;
+      return response()->json($data);
+    }
+
+    Procedimientos::guardarHistorialDecobo($tabla);
+    $data['mensaje']="El historial ha sido generado con exito";
+    $data['status']=true;
+    return response()->json($data);
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
+
+
+/**
+ *
+ */
+public function generarOrdenTemp($mes){
+  try {
+    Procedimientos::generarOrdenTempDecobo($mes);
+    $ordenes_temp= DB::table("decobo_orden_temp")->get();
+    foreach ($ordenes_temp as $key => $value) {
+      DB::table("decobo_orden_temp")->where("id",$value->id)->update(["lectura"=>$value->nueva_lectura]);
+    }
+    $res=DB::table("decobo_orden_temp")->where("id","!=",0)->update(["nueva_lectura"=>null]);
+    $data=array();
+    $data['mensaje']="Oden de trabajo temporal  ha sido generado con exito";
+    $data['status']=true;
+    return response()->json($data);
+
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
+
+
+/**
  *actualiza la orden de trabajo
  */
 public function actualizarOrdenTrabajo()
@@ -512,5 +565,49 @@ public function actualizarOrdenTrabajo()
   }
 
 }
+
+/**
+ *
+ */
+private function validarConsumos($medidor,$lecturaNueva,$mes){
+  try {
+    $res=DB::table('decobo_historial')
+             ->where('medidor',$medidor)
+             ->where('mes',$mes)
+             ->first();
+    if($res){
+      if($res->lectura>$lecturaNueva){
+        return true;
+      }
+      return false;
+    }
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+}
+
+
+/**
+ *
+ */
+public function  procesarCatastros(){
+  try {
+    $result=DB::table('catastros')->get();
+    foreach ($result as $key => $value) {
+      $res= DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->exists();
+      if($res){
+        DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura]);
+        DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+      }
+    }
+    return response()->json(true);
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
+
+
+
 
 }
