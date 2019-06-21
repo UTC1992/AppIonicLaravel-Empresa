@@ -124,4 +124,6 @@ class LecturasAppController extends Controller
      }
 
    }
+
+   public
 }

@@ -40,21 +40,31 @@ class OrdenTrabajoController extends Controller
  */
     public function distribuirRutasTecnicos(Request $request){
       try {
+        $cont=0;
+        $input=$request;
 
-        $dataInsert=array();
-        $dataInsert["tecnico_id"]=$request->idTecnico;
-        $dataInsert["agencia"]=$request->agencia;
-        $dataInsert["sector"]=$request->sector;
-        $dataInsert["ruta"]=$request->ruta;
-        $res= DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
+        foreach ($input->rutas as $key => $value) {
+          $dataInsert=array();
+          $dataInsert["tecnico_id"]=$value["idTecnico"];
+          $dataInsert["agencia"]=$value["agencia"];
+          $dataInsert["sector"]=$value["sector"];
+          $dataInsert["ruta"]=$value["ruta"];
+          DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
+          DB::table("decobo_orden_temp")->where("agencia",$value["agencia"])
+                                        ->where("sector",$value["sector"])
+                                        ->where("ruta",$value["ruta"])
+                                        ->update(["tecnico_id"=>$value['idTecnico']]);
+          $cont++;
+        }
+
         $dataResponse=array();
-
-        if($res){
-          $dataResponse["mensaje"]= "Ruta asignada correctamente al tecnico con ID: ".$request->idTecnico;
+        if($cont>0){
+          $dataResponse["mensaje"]= "Ruta asignada correctamente ";
+          $dataResponse["cantididad"]=$cont;
           $dataResponse["status"]= true;
           return response()->json($dataResponse);
         }
-        $dataResponse["mensaje"]= "Error no se pudo asignar la ruta al tecnico con ID: ".$request->idTecnico;
+        $dataResponse["mensaje"]= "Error no se pudo asignar las rutas";
         $dataResponse["status"]= false;
         return response()->json($dataResponse);
       } catch (\Exception $e) {

@@ -84,8 +84,8 @@ class LecturasService
     /**
      * upload txt
      */
-  public function uploadFile($file,$id){
-    return $this->performRequestFiles('POST',"/upload",$file,$id);
+  public function uploadFile($file,$id,$mes){
+    return $this->performRequestFiles('POST',"/upload",$file,$id,$mes);
   }
 
   /**

@@ -133,33 +133,38 @@ class ReportesController extends Controller
         foreach ($tecnicos as $key => $value) {
           $prodArray[$cont]["id_tecn"]=$value->id_tecn;
           $prodArray[$cont]["tecnico"]=$value->nombres.' '.$value->apellidos;
-           $prodArray[$cont]["fecha"]=date("Y-m-d",strtotime($value->created_at));
+          $prodArray[$cont]["fecha"]=date("Y-m-d",strtotime($value->created_at));
           $prodArray[$cont]["asignadas"] = DB::table('tbl_actividaddiaria as T0')
                      ->join('tbl_ordentrabajo as T1', 'T0.id_act','=','T1.id_act')
                      ->where('id_emp', $ID_EMP)
-                     ->where('T1.id_tecn',$value->id_tecn)->count();
+                     ->where('T1.id_tecn',$value->id_tecn)
+                     ->where('T0.created_at','like','%'.$fecha.'%')->count();
          $actArray=array();
          $prodArray[$cont]["orden_trabajo"]=Reportes::getActividadByTecnico($value->id_tecn,$fecha);
          $prodArray[$cont]["obtenidas_app"]=DB::table('tbl_actividaddiaria as T0')
                     ->join('tbl_ordentrabajo as T1', 'T0.id_act','=','T1.id_act')
                     ->where('id_emp', $ID_EMP)
                     ->where('T1.discharged',1)
-                    ->where('T1.id_tecn',$value->id_tecn)->count();
+                    ->where('T1.id_tecn',$value->id_tecn)
+                    ->where('T0.created_at','like','%'.$fecha.'%')->count();
          $prodArray[$cont]["enviadas_app"]=DB::table('tbl_actividaddiaria as T0')
                      ->join('tbl_ordentrabajo as T1', 'T0.id_act','=','T1.id_act')
                      ->where('id_emp', $ID_EMP)
                      ->where('T1.sent',1)
-                     ->where('T1.id_tecn',$value->id_tecn)->count();
+                     ->where('T1.id_tecn',$value->id_tecn)
+                     ->where('T0.created_at','like','%'.$fecha.'%')->count();
          $prodArray[$cont]["realizadas"]=DB::table('tbl_actividaddiaria as T0')
                     ->join('tbl_ordentrabajo as T1', 'T0.id_act','=','T1.id_act')
                     ->where('id_emp', $ID_EMP)
                     ->where('T0.estado',2)
-                    ->where('T1.id_tecn',$value->id_tecn)->count();
+                    ->where('T1.id_tecn',$value->id_tecn)
+                    ->where('T0.created_at','like','%'.$fecha.'%')->count();
          $prodArray[$cont]["faltantes"]=DB::table('tbl_actividaddiaria as T0')
                     ->join('tbl_ordentrabajo as T1', 'T0.id_act','=','T1.id_act')
                     ->where('id_emp', $ID_EMP)
                     ->where('T0.estado',3)
-                    ->where('T1.id_tecn',$value->id_tecn)->count();
+                    ->where('T1.id_tecn',$value->id_tecn)
+                    ->where('T0.created_at','like','%'.$fecha.'%')->count();
 
           $cont++;
         }
@@ -169,7 +174,7 @@ class ReportesController extends Controller
       }
 
     }
-   
+
    // obtener id empresa de usuario autenticado
    private function getIdEmpUserAuth(){
      try {
