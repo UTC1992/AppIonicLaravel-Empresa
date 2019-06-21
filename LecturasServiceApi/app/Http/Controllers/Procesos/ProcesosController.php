@@ -30,7 +30,7 @@ class ProcesosController extends Controller
         $contador_registros=0;
         $mes=$request->mes;
         $dataResponse=array();
-        if(!$this->validarMesCargaRutas($mes)){
+        if($this->validarMesCargaRutas($mes)){
           $dataResponse["error"]="No se puede subir el archivo, el mes seleccionado ya existe en la base de datos";
           $dataResponse["status"]=false;
           return response()->json($dataResponse);
