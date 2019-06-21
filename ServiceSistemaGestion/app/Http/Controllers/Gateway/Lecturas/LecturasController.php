@@ -26,8 +26,9 @@ class LecturasController extends Controller
          try {
            $file=$request->file;
            $ID_EMP=$this->getIdEmpUserAuth();
-           $result=$this->lecturasService->uploadFile($file,$ID_EMP);
-           return response($result);
+           $mes=$request->mes;
+           $result=$this->lecturasService->uploadFile($file,$ID_EMP,$mes);
+           return response($result)->header('Content-Type', 'applicationIjson');
          } catch (\Exception $e) {
            return response()->json("Error :".$e);
          }

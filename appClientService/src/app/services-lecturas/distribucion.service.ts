@@ -32,8 +32,19 @@ export class DistribucionService {
     );
   }
 
-  insertRutaTecnico(data : RutaTecnico[]):Observable<any[]>{
-    return this.http.post(this.baseUrl+"/rutas/distribucion",data)
+  getDistribuciones(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/rutas/asignadas")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
+   distribuirRutasTecnico(data:object):Observable<any>{
+    return this.http.post<any>(this.baseUrl+"/rutas/distribucion",data)
     .pipe(
       map((response: any) => response),
       catchError(e => {
@@ -48,6 +59,6 @@ export class DistribucionService {
         return throwError(e);
       })
     );
-   }
+  }
   
 }

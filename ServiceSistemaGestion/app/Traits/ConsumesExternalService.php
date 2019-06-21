@@ -28,7 +28,7 @@ trait ConsumesExternalService
 /**
  * envia archivos al servicio
  */
-  public function performRequestFiles($method,$requestUrl,$file,$id){
+  public function performRequestFiles($method,$requestUrl,$file,$id,$mes){
     $client= new Client([
       'base_uri'=>$this->baseUrl,
     ]);
@@ -39,14 +39,18 @@ trait ConsumesExternalService
 
     $response = $client->request($method, $requestUrl, [
         'multipart' => [
-            [
+          [
+              'name'     => 'mes',
+              'contents' => $mes,
+          ],
+          [
                 'name'     => 'id',
                 'contents' => $id,
-            ],
-            [
+          ],
+          [
                 'name'     => 'file',
                 'contents' => fopen($file, 'r')
-            ],
+          ],
 
         ],
         'headers'=>$headers

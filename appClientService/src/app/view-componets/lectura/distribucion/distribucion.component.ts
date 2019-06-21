@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
-import { LecturasService } from '../../../services-lecturas/lecturas.service';
+
 import { Filtro} from '../../../modelos-lec/filtro';
 import { DataFilter } from "../../../models/data-filter";
 import { Tecnico } from "../../../models/tecnico";
+
 import { TecnicoService } from "../../../services/tecnico.service";
+import { LecturasService } from '../../../services-lecturas/lecturas.service';
+import { DistribucionService } from '../../../services-lecturas/distribucion.service';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -66,6 +69,7 @@ export class DistribucionComponent implements OnInit {
   rutaElegida: string = null;
   rutasList: Filtro[] = [];
   formRutas = new FormControl();
+  rutasAsignadas: any[] = [];
 
   //mostrar filtros
   mostrarFiltro2: boolean = false;
@@ -77,6 +81,7 @@ export class DistribucionComponent implements OnInit {
     private lecturasService:LecturasService,
     private tecnicoService:TecnicoService,
     private dateAdapter: DateAdapter<Date>,
+    private distribucionService: DistribucionService
   ) {
     this.dateAdapter.setLocale('es'); 
    }
@@ -87,16 +92,41 @@ export class DistribucionComponent implements OnInit {
   }
 
   obtenerRutas(){
-    this.lecturasService.getRutasAll().subscribe(response => {
+    this.distribucionService.getRutasAll().subscribe(response => {
       console.log(response);
       this.rutasObtenidas = response;
-      for (let i = 0; i < response.length; i++) {
-        var valor = this.primerFiltro.find(x => x.agencia == response[i].agencia);
-        if (!valor) {
-          this.primerFiltro.push(response[i])
-          console.log(this.primerFiltro);
+    
+      this.distribucionService.getDistribuciones().subscribe(response => {
+        console.log(response);
+        this.rutasAsignadas = response;
+  
+        for (let i = 0; i < this.rutasAsignadas.length; i++) {
+          let vectorAux: any[] = [];
+          for (let j = 0; j < this.rutasObtenidas.length; j++) {
+  
+            if(this.rutasObtenidas[j].agencia == this.rutasAsignadas[i].agencia
+              && this.rutasObtenidas[j].sector == this.rutasAsignadas[i].sector
+              && this.rutasObtenidas[j].ruta == this.rutasAsignadas[i].ruta){
+                delete this.rutasObtenidas[j];
+            } else {
+              vectorAux.push(this.rutasObtenidas[j]);
+            }
+  
+          }
+          this.rutasObtenidas = vectorAux;
         }
-      }
+
+        for (let i = 0; i < this.rutasObtenidas.length; i++) {
+          var valor = this.primerFiltro.find(x => x.agencia == this.rutasObtenidas[i].agencia);
+          if (!valor) {
+            this.primerFiltro.push(response[i])
+            console.log(this.primerFiltro);
+          }
+        }
+        
+        console.log(this.rutasObtenidas);
+      });
+
     });
   }
 
@@ -133,7 +163,11 @@ export class DistribucionComponent implements OnInit {
     
     console.log($event.value);
     let agencia = $event.value;
-    this.agenciaElegida = agencia;
+    if(agencia == 'empty'){
+      this.agenciaElegida = null;  
+    } else {
+      this.agenciaElegida = agencia;
+    }
     for (let i = 0; i < this.rutasObtenidas.length; i++) {
       var valor = this.rutasObtenidas.find(x => x.agencia == agencia);
       if (valor) {
@@ -230,29 +264,52 @@ export class DistribucionComponent implements OnInit {
     
     if(this.agenciaElegida == null){
       this.showAlert('Alerta!',"Seleccione una agencia",'warning');
+      return 
     } else if(this.sectorElegido == null){
       this.showAlert('Alerta!',"Seleccione un sector",'warning');
-    } else if(this.rutaElegida == null){
+      return 
+    } else if(this.rutasList.length == 0){
       this.showAlert('Alerta!',"Seleccione una ruta",'warning');
-    } else if(this.listTecnicosSeleccionados.length != 1){
+      return 
+    } else if(this.listTecnicosSeleccionados.length > 1){
       this.showAlert('Alerta!',"Seleccione un solo técnico",'warning');
-    }
-    if(this.agenciaValidar && this.sectorValidar 
-      && this.rutaValidar && this.listTecnicosSeleccionados.length == 1){
+      return 
+    } else if(this.listTecnicosSeleccionados.length == 0){
+      this.showAlert('Alerta!',"Seleccione un técnico por favor.",'warning');
+      return 
+    } 
+    if(this.agenciaElegida != null && this.sectorElegido != null 
+      && this.rutasList.length > 0 && this.listTecnicosSeleccionados.length == 1){
       this.showCargando();
       console.log(this.listTecnicosSeleccionados[0].value);
-      let data={
-        'lecturas':this.idsLecturas,
-        'idTecnico':this.listTecnicosSeleccionados[0].value,
-      };
-      this.lecturasService.distribuirRutasTecnico(data).subscribe(
+
+      let dataEnvio : any[] = [];
+      let data: any[] = [];
+      for (let i = 0; i < this.rutasList.length; i++) {
+        
+        data.push({
+          idTecnico : this.listTecnicosSeleccionados[0].value,
+          agencia : this.rutasList[i].agencia,
+          sector : this.rutasList[i].sector,
+          ruta : this.rutasList[i].ruta,
+        });
+        dataEnvio.push({
+          rutas:data
+        });
+      }
+      console.log(dataEnvio);
+      this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
           console.log(result);
           if(result){
             //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');
+            this.inicializarFiltros();
+            this.obtenerRutas();
           } else {
             this.showAlert('Alerta!', 'No se pudo asignar la ruta', 'warning');
+            this.inicializarFiltros();
+            this.obtenerRutas();
           }
         }, error => {
           console.log(error);

@@ -20,13 +20,22 @@ class ProcesosController extends Controller
 
     }
 
-  /**
+/**
  * metodo carga archivo txt
  */
     public function carga(Request $request){
       try {
+
         $mes=0;
+        $contador_registros=0;
         $mes=$request->mes;
+        $dataResponse=array();
+        if($this->validarMesCargaRutas($mes)){
+          $dataResponse["error"]="No se puede subir el archivo, el mes seleccionado ya existe en la base de datos";
+          $dataResponse["status"]=false;
+          return response()->json($dataResponse);
+        }
+
         $configRow=$this->getConfigCompany($request->id);
         if(count($configRow)<=0){
           return response()->json("Error: La empresa con ID: ".$request->id." no tiene generada su configuración");
@@ -97,11 +106,12 @@ class ProcesosController extends Controller
                 $data["idEmpresa"]=$request->id;
                 $data["estado"]=false;
                 $data["created_at"]=date('Y-m-d H:i:s');
-                $data["mes"]=12;
+                $data["mes"]=$mes;
                 $dataInsert[$contInsert]=$data;
 
                 if($contInsert>=2100){
                   $this->createRegister($tabla,$dataInsert);
+                  $contador_registros=$contador_registros+$contInsert;
                   $dataInsert=array();
                   $contInsert=0;
                 }
@@ -116,19 +126,34 @@ class ProcesosController extends Controller
 
               if(count($dataInsert)>0){
                 $this->createRegister($tabla,$dataInsert);
-                //print_r($dataInsert);
+                $contador_registros=$contador_registros+count($dataInsert);
               }
               $res=true;
           }
 
           }
-
-          return response()->json($res);
+          $dataResponse["mensaje"]="El archivo ha sido subido correctamente";
+          $dataResponse["cantidad_subida"]=$contador_registros;
+          $dataResponse["status"]=$res;
+          return response()->json($dataResponse);
 
       } catch (\Exception $e) {
 
         return response()->json("error: ".$e);
       }
+    }
+
+    /**
+     * valida existencia de mes en hitrial
+     */
+    private function validarMesCargaRutas($mes){
+      try {
+        $result = DB::table("decobo_historial")->where("mes",$mes)->exists();
+        return $result;
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+
     }
 
     private function getConfigCompany($idCompany){
@@ -511,7 +536,13 @@ public function generarOrdenTemp($mes){
 public function actualizarOrdenTrabajo()
 {
   try {
+    $dataRe=array();
     $decobo_temp1=DB::table('decobo')->get();
+    if(count($decobo_temp1)<=0){
+      $dataRe["error"]="No se proceso ningun registro";
+      $dataRe["status"]=false;
+      $dataRe["total_procesados"]=0;
+    }
     $cont=0;
     foreach ($decobo_temp1 as $key => $value) {
         $data=array();
@@ -557,8 +588,10 @@ public function actualizarOrdenTrabajo()
         $cont++;
     }
 
-    $dataRe=array();
-    $dataRe["total procesados"]=$cont;
+
+    $dataRe["mensaje"]="Proceso finalizado con exito";
+    $dataRe["status"]=true;
+    $dataRe["total_procesados"]=$cont;
     return response()->json($dataRe);
   } catch (\Exception $e) {
     return response()->json("error: ".$e);

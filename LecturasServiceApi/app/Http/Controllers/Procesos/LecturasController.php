@@ -63,8 +63,8 @@ class LecturasController extends Controller
             if($value->nueva_lectura > $value->lectura){
               DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["alerta"=>1]);
             }
-            if(){
-              
+            if($value->lectura == "0" ){
+
             }
           }
         } catch (\Exception $e) {
@@ -72,4 +72,6 @@ class LecturasController extends Controller
         }
 
       }
+
+
 }

@@ -15,9 +15,8 @@
                       <mat-form-field>
                           <mat-select matNativeControl placeholder="Agencia" 
                           name="agencia" id="agencia"
-                          (selectionChange)="getSectores($event)"> 
+                          (selectionChange)="getSectores($event)" [(ngModel)]="agenciaElegida"> 
                             <mat-option value="empty"></mat-option>
-                              
                             <mat-option *ngFor="let value of primerFiltro" value="{{value.agencia}}" >
                               {{value.agencia}}</mat-option>
                           </mat-select>
