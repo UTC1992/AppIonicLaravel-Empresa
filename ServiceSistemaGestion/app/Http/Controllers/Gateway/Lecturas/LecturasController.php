@@ -234,5 +234,14 @@ class LecturasController extends Controller
     }
 
   }
+  
+  public function deleteAsignacionLecturas(Request $request){
+    try {
+      $result=$this->lecturasService->deleteAsignacion($request->all());
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+  }
 
 }

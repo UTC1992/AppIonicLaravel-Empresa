@@ -5,7 +5,7 @@ import { Filtro} from '../../../modelos-lec/filtro';
 import { DataFilter } from "../../../models/data-filter";
 import { Tecnico } from "../../../models/tecnico";
 
-import { TecnicoService } from "../../../services/tecnico.service";
+import { TecnicolecService } from "../../../services-lecturas/tecnicolec.service";
 import { LecturasService } from '../../../services-lecturas/lecturas.service';
 import { DistribucionService } from '../../../services-lecturas/distribucion.service';
 
@@ -13,8 +13,9 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import Swal from 'sweetalert2';
-import { DataRowOutlet } from '@angular/cdk/table';
-import { Runner } from 'protractor';
+import {BsModalRef, BsModalService,  } from 'ngx-bootstrap/modal';
+import {MatTableDataSource, MatPaginator} from '@angular/material';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 export const MY_FORMATS = {
   parse: {
@@ -38,6 +39,13 @@ export const MY_FORMATS = {
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class DistribucionComponent implements OnInit {
 
@@ -53,6 +61,7 @@ export class DistribucionComponent implements OnInit {
 
   idsLecturas:Filtro[]=[];
   tecnicosLecturas:Tecnico[]=[];
+  tecnicosConLecturas:Tecnico[]=[];
 
   tecnicoSeleccionado: string;
   listTecnicosSeleccionados: any[] = [];
@@ -76,12 +85,17 @@ export class DistribucionComponent implements OnInit {
   mostrarFiltro3: boolean = false;
   mostrarCantidad: boolean = false;
 
+  //creacion de tabla de lectores ya asignados
+  displayedColumns: string[] = ['index', 'tecnico'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(
-    private fb: FormBuilder,
-    private lecturasService:LecturasService,
-    private tecnicoService:TecnicoService,
+    private tecnicoService:TecnicolecService,
     private dateAdapter: DateAdapter<Date>,
-    private distribucionService: DistribucionService
+    private distribucionService: DistribucionService,
+    private modalService: BsModalService,
+    public modalRef: BsModalRef,
   ) {
     this.dateAdapter.setLocale('es'); 
    }
@@ -89,15 +103,20 @@ export class DistribucionComponent implements OnInit {
   ngOnInit() {
     this.getTenicosLecturas();
     this.obtenerRutas();
+    this.getTenicosConLecturas();
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   obtenerRutas(){
     this.distribucionService.getRutasAll().subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.rutasObtenidas = response;
     
       this.distribucionService.getDistribuciones().subscribe(response => {
-        console.log(response);
+        //console.log(response);
         this.rutasAsignadas = response;
   
         for (let i = 0; i < this.rutasAsignadas.length; i++) {
@@ -120,13 +139,17 @@ export class DistribucionComponent implements OnInit {
           var valor = this.primerFiltro.find(x => x.agencia == this.rutasObtenidas[i].agencia);
           if (!valor) {
             this.primerFiltro.push(response[i])
-            console.log(this.primerFiltro);
+            //console.log(this.primerFiltro);
           }
         }
         
-        console.log(this.rutasObtenidas);
+        //console.log(this.rutasObtenidas);
+      }, error => {
+        console.log(error);
       });
 
+    }, error => {
+      console.log(error);
     });
   }
 
@@ -139,7 +162,56 @@ export class DistribucionComponent implements OnInit {
         this.tecnicosLecturas=result;
         //console.log("tecnicos"+this.tecnicosLecturas);
       }
-    );
+    , error => {
+      console.log(error);
+    });
+  }
+
+  /**
+   * obtiene tecnicos que ya tienen rutas asignadas para lecturas
+   */
+  getTenicosConLecturas(){
+    this.tecnicoService.getTecnicosLecturasConAsignacion().subscribe(
+      result=>{
+        this.tecnicosConLecturas=result;
+        console.log("Tecnisos con asignaciones");
+        console.log(this.tecnicosConLecturas);
+        this.agruparDistribucion();
+      }, error => {
+        console.log(error);
+      });
+  }
+
+  agruparDistribucion(){
+    var dataAux: any[] = [];
+    var index = 1;
+    for (let i = 0; i < this.tecnicosConLecturas.length; i++) {
+      var valor = dataAux.find(x=>x.id_tecn == this.tecnicosConLecturas[i].id_tecn);
+      if(!valor){
+        dataAux.push({
+          index:index,
+          id_tecn:this.tecnicosConLecturas[i].id_tecn,
+          tecnico:this.tecnicosConLecturas[i].nombres+" "+this.tecnicosConLecturas[i].apellidos,
+          data: null
+        });
+        index++;
+      }
+    }
+    var dataTecnicos : any[] = [];
+    for (let i = 0; i < dataAux.length; i++) {
+      dataTecnicos = [];
+      for (let j = 0; j < this.tecnicosConLecturas.length; j++) {
+        if(dataAux[i].id_tecn == this.tecnicosConLecturas[j].id_tecn){
+          dataTecnicos.push({
+            datos:this.tecnicosConLecturas[j]
+          });
+        }
+      }
+      dataAux[i].data = dataTecnicos;
+    }
+    this.dataSource = new MatTableDataSource(dataAux);
+    this.dataSource.paginator = this.paginator;
+    console.log(dataAux);
   }
 
   inicializarFiltros(){
@@ -161,7 +233,7 @@ export class DistribucionComponent implements OnInit {
   getSectores($event){
     this.inicializarFiltros();
     
-    console.log($event.value);
+    //console.log($event.value);
     let agencia = $event.value;
     if(agencia == 'empty'){
       this.agenciaElegida = null;  
@@ -174,7 +246,7 @@ export class DistribucionComponent implements OnInit {
         let valor2 = this.segundoFiltro.find(x => x.sector == this.rutasObtenidas[i].sector);
         if(!valor2){
           this.segundoFiltro.push(this.rutasObtenidas[i]);
-          console.log(this.segundoFiltro);
+          //console.log(this.segundoFiltro);
           this.mostrarFiltro2 = true;
         }
         
@@ -194,7 +266,7 @@ export class DistribucionComponent implements OnInit {
     this.mostrarCantidad = false;
     this.formRutas = new FormControl();
 
-    console.log($event.value);
+    //console.log($event.value);
     let sector = $event.value;
     this.sectorElegido = sector;
     for (let i = 0; i < this.rutasObtenidas.length; i++) {
@@ -202,7 +274,7 @@ export class DistribucionComponent implements OnInit {
         let valor3 = this.tercerFiltro.find(x => x.ruta == this.rutasObtenidas[i].ruta);
         if(!valor3){
           this.tercerFiltro.push(this.rutasObtenidas[i]);
-          console.log(this.tercerFiltro);
+          //console.log(this.tercerFiltro);
           this.mostrarFiltro3 = true;
         }
         
@@ -230,7 +302,7 @@ export class DistribucionComponent implements OnInit {
       this.rutasList = [];
       this.rutasList = vectorAux;
       this.cantidad_lecturas -= cantidad;
-      console.log(this.rutasList);
+      //console.log(this.rutasList);
     } else {
       for (let i = 0; i < this.rutasObtenidas.length; i++) {
         if (this.rutasObtenidas[i].sector == this.sectorElegido 
@@ -240,7 +312,7 @@ export class DistribucionComponent implements OnInit {
             
             this.rutasList.push(this.rutasObtenidas[i]);
             this.cantidad_lecturas += this.rutasObtenidas[i].cantidad;
-            console.log(this.rutasList);
+            //console.log(this.rutasList);
           
         }
       }
@@ -281,7 +353,7 @@ export class DistribucionComponent implements OnInit {
     if(this.agenciaElegida != null && this.sectorElegido != null 
       && this.rutasList.length > 0 && this.listTecnicosSeleccionados.length == 1){
       this.showCargando();
-      console.log(this.listTecnicosSeleccionados[0].value);
+      //console.log(this.listTecnicosSeleccionados[0].value);
 
       let dataEnvio : any[] = [];
       let data: any[] = [];
@@ -297,7 +369,7 @@ export class DistribucionComponent implements OnInit {
           rutas:data
         });
       }
-      console.log(dataEnvio);
+      //console.log(dataEnvio);
       this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
           console.log(result);
@@ -305,11 +377,11 @@ export class DistribucionComponent implements OnInit {
             //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');
             this.inicializarFiltros();
-            this.obtenerRutas();
+            this.actualizarVista();
           } else {
             this.showAlert('Alerta!', 'No se pudo asignar la ruta', 'warning');
             this.inicializarFiltros();
-            this.obtenerRutas();
+            this.actualizarVista();
           }
         }, error => {
           console.log(error);
@@ -319,6 +391,51 @@ export class DistribucionComponent implements OnInit {
     }
         
     //console.log(this.idsLecturas);
+  }
+
+  actualizarVista(){
+    this.getTenicosLecturas();
+    this.obtenerRutas();
+    this.getTenicosConLecturas();
+  }
+
+  reasignarRutaTecnico(id){
+    this.tecnicoService.changeStateTecnico(id).subscribe(response => {
+      console.log(response);
+      this.actualizarVista();
+      this.showAlert(
+        'Éxito!',
+        'El lector ha sido habilitado.',
+        'success'
+      )
+    }, error => {
+      console.log(error);
+      this.actualizarVista();
+    });
+  }
+
+  eliminarAsignacion(id_tecn, agencia, sector, ruta){
+    let data: any[] = [];
+    data.push({
+      idTecnico : id_tecn,
+      agencia : agencia,
+      sector : sector,
+      ruta : ruta,
+    });
+    this.distribucionService.deleteRutasTecnico(data).subscribe(response =>{
+      console.log(response);
+      if(response == 1){
+        this.actualizarVista();
+        this.showAlert("Éxito !","La asignación se elimino éxitosamente","success");
+      } else {
+        this.actualizarVista();
+        this.showAlert("Alerta !","No se puedo eliminar la asignación","warning");
+      }
+      
+    }, error => {
+      console.log("Error al eliminar la asignacion");
+      this.actualizarVista();
+    });
   }
 
   showAlert(title, text, type){
@@ -341,6 +458,23 @@ export class DistribucionComponent implements OnInit {
       allowEscapeKey:false,
       onOpen: () => {
         Swal.showLoading();
+      }
+    });
+  }
+
+  confirmarEliminar(id_tecn, agencia, sector, ruta){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Se eliminará la asignación",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarAsignacion(id_tecn, agencia, sector, ruta);
       }
     });
   }

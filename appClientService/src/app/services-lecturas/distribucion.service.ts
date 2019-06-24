@@ -60,5 +60,23 @@ export class DistribucionService {
       })
     );
   }
+
+  deleteRutasTecnico(data:object):Observable<any>{
+    return this.http.post<any>(this.baseUrl+"/delete-distribution",data)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          //console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
+  }
   
 }

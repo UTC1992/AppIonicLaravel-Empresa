@@ -54,6 +54,8 @@ class OrdenTrabajoController extends Controller
                                         ->where("sector",$value["sector"])
                                         ->where("ruta",$value["ruta"])
                                         ->update(["tecnico_id"=>$value['idTecnico']]);
+          DB::table("dashboard_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
+                                              ->update(["asignado"=>1]);
           $cont++;
         }
 
@@ -228,7 +230,21 @@ class OrdenTrabajoController extends Controller
 
   }
 
-
+  public function deleteRutaTecnico(Request $request){
+    try {
+      $input=$request[0];
+      $result= DB::table("rutas_tecnicos_decobo")
+                  ->where("agencia",$input["agencia"])
+                  ->where("sector",$input["sector"])
+                  ->where("ruta",$input["ruta"])
+                  ->where("tecnico_id",$input["idTecnico"])
+                  ->delete();
+      
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+  }
 
 
 

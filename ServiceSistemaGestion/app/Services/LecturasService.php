@@ -178,4 +178,11 @@ class LecturasService
     public function obtenerRutasAsignadasTecnicos(){
       return $this->performRequest('GET',"/rutas/tecnicos");
     }
+
+    /**
+     * eliminar asignacion tecnicos decobo
+    */
+    public function deleteAsignacion($data){
+      return $this->performRequest('POST',"/rutas/delete-asignacion",$data);
+    }
 }

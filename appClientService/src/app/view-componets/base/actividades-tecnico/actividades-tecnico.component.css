@@ -86,3 +86,8 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-viewport {
   height: 250px;
 }
+
+/*dar un padding-top al contenido td*/
+.datos-td{
+  padding-top: 10px;
+}

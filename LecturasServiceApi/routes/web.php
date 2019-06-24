@@ -35,6 +35,7 @@ $router->get('/rutas/elepco','Procesos\OrdenTrabajoController@getRutasElepco');
 $router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRutasTecnicos');
 $router->get('/rutas','Procesos\OrdenTrabajoController@obtenerRutasDecobo');
 $router->get('/rutas/tecnicos','Procesos\OrdenTrabajoController@obtenerDistribucionTecnicos');
+$router->post('/rutas/delete-asignacion','Procesos\OrdenTrabajoController@deleteRutaTecnico');
 /**
  * rutras de orden trabaja distribucion
  */

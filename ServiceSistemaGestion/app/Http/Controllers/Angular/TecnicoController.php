@@ -11,6 +11,7 @@ use App\Models\OrdenTrabajo;
 use App\Models\ActividadDiaria;
 use App\Models\ReconexionManual;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 class TecnicoController extends Controller
 {
@@ -125,6 +126,16 @@ class TecnicoController extends Controller
     public function getTecnicosSinActividadesLecturas(){
       $tecnico=new Tecnico();
       $result=$tecnico->where('asignado',0)->where('estado',1)->where('borrado',0)->where('id_emp',$this->getIdEmpUserAuth())->where('actividad','lecturas')->get();
+      return response()->json($result);
+    }
+
+    //tecnicos sin asignar actividades de lecturas
+    public function getTecnicosConActividadesLecturas(){
+      $result=DB::select("SELECT t0.id_tecn, t0.nombres, t0.apellidos, t1.agencia, t1.sector, t1.ruta,
+                          (SELECT COUNT(*) FROM lecturasdb.decobo_orden_temp t3 WHERE t3.ruta=t1.ruta) as cantidad 
+                          from dashboard_db.tbl_tecnico t0, lecturasdb.rutas_tecnicos_decobo t1
+                          WHERE t0.id_tecn=t1.tecnico_id AND t0.id_emp=".$this->getIdEmpUserAuth()
+                          , []);
       return response()->json($result);
     }
 
