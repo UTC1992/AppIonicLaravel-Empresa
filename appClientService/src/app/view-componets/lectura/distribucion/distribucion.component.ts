@@ -49,7 +49,6 @@ export const MY_FORMATS = {
 })
 export class DistribucionComponent implements OnInit {
 
-  filtrosLabel: Filtro[]=[];
   primerFiltro:Filtro[]=[];
   segundoFiltro:Filtro[]=[];
   tercerFiltro:Filtro[]=[];
@@ -86,7 +85,7 @@ export class DistribucionComponent implements OnInit {
   mostrarCantidad: boolean = false;
 
   //creacion de tabla de lectores ya asignados
-  displayedColumns: string[] = ['index', 'tecnico'];
+  displayedColumns: string[] = ['index', 'tecnico', 'accion'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -111,12 +110,12 @@ export class DistribucionComponent implements OnInit {
   }
 
   obtenerRutas(){
-    this.distribucionService.getRutasAll().subscribe(response => {
-      //console.log(response);
-      this.rutasObtenidas = response;
-    
+    this.distribucionService.getRutasAll().subscribe(response1 => {
+      console.log(response1);
+      this.rutasObtenidas = response1;
+      
       this.distribucionService.getDistribuciones().subscribe(response => {
-        //console.log(response);
+        console.log(response);
         this.rutasAsignadas = response;
   
         for (let i = 0; i < this.rutasAsignadas.length; i++) {
@@ -138,7 +137,7 @@ export class DistribucionComponent implements OnInit {
         for (let i = 0; i < this.rutasObtenidas.length; i++) {
           var valor = this.primerFiltro.find(x => x.agencia == this.rutasObtenidas[i].agencia);
           if (!valor) {
-            this.primerFiltro.push(response[i])
+            this.primerFiltro.push(this.rutasObtenidas[i]);
             //console.log(this.primerFiltro);
           }
         }
@@ -174,11 +173,11 @@ export class DistribucionComponent implements OnInit {
     this.tecnicoService.getTecnicosLecturasConAsignacion().subscribe(
       result=>{
         this.tecnicosConLecturas=result;
-        console.log("Tecnisos con asignaciones");
-        console.log(this.tecnicosConLecturas);
+        //console.log("Tecnicos con asignaciones");
+        //console.log(this.tecnicosConLecturas);
         this.agruparDistribucion();
       }, error => {
-        console.log(error);
+        //console.log(error);
       });
   }
 
@@ -402,12 +401,22 @@ export class DistribucionComponent implements OnInit {
   reasignarRutaTecnico(id){
     this.tecnicoService.changeStateTecnico(id).subscribe(response => {
       console.log(response);
-      this.actualizarVista();
-      this.showAlert(
-        'Éxito!',
-        'El lector ha sido habilitado.',
-        'success'
-      )
+      if(response){
+        this.actualizarVista();
+        this.showAlert(
+          'Éxito!',
+          'El lector ha sido habilitado.',
+          'success'
+        )
+      } else {
+        this.actualizarVista();
+        this.showAlert(
+          'Alerta !',
+          'No se pudo habilitar al lector.',
+          'warning'
+        )
+      }
+      
     }, error => {
       console.log(error);
       this.actualizarVista();
@@ -424,7 +433,7 @@ export class DistribucionComponent implements OnInit {
     });
     this.distribucionService.deleteRutasTecnico(data).subscribe(response =>{
       console.log(response);
-      if(response == 1){
+      if(response){
         this.actualizarVista();
         this.showAlert("Éxito !","La asignación se elimino éxitosamente","success");
       } else {

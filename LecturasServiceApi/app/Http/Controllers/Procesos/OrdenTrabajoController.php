@@ -230,17 +230,43 @@ class OrdenTrabajoController extends Controller
 
   }
 
+  /**
+    eliminacion de asignacion de una ruta a un tecnico
+    si ya no esta asignado a mas rutas se cambia el estado
+  */
   public function deleteRutaTecnico(Request $request){
     try {
       $input=$request[0];
-      $result= DB::table("rutas_tecnicos_decobo")
+      $result1= DB::table("rutas_tecnicos_decobo")
                   ->where("agencia",$input["agencia"])
                   ->where("sector",$input["sector"])
                   ->where("ruta",$input["ruta"])
                   ->where("tecnico_id",$input["idTecnico"])
                   ->delete();
+      $result2=DB::table("decobo_orden_temp")
+                  ->where("agencia",$input["agencia"])
+                  ->where("sector",$input["sector"])
+                  ->where("ruta",$input["ruta"])
+                  ->where("tecnico_id",$input["idTecnico"])
+                  ->update(["tecnico_id"=>0]);
+
+      $result3= DB::table("rutas_tecnicos_decobo")
+                  ->select("*")
+                  ->where("tecnico_id",$input["idTecnico"])
+                  ->get();
+
+      if(count($result3) == 0){
+        $result4 = DB::table("dashboard_db.tbl_tecnico")
+                  ->where("id_tecn",$input['idTecnico'])
+                  ->update(["asignado"=>0]);
+      }
       
-      return response()->json($result);
+      if($result1 == 1 && $result2 > 0){
+        return response()->json(true);
+      } else {
+        return response()->json(false);
+      }
+      
     } catch (\Exception $e) {
       return response()->json("error: ".$e);
     }

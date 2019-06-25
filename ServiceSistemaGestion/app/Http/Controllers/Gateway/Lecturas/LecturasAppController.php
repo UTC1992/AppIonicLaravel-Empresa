@@ -15,7 +15,7 @@ class LecturasAppController extends Controller
     public $lecturasAppServices;
 
     public function __construct(LecturasAppService $lecturasAppServices){
-    //  $this->middleware('auth:api');
+      //$this->middleware('auth:api');
       $this->lecturasAppServices=$lecturasAppServices;
     }
 
@@ -124,6 +124,5 @@ class LecturasAppController extends Controller
      }
 
    }
-
-   public
+   
 }
