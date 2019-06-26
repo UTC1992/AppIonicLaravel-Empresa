@@ -9,7 +9,7 @@ import { MatTableModule, MatToolbarModule,
   MatButtonModule, MatSidenavModule, MatIconModule, 
   MatListModule, MatGridListModule, MatCardModule, 
   MatMenuModule, MatDatepickerModule, MatNativeDateModule, 
-  MatTableDataSource, MatSelectModule, MatInputModule } from '@angular/material';
+  MatTableDataSource, MatSelectModule, MatInputModule, MatRadioModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -91,7 +91,8 @@ import { ChartsModule } from 'ng2-charts';
     MatProgressBarModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    ScrollDispatchModule
+    ScrollDispatchModule,
+    MatRadioModule
   ],
   providers: [
     MatDatepickerModule,

@@ -55,51 +55,49 @@ class MobileController extends Controller
      */
     public function recibirLecturas(Request $request){
       try {
-     //$input=$request->json()->all();
+         $data=json_decode($request->listTareas, true);
+         $idEmpresa=$request->id_emp;
+         $tablaLecturasCompany="decobo_orden_temp";//$this->getTableCompany($idEmpresa);
 
-     //$input=$request->json()->all();
-     $data=json_decode($request->listTareas, true);
-     $idEmpresa=$request->id_emp;
-     $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+         $cont=0;
+         foreach ($data as $key => $value) {
+           // code...
+           // data lecturas
+           if($value["estado"]==2){
+             $dataProcArray=array();
+             $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
+             $dataProcArray["estado"]=$value["estado"];
+             $dataProcArray["fecha_lectura"]=$value["fechatarea"];
+             $dataProcArray["hora"]=$value["hora"];
+             $dataProcArray["lat"]=$value["lat_lectura"];
+             $dataProcArray["lon"]=$value["lon_lectura"];
+             $dataProcArray["observacion"]=$value["observacion"];;
+             $dataProcArray["foto"]=$value["foto"];
+             $dataProcArray["estado"]=$value["estado"];
+             $dataProcArray["recibido"]=1;
+             DB::table($tablaLecturasCompany)
+                  ->where('medidor',$value["medidor"])
+                  ->update($dataProcArray);
+           }
 
-     $cont=0;
-     foreach ($data as $key => $value) {
-       // code...
-       // data lecturas
-       if($value["estado"]==2){
-         $dataProcArray=array();
-         $dataProcArray["nueva_lectura"]=$value["lectura_actual"];
-         $dataProcArray["estado"]=$value["estado"];
-         $dataProcArray["fecha_lectura"]=$value["fechatarea"];
-         $dataProcArray["hora"]=$value["hora"];
-         $dataProcArray["lat"]=$value["lat_lectura"];
-         $dataProcArray["lon"]=$value["lon_lectura"];
-         $dataProcArray["observacion"]=$value["observacion"];;
-         $dataProcArray["foto"]=$value["foto"];
-         $dataProcArray["estado"]=$value["estado"];
-         DB::table($tablaLecturasCompany)
-              ->where('id',$value["id"])
-              ->update($dataProcArray);
+           $cont++;
+         }
+
+         if($cont>0){
+           $data["mensaje"]="Lecturas recibidas correctamente";
+           $data["cantidad"]=$cont;
+           $data["status"]=true;
+         }else{
+           $data["mensaje"]="Ocurrio un error al actualizar registros";
+           $data["status"]=false;
+         }
+
+         return response()->json($data);
+       } catch (\Exception $e) {
+         return response()->json("error: ".$e);
        }
 
-       $cont++;
-     }
-
-     if($cont>0){
-       $data["mensaje"]="Lecturas recibidas correctamente";
-       $data["cantidad"]=$cont;
-       $data["status"]=true;
-     }else{
-       $data["mensaje"]="Ocurrio un error al actualizar registros";
-       $data["status"]=false;
-     }
-
-     return response()->json($data);
-   } catch (\Exception $e) {
-     return response()->json("error: ".$e);
-   }
-
-    }
+  }
 
 
 

@@ -90,6 +90,7 @@ Route::group(['prefix' => 'angular'], function(){
     // observaciones
     Route::get('observaciones','AuthApi\PermisosController@getObservacionesEmpresa');
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
+    Route::get('get-observacion/{id_obs}','AuthApi\PermisosController@getObservacionById');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');
     Route::get('borrar-observacion/{id_obs}','AuthApi\PermisosController@borrarObservacion');
 });

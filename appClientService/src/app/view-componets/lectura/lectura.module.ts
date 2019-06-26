@@ -11,7 +11,7 @@ import { MatTableModule, MatToolbarModule, MatButtonModule,
   MatSidenavModule, MatIconModule, MatListModule, 
   MatGridListModule, MatCardModule, MatMenuModule, 
   MatTabsModule, MatDatepickerModule, MatNativeDateModule, 
-  MatTableDataSource, MatSelectModule } from '@angular/material';
+  MatTableDataSource, MatSelectModule, MatRadioModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
@@ -36,6 +36,7 @@ import { LoadfileComponent } from './loadfile/loadfile.component';
 import { DistribucionComponent } from './distribucion/distribucion.component';
 import { ConsultasComponent } from './consultas/consultas.component';
 import { ReporteComponent } from './reporte/reporte.component';
+import { ObservacionesComponent } from './observaciones/observaciones.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { ReporteComponent } from './reporte/reporte.component';
     ChartsModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatRadioModule
   ],
   declarations: [
     PanelComponent,
@@ -83,6 +85,7 @@ import { ReporteComponent } from './reporte/reporte.component';
     DistribucionComponent,
     ConsultasComponent,
     ReporteComponent,
+    ObservacionesComponent,
   ],
   exports: [
   ],
