@@ -593,7 +593,7 @@ public function actualizarOrdenTrabajo()
         $data['latitud']=$value->latitud;
         $data['idEmpresa']=$value->idEmpresa;
         $data['mes']=$value->mes;
-        $data['nuevo_consumo']=null;
+        $data['nuevo_consumo']=0;
         $data['procesado']=0;
         $res=DB::table('decobo_orden_temp')
                  ->where('medidor',$value->medidor)->first();
@@ -674,6 +674,8 @@ public function  procesarCatastros(){
  */
  public function procesarConsumosFinal(){
    try {
+     $dataResult=array();
+     $cont=0;
      //$this->calcularConsumos();
      $this->validarObservacion();
      $this->promediaConsuloSinLecturaSinObs();
@@ -688,7 +690,14 @@ public function  procesarCatastros(){
           ->where("medidor",$value->medidor)
           ->update(["alerta"=>1,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
        }
+       DB::table("decobo_orden_temp")
+        ->where("medidor",$value->medidor)
+        ->update(["procesado"=>1]);
+        $cont++;
      }
+     $dataResult["mensaje"]="Consumos Validados con exito";
+     $dataResult["cantidad"]=$cont;
+     $dataResult["status"]=true;
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
