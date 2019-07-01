@@ -24,13 +24,26 @@ class MobileController extends Controller
      */
     public function index($idEmpresa,$idTecnico){
       try {
-        $tablaLecturasCompany= $this->getTableCompany($idEmpresa);
-        $rutas = DB::table('decobo_orden_temp as T0')
-                        ->join('rutas_tecnicos_decobo as T1', 'T1.ruta', '=', 'T0.ruta')
-                        ->where('T1.id_tecnico', $idTecnico)
-                        ->get();
-
-        return response()->json($rutas);
+      //  $tablaLecturasCompany= $this->getTableCompany($idEmpresa);
+        $rutas_tecnico= DB::table("rutas_tecnicos_decobo")->where("tecnico_id",$idTecnico)->get();
+        $dataResult=array();
+        $cont=0;
+        if(count($rutas_tecnico)>0){
+        foreach ($rutas_tecnico as $key => $value) {
+          $dataSelect=array();
+          $dataSelect=DB::table('decobo_orden_temp')
+                          ->where('agencia',$value->agencia)
+                          ->where('sector',$value->sector)
+                          ->where('ruta',$value->ruta)
+                          ->get();
+              for ($i=0; $i < count($dataSelect) ; $i++) {
+                array_push($dataResult, $dataSelect[$i]);
+              }
+        }
+          return response()->json($dataResult);
+        }else{
+          return response()->json(false);
+        }
       } catch (\Exception $e) {
           return response()->json("error: ".$e);
       }
@@ -42,12 +55,9 @@ class MobileController extends Controller
      */
     public function recibirLecturas(Request $request){
       try {
-     //$input=$request->json()->all();
-
-     //$input=$request->json()->all();
      $data=json_decode($request->listTareas, true);
      $idEmpresa=$request->id_emp;
-     $tablaLecturasCompany=$this->getTableCompany($idEmpresa);
+     $tablaLecturasCompany="decobo_orden_temp";//$this->getTableCompany($idEmpresa);
 
      $cont=0;
      foreach ($data as $key => $value) {
@@ -64,8 +74,9 @@ class MobileController extends Controller
          $dataProcArray["observacion"]=$value["observacion"];;
          $dataProcArray["foto"]=$value["foto"];
          $dataProcArray["estado"]=$value["estado"];
+         $dataProcArray["recibido"]=1;
          DB::table($tablaLecturasCompany)
-              ->where('id',$value["id"])
+              ->where('medidor',$value["medidor"])
               ->update($dataProcArray);
        }
 

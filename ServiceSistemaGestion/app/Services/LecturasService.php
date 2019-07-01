@@ -178,4 +178,30 @@ class LecturasService
     public function obtenerRutasAsignadasTecnicos(){
       return $this->performRequest('GET',"/rutas/tecnicos");
     }
+    /**
+       * eliminar asignacion tecnicos decobo
+      */
+      public function deleteAsignacion($data){
+        return $this->performRequest('POST',"/rutas/delete-asignacion",$data);
+      }
+
+  /**
+   * validar lecturas
+   */
+   public function validarLecturasServices(){
+     return $this->performRequest('GET',"/procesos/valida-lecturas");
+   }
+
+   /**
+    * calcular consumos
+    */
+    public function calculaConsumosService(){
+      return $this->performRequest('GET',"/procesos/calcular-consumo");
+    }
+  /**
+   * valida consumos
+   */
+   public function validaConsumosService(){
+     return $this->performRequest('GET',"/procesos/valida-consumos");
+   }
 }

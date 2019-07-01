@@ -80,7 +80,9 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
     Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
     Route::get('procesos/orden-trabajo/{mes}','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
-
+    Route::get('procesos/valida-lecturas','Gateway\Lecturas\LecturasController@validarLecturas');
+    Route::get('procesos/valida-consumos','Gateway\Lecturas\LecturasController@validaConsumos');
+    Route::get('procesos/calcula-consumos','Gateway\Lecturas\LecturasController@calculaConsumosService');
 
 
     // observaciones
@@ -88,6 +90,9 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');
     Route::get('borrar-observacion/{id_obs}','AuthApi\PermisosController@borrarObservacion');
+
+    Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
+    Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
 });
 
 Route::group(['prefix' => 'mobile'], function(){

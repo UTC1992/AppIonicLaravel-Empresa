@@ -235,4 +235,51 @@ class LecturasController extends Controller
 
   }
 
+  public function deleteAsignacionLecturas(Request $request){
+    try {
+      $result=$this->lecturasService->deleteAsignacion($request->all());
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+  }
+
+  /**
+   *  servicio que validar lecturas
+   */
+   public function validarLecturas(){
+     try {
+       $result=$this->lecturasService->validarLecturasServices();
+       return response($result)->header('Content-Type', 'applicationIjson');
+     } catch (\Exception $e) {
+       return response()->json("Error :".$e);
+     }
+
+   }
+
+  /**
+   * calcula consumos desde servcioo lectuyras
+   */
+   public function calculaConsumosService(){
+     try {
+       $result=$this->lecturasService->calculaConsumosService();
+       return response($result)->header('Content-Type', 'applicationIjson');
+     } catch (\Exception $e) {
+       return response()->json("Error :".$e);
+     }
+
+   }
+
+  /**
+   * valida consumos service
+   */
+   public function validaConsumos(){
+     try {
+       $result= $this->lecturasService->validaConsumosService();
+       return response($result)->header('Content-Type', 'applicationIjson');
+     } catch (\Exception $e) {
+       return response()->json("Error :".$e);
+     }
+
+   }
 }
