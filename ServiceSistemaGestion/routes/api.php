@@ -41,9 +41,6 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('actividades-tecnicos','Angular\ActividadDiariaController@getActivitadesTecnico');
     Route::get('tecnicos-sin-actividades','Angular\TecnicoController@getTecnicosSinActividades');
     Route::get('tecnicos-sin-lecturas','Angular\TecnicoController@getTecnicosSinActividadesLecturas');
-    
-    Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
-
     Route::get('actividades-tecnico/{id_tecn}/{tipo}/{sector}','Angular\ActividadDiariaController@getActivitiesTecnico');
     Route::get('finalizar/{id_tecn}','Angular\ActividadDiariaController@validateActivitiesByTecnico');
     Route::get('actividades-fecha/{created_at}/{id_tecn}/{actividad}/{estado}','Angular\ActividadDiariaController@getActivitiesToDay');
@@ -76,7 +73,6 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('data-first','Gateway\Lecturas\LecturasController@getFirstFilterFields');
     Route::post('data','Gateway\Lecturas\LecturasController@getDataFilter');
     Route::post('data-distribution','Gateway\Lecturas\LecturasController@getDataDistribution');
-    Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
 
 
     Route::get('orden-trabajo','Gateway\Lecturas\LecturasController@getOrdenTrabajoTecnicosLecturas');
@@ -84,15 +80,20 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
     Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
     Route::get('procesos/orden-trabajo/{mes}','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
-
+    Route::get('procesos/valida-lecturas','Gateway\Lecturas\LecturasController@validarLecturas');
+    Route::get('procesos/valida-consumos','Gateway\Lecturas\LecturasController@validaConsumos');
+    Route::get('procesos/calcula-consumos','Gateway\Lecturas\LecturasController@calculaConsumosService');
 
 
     // observaciones
     Route::get('observaciones','AuthApi\PermisosController@getObservacionesEmpresa');
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
-    Route::get('get-observacion/{id_obs}','AuthApi\PermisosController@getObservacionById');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');
+    Route::get('get-observacion/{id_obs}','AuthApi\PermisosController@getObservacionById');
     Route::get('borrar-observacion/{id_obs}','AuthApi\PermisosController@borrarObservacion');
+
+    Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
+    Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
 });
 
 Route::group(['prefix' => 'mobile'], function(){

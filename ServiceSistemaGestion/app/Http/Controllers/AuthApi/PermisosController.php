@@ -99,16 +99,16 @@ class PermisosController extends Controller
  public function actualizarObservacion(Request $request){
    try {
       $ID_EMP=$this->getIdEmpUserAuth();
-       $observacion= Observacion::find($request->id_obs);
-       $observacion->codigo=$request->codigo;
-       $observacion->descripcion=$request->descripcion;
-       $observacion->tipo=$request->tipo;
-       $observacion->permite_lec=$request->permite_lec;
-       $observacion->id_emp=$ID_EMP;
-       $result= $observacion->save();
-       if($result){
-         return response()->json(true);
-       }
+      $observacion= Observacion::find($request->id_obs);
+      $observacion->codigo=$request->codigo;
+      $observacion->descripcion=$request->descripcion;
+      $observacion->tipo=$request->tipo;
+      $observacion->permite_lec=$request->permite_lec;
+      $observacion->id_emp=$ID_EMP;
+     $result= $observacion->save();
+     if($result){
+       return response()->json(true);
+     }
       return response()->json(false);
    } catch (\Exception $e) {
      return response()->json("Error: ".$e);
@@ -138,5 +138,6 @@ class PermisosController extends Controller
     $observacion=Observacion::find($id_obs);
     return response()->json($observacion);
   }
+
 
 }

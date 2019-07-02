@@ -30,11 +30,12 @@ class ProcesosController extends Controller
         $contador_registros=0;
         $mes=$request->mes;
         $dataResponse=array();
+        /*
         if($this->validarMesCargaRutas($mes)){
           $dataResponse["error"]="No se puede subir el archivo, el mes seleccionado ya existe en la base de datos";
           $dataResponse["status"]=false;
           return response()->json($dataResponse);
-        }
+        }*/
 
         $configRow=$this->getConfigCompany($request->id);
         if(count($configRow)<=0){
@@ -172,7 +173,8 @@ class ProcesosController extends Controller
 
     private function createRegister($table,$data){
 
-      DB::table($table)->insert($data);
+    //  DB::table($table)->insert($data);
+      DB::table("decobo_orden_temp")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 
@@ -489,7 +491,7 @@ public function generarGuardarHistorialDecobo(){
   try {
     $data=array();
     $tabla='decobo_orden_temp';
-    $decobo_temp=DB::table('decobo_orden_temp')->where('lectura','is null')->exists();
+    $decobo_temp=DB::table('decobo_orden_temp')->where('nueva_lectura','is null')->exists();
     if($decobo_temp){
       $data['mensaje']="No se puede guardar el historial por que existen lecturas sin procesar";
       $data['status']=false;
@@ -512,16 +514,33 @@ public function generarGuardarHistorialDecobo(){
  */
 public function generarOrdenTemp($mes){
   try {
-    Procedimientos::generarOrdenTempDecobo($mes);
-    $ordenes_temp= DB::table("decobo_orden_temp")->get();
-    foreach ($ordenes_temp as $key => $value) {
-      DB::table("decobo_orden_temp")->where("id",$value->id)->update(["lectura"=>$value->nueva_lectura]);
-    }
-    $res=DB::table("decobo_orden_temp")->where("id","!=",0)->update(["nueva_lectura"=>null]);
     $data=array();
-    $data['mensaje']="Oden de trabajo temporal  ha sido generado con exito";
-    $data['status']=true;
-    return response()->json($data);
+    $fecha= date('Y-m-d');
+    $decobo_historial=DB::table('decobo_historial')->where('mes',$mes)->exists();
+    if($decobo_historial){
+      $data['error']="No se puede procesar para el mes ingresado ";
+      $data['status']=false;
+      return response()->json($data);
+    }
+
+    Procedimientos::generarOrdenTempDecobo($mes-1);
+    $ordenes_temp= DB::table("decobo_orden_temp")->get();
+
+    if(count($ordenes_temp)>0){
+      foreach ($ordenes_temp as $key => $value) {
+        DB::table("decobo_orden_temp")->where("id",$value->id)->update(["lectura"=>$value->nueva_lectura,"consumo_anterior"=>$value->nuevo_consumo]);
+      }
+      $res=DB::table("decobo_orden_temp")->where("id","!=",0)->update(["nueva_lectura"=>"0","estado"=>0,"recibido"=>0]);
+
+      $data['mensaje']="Oden de trabajo temporal  ha sido generado con exito";
+      $data['status']=true;
+      return response()->json($data);
+    }else{
+      $data['error']="Oden de trabajo temporal  no pudo ser generado";
+      $data['status']=false;
+      return response()->json($data);
+    }
+
 
   } catch (\Exception $e) {
     return response()->json("error: ".$e);
@@ -574,13 +593,22 @@ public function actualizarOrdenTrabajo()
         $data['latitud']=$value->latitud;
         $data['idEmpresa']=$value->idEmpresa;
         $data['mes']=$value->mes;
+        $data['nuevo_consumo']=0;
+        $data['procesado']=0;
         $res=DB::table('decobo_orden_temp')
                  ->where('medidor',$value->medidor)->first();
         if($res){
-            if(is_null($res->lectura) || $res->lectura==''){
+            if(is_null($res->nueva_lectura) || $res->nueva_lectura==''){
               DB::table('decobo_orden_temp')
                   ->where('medidor',$value->medidor)
                   ->update($data);
+            }else{
+              $dataUpdate=array();
+              $dataUpdate["mes"]=$value->mes;
+              $dataUpdate['nuevo_consumo']=null;
+              DB::table('decobo_orden_temp')
+                  ->where('medidor',$value->medidor)
+                  ->update($dataUpdate);
             }
         }else{
           DB::table('decobo_orden_temp')->insert($data);
@@ -641,6 +669,254 @@ public function  procesarCatastros(){
 }
 
 
+/**
+ * procesar lecturas y validar consumos
+ */
+ public function procesarConsumosFinal(){
+   try {
+     $dataResult=array();
+     $cont=0;
+     //$this->calcularConsumos();
+     $this->validarObservacion();
+     $this->promediaConsuloSinLecturaSinObs();
+     $result = DB::table("decobo_orden_temp")
+               ->where("procesado",0)
+               ->get();
+
+     foreach ($result as $key => $value) {
+       $rs = $this->calcularPorcentajeMasMenos15($value->nuevo_consumo,$value->consumo_anterior);
+       if(!$rs){
+         DB::table("decobo_orden_temp")
+          ->where("medidor",$value->medidor)
+          ->update(["alerta"=>1,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
+       }
+       DB::table("decobo_orden_temp")
+        ->where("medidor",$value->medidor)
+        ->update(["procesado"=>1]);
+        $cont++;
+     }
+     $dataResult["mensaje"]="Consumos Validados con exito";
+     $dataResult["cantidad"]=$cont;
+     $dataResult["status"]=true;
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
+
+ }
+
+private function promediaConsuloSinLecturaSinObs(){
+  try {
+  $result =  DB::table("decobo_orden_temp")
+        ->where("nueva_lectura","0")
+        ->where("observacion","is null")
+        ->where("lectura","!=","0")
+        ->get();
+
+        if(count($result)>0){
+          foreach ($result as $key => $value) {
+            $rs1 = DB::table("decobo_historial")
+                  ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
+                  ->where("medidor",$value->medidor)
+                  ->get();
+                  if(count($rs1)>0){
+                    $contador=0;
+                    $consumo=0;
+                    $nl=0;
+                    foreach ($variable as $key => $value2) {
+                      $consumo = $consumo + $value2->nuevo_consumo;
+                    }
+                    $consumo = $consumo / count($rs1);
+                    $nl = $consumo + $value->lectura;
+
+                    DB::table("decobo_orden_temp")
+                      ->where("medidor",$value->medidor)
+                      ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);
+                  }
+          }
+        }
+  } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+  }
+
+}
+
+ public function calcularConsumos(){
+   try {
+     $dataResult=array();
+     $cont=0;
+          $result = DB::table("decobo_orden_temp")->get();
+          foreach ($result as $key => $value) {
+            if($value->nueva_lectura!="0"){
+              $consumo = (int)$value->nueva_lectura - (int)$value->lectura;
+              $result = DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["nuevo_consumo"=>$consumo]);
+              $cont++;
+            }
+          }
+
+          $dataResult["mensaje"]="Consumos calculados correctamente";
+          $dataResult["cantidad"]=$cont;
+          $dataResult["status"]=true;
+          return response()->json($dataResult);;
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
+
+ }
+
+ private function calcularNuevoConsumo2(){
+   $cont=0;
+        $result = DB::table("decobo_orden_temp")->get();
+        foreach ($result as $key => $value) {
+          $consumo = (int)$value->nueva_lectura - (int)$value->lectura;
+          $result = DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["nuevo_consumo"=>$consumo]);
+          $cont++;
+        }
+        return $cont;
+ }
+
+  private function calcularPorcentajeMasMenos15($nuevo_consumo, $consumo_anterior){
+
+      $resultMas15 = $valor + ($valor*0.15);
+      $resultMenos15 = $valor - ($valor*0.15);
+
+      if($nuevo_consumo <= $resultMas15 || $nuevo_consumo >= $resultMenos15){
+        return true;
+      }
+      return false;
+  }
+
+  private function validarObservacion(){
+    $result =DB::table("decobo_orden_temp")
+            ->orWhere("observacion","borroso")
+            ->orWhere("observacion","alto")
+            ->orWhere("observacion","obstruido")
+            ->where("procesado",0)
+            ->get();
+    if(count($result)>0){
+      foreach ($result as $key => $value) {
+        $rs1 = DB::table("decobo_historial")
+              ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
+              ->where("medidor",$value->medidor)
+              ->get();
+              if(count($rs1)>0){
+                $contador=0;
+                $consumo=0;
+                $nl=0;
+                foreach ($variable as $key => $value2) {
+                  $consumo = $consumo + $value2->nuevo_consumo;
+                }
+                $consumo = $consumo / count($rs1);
+                $nl = $consumo + $value->lectura;
+
+                DB::table("decobo_orden_temp")
+                  ->where("medidor",$value->medidor)
+                  ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);
+              }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * validar lecturas
+   */
+  public function validarLecturas(){
+    try {
+
+      $result =DB::table("decobo_orden_temp")
+                ->where("nueva_lectura","0")
+                ->where("procesado","=",0)
+                ->get();
+        $cont=0;
+        $cont_lecturas=0;
+        $cont_coordenadas=0;
+        $dataResult=array();
+        foreach ($result as $key => $value) {
+            $lectura_anterior_cero=DB::table("decobo_historial")
+                                  ->where('secuencial', ($value->secuencial)-1)
+                                  ->where('nueva_lectura', '0')
+                                  ->where('medidor', $value->medidor)
+                                  ->where('observacion', 'like','%MEDIDOR RETIRADO%')
+                                  ->exists();
+            if($lectura_anterior_cero){
+              DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["lectura"=>"0","observacion"=>"MEDIDOR RETIRADO","procesado"=>1]);
+            }
+
+            $lecturas_anteriores = DB::table("decobo_historial")
+                                      ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
+                                      ->where("nueva_lectura","0")
+                                      ->where("medidor",$value->medidor)
+                                      ->get();
+
+            if(count($lecturas_anteriores)>0){
+              foreach ($lecturas_anteriores as $key => $value) {
+                DB::table("decobo_orden_temp")
+                ->where("medidor",$value->medidor)
+                ->update(["observacion"=>$value->observacion,"lectura"=>$value->lectura,"procesado"=>1]);
+              }
+            }
+            $cont_lecturas++;
+
+          if((is_null($value->longitud) || is_null($value->latitud) || ($value->longitud=="" || $value->latitud=="")) && ($value->lectura=="0" || is_null($value->lectura))){
+
+              DB::table("decobo_orden_temp")
+              ->where("medidor",$value->medidor)
+              ->update(["lectura"=>"0","observacion"=>"SIN COORDENADAS","procesado"=>1]);
+              $cont_coordenadas++;
+          }
+          $cont++;
+        }
+
+      // valida lectura menor que la anterior
+      $r = $this->validaLecturaMayor();
+
+
+      $dataResult["mensaje"]="Proceso terminado con exito";
+      $dataResult["cantidad_lecturas_cero"]=$cont;
+      $dataResult["status"]=true;
+
+      return response()->json($dataResult);
+
+    } catch (\Exception $e) {
+       return response()->json("error: ".$e);
+    }
+  }
+
+
+private function validaLecturaMayor(){
+  try {
+    $result= DB::table("decobo_orden_temp")
+            ->where("nueva_lectura","<","lectura")
+            ->where("procesado",0)
+            ->get();
+    $contador=0;
+    $dataIds=array();
+    foreach ($result as $key => $value) {
+      $dataIds[$contador]=$value->id;
+      $contador++;
+    }
+    if(count($dataIds)>0){
+      DB::table("decobo_orden_temp")
+          ->whereIn("id",$dataIds)
+          ->update(["alerta"=>1,"referencia_alerta"=>"LECTURA MENOR QUE LA ANTERIOR","procesado"=>1]);
+    }
+    return true;
+  } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+  }
+
+
+}
+
+  public function validarConsumos2(){
+    try {
+
+
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+
+  }
 
 
 }

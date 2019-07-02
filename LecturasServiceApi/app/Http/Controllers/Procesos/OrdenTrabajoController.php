@@ -35,45 +35,45 @@ class OrdenTrabajoController extends Controller
     }
 
 
-/**
- * distrinuir rutas a tecnicos
- */
-    public function distribuirRutasTecnicos(Request $request){
-      try {
-        $cont=0;
-        $input=$request->all();
-        
-        foreach ($input as $key => $value) {
-          $dataInsert=array();
-          $dataInsert["tecnico_id"]=$value["idTecnico"];
-          $dataInsert["agencia"]=$value["agencia"];
-          $dataInsert["sector"]=$value["sector"];
-          $dataInsert["ruta"]=$value["ruta"];
-          DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
-          DB::table("decobo_orden_temp")->where("agencia",$value["agencia"])
-                                        ->where("sector",$value["sector"])
-                                        ->where("ruta",$value["ruta"])
-                                        ->update(["tecnico_id"=>$value['idTecnico']]);
-          DB::table("dashboard_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
-                                              ->update(["asignado"=>1]);
-          $cont++;
-        }
 
-        $dataResponse=array();
-        if($cont>0){
-          $dataResponse["mensaje"]= "Ruta asignada correctamente ";
-          $dataResponse["cantididad"]=$cont;
-          $dataResponse["status"]= true;
-          return response()->json($dataResponse);
+    //===== le modifique para que cambie el estado del tecnico al asignar
+
+    public function distribuirRutasTecnicos(Request $request){
+          try {
+            $cont=0;
+            $input=$request->all();
+
+            foreach ($input as $key => $value) {
+              $dataInsert=array();
+              $dataInsert["tecnico_id"]=$value["idTecnico"];
+              $dataInsert["agencia"]=$value["agencia"];
+              $dataInsert["sector"]=$value["sector"];
+              $dataInsert["ruta"]=$value["ruta"];
+              DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
+              DB::table("decobo_orden_temp")->where("agencia",$value["agencia"])
+                                            ->where("sector",$value["sector"])
+                                            ->where("ruta",$value["ruta"])
+                                            ->update(["tecnico_id"=>$value['idTecnico']]);
+              DB::table("dashboard_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
+                                                  ->update(["asignado"=>1]);
+              $cont++;
+            }
+
+            $dataResponse=array();
+            if($cont>0){
+              $dataResponse["mensaje"]= "Ruta asignada correctamente ";
+              $dataResponse["cantididad"]=$cont;
+              $dataResponse["status"]= true;
+              return response()->json($dataResponse);
+            }
+            $dataResponse["mensaje"]= "Error no se pudo asignar las rutas";
+            $dataResponse["status"]= false;
+
+            return response()->json($dataResponse);
+          } catch (\Exception $e) {
+            return response()->json("error: ".$e);
+          }
         }
-        $dataResponse["mensaje"]= "Error no se pudo asignar las rutas";
-        $dataResponse["status"]= false;
-        
-        return response()->json($dataResponse);
-      } catch (\Exception $e) {
-        return response()->json("error: ".$e);
-      }
-    }
 
     // metodo devuelve actividades del dia por idempresa y paginado
     public function getAllRutasByEmpresa(Request $request){
@@ -230,48 +230,48 @@ class OrdenTrabajoController extends Controller
 
   }
 
-  /**
-    eliminacion de asignacion de una ruta a un tecnico
-    si ya no esta asignado a mas rutas se cambia el estado
-  */
-  public function deleteRutaTecnico(Request $request){
-    try {
-      $input=$request[0];
-      $result1= DB::table("rutas_tecnicos_decobo")
-                  ->where("agencia",$input["agencia"])
-                  ->where("sector",$input["sector"])
-                  ->where("ruta",$input["ruta"])
-                  ->where("tecnico_id",$input["idTecnico"])
-                  ->delete();
-      $result2=DB::table("decobo_orden_temp")
-                  ->where("agencia",$input["agencia"])
-                  ->where("sector",$input["sector"])
-                  ->where("ruta",$input["ruta"])
-                  ->where("tecnico_id",$input["idTecnico"])
-                  ->update(["tecnico_id"=>0]);
 
-      $result3= DB::table("rutas_tecnicos_decobo")
-                  ->select("*")
-                  ->where("tecnico_id",$input["idTecnico"])
-                  ->get();
+  /*
+      eliminacion de asignacion de una ruta a un tecnico
+      si ya no esta asignado a mas rutas se cambia el estado
+    */
+    public function deleteRutaTecnico(Request $request){
+      try {
+        $input=$request[0];
+        $result1= DB::table("rutas_tecnicos_decobo")
+                    ->where("agencia",$input["agencia"])
+                    ->where("sector",$input["sector"])
+                    ->where("ruta",$input["ruta"])
+                    ->where("tecnico_id",$input["idTecnico"])
+                    ->delete();
+        $result2=DB::table("decobo_orden_temp")
+                    ->where("agencia",$input["agencia"])
+                    ->where("sector",$input["sector"])
+                    ->where("ruta",$input["ruta"])
+                    ->where("tecnico_id",$input["idTecnico"])
+                    ->update(["tecnico_id"=>0]);
 
-      if(count($result3) == 0){
-        $result4 = DB::table("dashboard_db.tbl_tecnico")
-                  ->where("id_tecn",$input['idTecnico'])
-                  ->update(["asignado"=>0]);
+        $result3= DB::table("rutas_tecnicos_decobo")
+                    ->select("*")
+                    ->where("tecnico_id",$input["idTecnico"])
+                    ->get();
+
+        if(count($result3) == 0){
+          $result4 = DB::table("dashboard_db.tbl_tecnico")
+                    ->where("id_tecn",$input['idTecnico'])
+                    ->update(["asignado"=>0]);
+        }
+
+        if($result1 == 1 && $result2 > 0){
+          return response()->json(true);
+        } else {
+          return response()->json(false);
+        }
+
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
       }
-      
-      if($result1 == 1 && $result2 > 0){
-        return response()->json(true);
-      } else {
-        return response()->json(false);
-      }
-      
-    } catch (\Exception $e) {
-      return response()->json("error: ".$e);
     }
-  }
-
 
 
 }

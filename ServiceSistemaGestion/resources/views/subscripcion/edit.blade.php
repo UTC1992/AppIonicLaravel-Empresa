@@ -30,25 +30,26 @@
                           <div class="form-group">
                               <label class="control-label col-md-2">Empresa:</label>
                               <div class="col-md-8">
-                                  @foreach($subs as $item)
-                                    <input value="{{ $item->idEmp }}" type="hidden" name="id_emp" />
-                                    <input class="form-control" value=" {{ $item->nombreEmp }}" required readonly>
-                                  @endforeach
+                                  <select class="form-control" name="id_emp" required>
+                                    @foreach($subs as $item)
+                                      <option value="{{ $item->idEmp }}">{{ $item->nombreEmp }}</option>
+                                    @endforeach
+                                    @foreach($empresas as $item)
+                                      <option value="{{$item->id_emp}}">{{$item->nombre}}</option>
+                                    @endforeach
+                                  </select>
                               </div>
                           </div>
                           <div class="form-group">
                               <label class="control-label col-md-2">Módulo:</label>
                               <div class="col-md-8">
                                   <select class="form-control" name="id_mod" required>
-                                    @foreach($subs as $itemSub)
-                                      <option value="{{ $itemSub->idMod }}">{{ $itemSub->nombreMod }}</option>
-                                      @foreach($modulos as $item)
-                                        @if ($item->id_mod != $itemSub->idMod)
-                                        <option value="{{$item->id_mod}}">{{$item->nombre}}</option>
-                                        @endif
-                                      @endforeach
+                                    @foreach($subs as $item)
+                                      <option value="{{ $item->idMod }}">{{ $item->nombreMod }}</option>
                                     @endforeach
-                                    
+                                    @foreach($modulos as $item)
+                                      <option value="{{$item->id_mod}}">{{$item->nombre}}</option>
+                                    @endforeach
                                   </select>
                               </div>
                           </div>
@@ -56,13 +57,11 @@
                               <label class="control-label col-md-2">Planes:</label>
                               <div class="col-md-8">
                                   <select class="form-control" name="id_plan" required>
-                                    @foreach($subs as $itemSubs)
-                                      <option value="{{ $itemSubs->id_plan }}">{{ $itemSubs->nombre }}</option>
-                                      @foreach($planes as $item)
-                                        @if ($item->id_plan != $itemSubs->id_plan)
-                                          <option value="{{$item->id_plan}}">{{$item->nombre}}</option>
-                                        @endif
-                                      @endforeach
+                                    @foreach($subs as $item)
+                                      <option value="{{ $item->id_plan }}">{{ $item->nombre }}</option>
+                                    @endforeach
+                                    @foreach($planes as $item)
+                                      <option value="{{$item->id_plan}}">{{$item->nombre}}</option>
                                     @endforeach
                                   </select>
                               </div>

@@ -60,3 +60,37 @@
     </mat-accordion>
   </mat-card-content>
 </div>
+<div class="card card-body" style="margin-bottom: 10px;">
+  <div class="d-flex justify-content-center">
+    <h5 class="">Validaciones</h5>
+  </div>
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            Expandir para validar datos
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col col-lg-3">
+            <button mat-button type="button" 
+            (click)="calcularConsumos()" class="btn btn-primary btn-sm">
+            <mat-icon>touch_app</mat-icon>
+            Calcular consumos</button>
+          </div>
+          <div class="col col-lg-3">
+            <button mat-button type="button" 
+            (click)="validarConsumosYPromediar()" class="btn btn-primary btn-sm">
+            <mat-icon>touch_app</mat-icon>
+            Validar consumos</button>
+          </div>
+          <div class="col col-lg-3">
+            <button mat-button type="button" 
+            (click)="validarLecturasCero()" class="btn btn-primary btn-sm">
+            <mat-icon>touch_app</mat-icon>
+            Validar lecturas en 0</button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</div>
