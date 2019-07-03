@@ -107,7 +107,7 @@ class ProcesosController extends Controller
                 $data["idEmpresa"]=$request->id;
                 $data["estado"]=false;
                 $data["created_at"]=date('Y-m-d H:i:s');
-                $data["mes"]=$mes;
+                $data["mes"]=intval($mes);
                 $dataInsert[$contInsert]=$data;
 
                 if($contInsert>=2100){
@@ -173,8 +173,8 @@ class ProcesosController extends Controller
 
     private function createRegister($table,$data){
 
-    //  DB::table($table)->insert($data);
-      DB::table("decobo_orden_temp")->insert($data);
+      DB::table($table)->insert($data);
+      //DB::table("decobo_orden_temp")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 

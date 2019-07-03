@@ -35,6 +35,10 @@ export class LoadfileComponent implements OnInit {
 
   formload: FormGroup;
 
+  //meses
+  mesElegido: any = null;
+  meses: any[] = [];
+
   //fecha borrado
   fechaBorrado: string = null;
   dateBorrado = new FormControl(
@@ -54,6 +58,19 @@ export class LoadfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.llenarMeses();
+  }
+
+  llenarMeses(){
+    let mesesVector = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
+                      "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    for (let i = 0; i < 12; i++) {
+      this.meses.push({
+        numero: (i+1),
+        nombre:mesesVector[i]
+      });
+    }
+    console.log(this.meses);
   }
 
   getFechaBorrar(pickerInput: string): void {
@@ -63,7 +80,8 @@ export class LoadfileComponent implements OnInit {
 
   createForm() {
     this.formload = this.formbuilder.group({
-      archivo: null
+      archivo: [null],
+      mes:[null]
     });
   }
 
@@ -71,18 +89,24 @@ export class LoadfileComponent implements OnInit {
    * 
    */
   onSubmit(){
+    console.log(this.formload.value);
+    this.showCargando();
     if(this.formload.get('archivo').value==null || this.formload.get('archivo').value==""){
       this.showAlert('Alerta!',"Seleccione un archivo",'warning');
       return;
     }
+    if(this.formload.get('mes').value==null || this.formload.get('mes').value==""){
+      this.showAlert('Alerta!',"Seleccione un mes",'warning');
+      return;
+    }
     const formModel = this.prepareSave();
-    this.lecturaService.uploadFile(formModel).subscribe(
-      result=>{
+    this.lecturaService.uploadFile(formModel).subscribe(result=>{
         console.log(result);
         this.showAlert('Éxito','Datos subidos exitosamente','success');
         this.clearFile();
-      }
-    );
+      }, error => {
+        console.log(error);
+    });
     
   }
 
@@ -100,6 +124,7 @@ export class LoadfileComponent implements OnInit {
    */
   clearFile() {
     this.formload.get('archivo').setValue(null);
+    this.formload.get('mes').setValue(null);
     this.fileInput.nativeElement.value = '';
   }
 
@@ -115,8 +140,13 @@ export class LoadfileComponent implements OnInit {
   }
 
   enviarDatosATemporal(){
+    this.showCargando();
     this.lecturaService.procesarDatosSubidos().subscribe(response => {
       console.log(response);
+      this.showAlert("Éxito !","Los datos subidos han sido procesados exitosamente","success");
+    }, error => {
+      this.showAlert("Error !","Error al procesar los datos","error");
+      console.log(error);
     });
   }
 
@@ -129,5 +159,19 @@ export class LoadfileComponent implements OnInit {
     });
   }
   
+  showCargando(){
+    let swal = Swal;
+    swal.fire({
+      title: 'Espere por favor...',
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey:false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  }
 
 }

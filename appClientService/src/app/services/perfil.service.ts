@@ -19,7 +19,7 @@ export class PerfilService {
   constructor(
     private http:HttpClient,
     ) {
-      this.baseUrl = this.url.base;
+      this.baseUrl = this.url.basePerfil;
    }
    // edit Company
    editarEmpresa(form:object){
