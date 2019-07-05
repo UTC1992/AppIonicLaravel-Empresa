@@ -191,10 +191,10 @@ class LecturasController extends Controller
 /**
  *servicio generar orden de trabajo temporal
  */
-  public function generarOrdenTrabajo($mes){
+  public function generarOrdenTrabajo(){
     try {
       $ID_EMP=$this->getIdEmpUserAuth();
-      $result=$this->lecturasService->generarOrdenTempService($mes);
+      $result=$this->lecturasService->generarOrdenTempService();
       return response($result)->header('Content-Type', 'applicationIjson');
     } catch (\Exception $e) {
       return response()->json("Error :".$e);

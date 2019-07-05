@@ -79,7 +79,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('catastros/proceso','Gateway\Lecturas\LecturasController@procesarCatastros');
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
     Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
-    Route::get('procesos/orden-trabajo/{mes}','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
+    Route::get('procesos/orden-trabajo','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
     Route::get('procesos/valida-lecturas','Gateway\Lecturas\LecturasController@validarLecturas');
     Route::get('procesos/valida-consumos','Gateway\Lecturas\LecturasController@validaConsumos');
     Route::get('procesos/calcula-consumos','Gateway\Lecturas\LecturasController@calculaConsumosService');

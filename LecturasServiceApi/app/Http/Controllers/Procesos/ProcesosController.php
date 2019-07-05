@@ -512,35 +512,98 @@ public function generarGuardarHistorialDecobo(){
 /**
  *
  */
-public function generarOrdenTemp($mes){
+public function generarOrdenTemp(){
   try {
     $data=array();
     $fecha= date('Y-m-d');
-    $decobo_historial=DB::table('decobo_historial')->where('mes',$mes)->exists();
-    if($decobo_historial){
-      $data['error']="No se puede procesar para el mes ingresado ";
-      $data['status']=false;
-      return response()->json($data);
-    }
+    $res = DB::table("decobo_historial")
+                        ->select("secuencial")
+                        ->groupBy("secuencial")
+                        ->orderBy('secuencial', 'desc')
+                        ->first();
+    $ultimo_secuencial=$res->secuencial;
+    $decobo_historial=DB::table('decobo_historial')->where('secuencial',$ultimo_secuencial)->get();
+    if(count($decobo_historial)>0){
 
-    Procedimientos::generarOrdenTempDecobo($mes-1);
-    $ordenes_temp= DB::table("decobo_orden_temp")->get();
+      DB::table('decobo_orden_temp')->truncate();
+      $dataInsert=array();
+      $contador=0;
+      foreach ($decobo_historial as $key => $value) {
+          $dataValue=array();
+          //$dataValue["id"]=$value->id;
+          $dataValue["zona"]=$value->zona;
+          $dataValue["agencia"]=$value->agencia;
+          $dataValue["sector"]=$value->sector;
+          $dataValue["ruta"]=$value->ruta;
+          $dataValue["cuenta"]=$value->cuenta;
+          $dataValue["medidor"]=$value->medidor;
+          $dataValue["campo_a"]=$value->campo_a;
+          $dataValue["campo_n"]=$value->campo_n;
+          $dataValue["campo_0"]=$value->campo_0;
+          $dataValue["secuencia"]=$value->secuencia;
+          $dataValue["columna2"]=$value->columna2;
+          $dataValue["fechaultimalec"]=$value->fechaultimalec;
+          $dataValue["lectura"]=$value->nueva_lectura;
+          $dataValue["equipo"]=$value->equipo;
+          $dataValue["lector"]=$value->lector;
+          $dataValue["esferas"]=$value->esferas;
+          $dataValue["tarifa"]=$value->tarifa;
+          $dataValue["nombre"]=$value->nombre;
+          $dataValue["campo10"]=$value->campo10;
+          $dataValue["columna4"]=$value->columna4;
+          $dataValue["este"]=$value->este;
+          $dataValue["norte"]=$value->norte;
+          $dataValue["estado"]=$value->estado;
+          $dataValue["longitud"]=$value->longitud;
+          $dataValue["latitud"]=$value->latitud;
+          $dataValue["idEmpresa"]=$value->idEmpresa;
+          $dataValue["created_at"]=$fecha;
+          $dataValue["updated_at"]=$fecha;
+          $dataValue["nueva_lectura"]="0";
+          $ms=0;
+          if($value->mes==12){
+            $mes=1;
+          }else{
+            $mes=$value->mes+1;
+          }
+          $dataValue["mes"]=$mes;
+          $dataValue["alerta"]=0;
+          $dataValue["referencia_alerta"]=null;
+          $dataValue["recibido"]=0;
+          $dataValue["obtenido"]=0;
+          $dataValue["hora"]=$value->hora;
+          $dataValue["observacion"]=$value->observacion;
+          $dataValue["foto"]=$value->foto;
+          $dataValue["lectura_actual"]=null;
+          $dataValue["lat"]=$value->lat;
+          $dataValue["lon"]=$value->lon;
+          $dataValue["fecha_lectura"]=$value->fecha_lectura;
+          $dataValue["tecnico_id"]=$value->tecnico_id;
+          $dataValue["cedula_tecnico"]=$value->cedula_tecnico;
+          $dataValue["consumo_anterior"]=$value->nuevo_consumo;
+          $dataValue["nuevo_consumo"]="0";
+          $dataValue["procesado"]=0;
+          $dataValue["secuencial"]=$ultimo_secuencial+1;
+          $dataInsert[$contador]=$dataValue;
+          if($contador===1100){
+            DB::table("decobo_orden_temp")->insert($dataInsert);
+            $dataInsert=array();
+            $contador=0;
+          }
+          $contador++;
 
-    if(count($ordenes_temp)>0){
-      foreach ($ordenes_temp as $key => $value) {
-        DB::table("decobo_orden_temp")->where("id",$value->id)->update(["lectura"=>$value->nueva_lectura,"consumo_anterior"=>$value->nuevo_consumo]);
       }
-      $res=DB::table("decobo_orden_temp")->where("id","!=",0)->update(["nueva_lectura"=>"0","estado"=>0,"recibido"=>0]);
-
+      if(count($dataInsert)>0){
+        DB::table("decobo_orden_temp")->insert($dataInsert);
+      }
       $data['mensaje']="Oden de trabajo temporal  ha sido generado con exito";
       $data['status']=true;
       return response()->json($data);
     }else{
-      $data['error']="Oden de trabajo temporal  no pudo ser generado";
+      $data['error']="No se pudo generar el orden de trabajo temporal";
       $data['status']=false;
       return response()->json($data);
     }
-
 
   } catch (\Exception $e) {
     return response()->json("error: ".$e);

@@ -110,20 +110,21 @@ class LecturasAppController extends Controller
    */
    public function getObservaciones($ID_EMP){
      try {
-       $result=Observacion::where('id_emp',$ID_EMP)->get();
+       $data=array();
+       $result = Observacion::where('id_emp',$ID_EMP)->get();
        if(count($result)>0){
          $data["observaciones"]=$result;
          $data["status"]=true;
-         return response()->json($result);
+         return response()->json($data);
        }
        $data["mensaje"]="No hay observaciones creadas para empresa con ID: ".$ID_EMP;
        $data["status"]=false;
-       return response()->json($result);
+       return response()->json($data);
      } catch (\Exception $e) {
         return response()->json("Error :".$e);
      }
 
    }
 
-   public
+   
 }

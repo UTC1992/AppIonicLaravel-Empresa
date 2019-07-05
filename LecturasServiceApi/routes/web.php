@@ -50,7 +50,7 @@ $router->post('/upload','Procesos\ProcesosController@carga');
 $router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros');
 $router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
 $router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
-$router->get('/procesos/oden-temp/{mes}','Procesos\ProcesosController@generarOrdenTemp');
+$router->get('/procesos/oden-temp','Procesos\ProcesosController@generarOrdenTemp');
 $router->get('/procesos/calcular-consumo','Procesos\ProcesosController@calcularConsumos');
 $router->get('/procesos/valida-lecturas','Procesos\ProcesosController@validarLecturas');
 $router->get('/procesos/valida-consumos','Procesos\ProcesosController@procesarConsumosFinal');

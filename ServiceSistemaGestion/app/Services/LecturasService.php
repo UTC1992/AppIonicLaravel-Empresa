@@ -161,8 +161,8 @@ class LecturasService
 /**
  * generar orden de trabajo para lecturas
  */
-  public function generarOrdenTempService($mes){
-    return $this->performRequest('GET',"/procesos/oden-temp/{$mes}");
+  public function generarOrdenTempService(){
+    return $this->performRequest('GET',"/procesos/oden-temp");
   }
 
   /**
