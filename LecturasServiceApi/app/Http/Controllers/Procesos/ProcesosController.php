@@ -751,7 +751,7 @@ public function  procesarCatastros(){
        if(!$rs){
          DB::table("decobo_orden_temp")
           ->where("medidor",$value->medidor)
-          ->update(["alerta"=>1,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
+          ->update(["alerta"=>2,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
        }
        DB::table("decobo_orden_temp")
         ->where("medidor",$value->medidor)
