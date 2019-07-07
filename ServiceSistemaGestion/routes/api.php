@@ -93,6 +93,13 @@ Route::group(['prefix' => 'angular'], function(){
 
     Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
     Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
+
+
+    //reportes lecturas
+    Route::post('reportes/lecturas','Gateway\Lecturas\LecturasController@getLecturasTrabajo');
+    Route::get('reportes/error-consumos','Gateway\Lecturas\LecturasController@reporteErroresConsumos');
+    Route::get('reportes/error-lecturas','Gateway\Lecturas\LecturasController@reporteErroresLecturas');
+    Route::get('reportes/envios/{mes}','Gateway\Lecturas\LecturasController@reporteEnviosLecturas');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -128,6 +135,8 @@ Route::group(['prefix' => 'mobile'], function(){
        Route::get('productividad-tecnico/{fecha}','Reportes\ReportesController@productividadTecnico');
 
      });
+
+
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');
 Route::get('export-lecturas/{idEmpresa}/{mes}','Angular\ImportController@exportarConsolidadoLecturas');

@@ -57,6 +57,16 @@ $router->get('/procesos/valida-consumos','Procesos\ProcesosController@procesarCo
 //$router->get('/procesos/valid','Procesos\ProcesosController@validarLecturas');
 
 
+
+/**
+ * reportes
+ */
+
+$router->post('/reportes/avance','Procesos\ReportesController@consultarLecturas');
+$router->get('/reportes/errores-consumo','Procesos\ReportesController@consultarErroresConsumo');
+$router->get('/reportes/errores-lecturas','Procesos\ReportesController@consultarErroresLecturas');
+$router->get('/reportes/envios/{fecha}','Procesos\ReportesController@consultarEnvios');
+
 /**
  * rutas de app móvil
  */

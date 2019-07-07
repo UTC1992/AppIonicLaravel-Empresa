@@ -553,7 +553,7 @@ public function generarOrdenTemp(){
           $dataValue["columna4"]=$value->columna4;
           $dataValue["este"]=$value->este;
           $dataValue["norte"]=$value->norte;
-          $dataValue["estado"]=$value->estado;
+          $dataValue["estado"]=1;
           $dataValue["longitud"]=$value->longitud;
           $dataValue["latitud"]=$value->latitud;
           $dataValue["idEmpresa"]=$value->idEmpresa;
@@ -578,7 +578,7 @@ public function generarOrdenTemp(){
           $dataValue["lat"]=$value->lat;
           $dataValue["lon"]=$value->lon;
           $dataValue["fecha_lectura"]=$value->fecha_lectura;
-          $dataValue["tecnico_id"]=$value->tecnico_id;
+          $dataValue["tecnico_id"]=$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
           $dataValue["cedula_tecnico"]=$value->cedula_tecnico;
           $dataValue["consumo_anterior"]=$value->nuevo_consumo;
           $dataValue["nuevo_consumo"]="0";
@@ -611,7 +611,24 @@ public function generarOrdenTemp(){
 
 }
 
+/**
+ * encintrar asignacion
+ */
+ private function getTecnicoAsignacion($agencia,$sector,$ruta)
+ {
 
+     $result = DB::table("rutas_tecnicos_decobo")
+                ->where("agencia",$agencia)
+                ->where("sector",$sector)
+                ->where("ruta",$ruta)
+                ->first();
+      if($result){
+        return $result->tecnico_id;
+      }
+      return null;
+
+
+ }
 /**
  *actualiza la orden de trabajo
  */
