@@ -44,7 +44,7 @@ class ReportesController extends Controller
                       $query->where("tecnico_id",$lector);
                     })
                   ->where(function($query) use($estado){
-                      if($estado!="empty")
+                    if($estado!="empty")
                         $query->where("estado",$estado);
                       })
                   ->get();
