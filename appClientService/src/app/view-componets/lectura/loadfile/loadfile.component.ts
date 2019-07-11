@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
 import { LecturasService } from '../../../services-lecturas/lecturas.service';
+import { ValidacionService } from '../../../services-lecturas/validacion.service';
 
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -51,6 +52,7 @@ export class LoadfileComponent implements OnInit {
     private formbuilder: FormBuilder,
     private lecturaService: LecturasService,
     private dateAdapter: DateAdapter<Date>,
+    private validacionService: ValidacionService
 
   ) {
     this.dateAdapter.setLocale('es'); 
@@ -116,6 +118,7 @@ export class LoadfileComponent implements OnInit {
   prepareSave(): any {
     let input = new FormData();
     input.append('file', this.formload.get('archivo').value);
+    input.append('mes', this.formload.get('mes').value);
     return input;
   }
 
@@ -149,6 +152,41 @@ export class LoadfileComponent implements OnInit {
       console.log(error);
     });
   }
+
+  calcularConsumos(){
+    this.showCargando();
+    this.validacionService.calcularConsumos().subscribe(response => {
+      console.log(response);
+      this.showAlert("Éxito !","Los consumos se han calculado exitosamente","success");
+    }, error => {
+      this.showAlert("Error !","Error al calcular consumos","error");
+      console.log(error);
+    });
+  }
+
+  validarConsumos(){
+    this.showCargando();
+    this.validacionService.validarConsumos().subscribe(response => {
+      console.log(response);
+      this.showAlert("Éxito !","Los consumos se han validado exitosamente","success");
+    }, error => {
+      this.showAlert("Error !","Error al validar los consumos","error");
+      console.log(error);
+    });
+  }
+
+  validarLecturasCero(){
+    this.showCargando();
+    this.validacionService.validarLecturasCero().subscribe(response => {
+      console.log(response);
+      this.showAlert("Éxito !","Las lecturas se han validado exitosamente","success");
+    }, error => {
+      this.showAlert("Error !","Error al validar las lecturas","error");
+      console.log(error);
+    });
+  }
+
+
 
   showAlert(title, text, type){
     Swal.fire({
