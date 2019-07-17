@@ -204,4 +204,35 @@ class LecturasService
    public function validaConsumosService(){
      return $this->performRequest('GET',"/procesos/valida-consumos");
    }
+
+/**
+ *  REPORTES
+ */
+
+ public function getReporteLecturasService($data){
+  return $this->performRequest('POST',"/reportes/avance",$data);
+}
+
+/**
+ * errores de consumo
+ */
+ public function getReporteErroresConsumoService(){
+   return $this->performRequest('GET',"/reportes/errores-consumo");
+ }
+
+/**
+* errores lecturas
+*/
+public function getReporteErroresLecturasService(){
+  return $this->performRequest('GET',"/reportes/errores-lecturas");
+}
+
+/**
+ * reporte sobre envios
+ */
+ public function getReporteEnviosService($mes){
+   return $this->performRequest('GET',"/reportes/envios/{$mes}");
+ }
+
+
 }

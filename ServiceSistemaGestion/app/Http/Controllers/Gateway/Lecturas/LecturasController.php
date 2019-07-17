@@ -280,6 +280,47 @@ class LecturasController extends Controller
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
      }
-
    }
+
+   public function getLecturasTrabajo(Request $request){
+    try {
+      $result= $this->lecturasService->getReporteLecturasService($request->all());
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
+  }
+
+  public function reporteErroresConsumos(){
+    try {
+      $result= $this->lecturasService->getReporteErroresConsumoService();
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
+  }
+
+  public function reporteErroresLecturas(){
+    try {
+      $result= $this->lecturasService->getReporteErroresLecturasService();
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
+  }
+
+  public function reporteEnviosLecturas($mes){
+    try {
+      $result= $this->lecturasService->getReporteEnviosService($mes);
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+  }
+
+
+
 }

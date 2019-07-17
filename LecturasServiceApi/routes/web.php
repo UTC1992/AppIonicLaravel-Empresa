@@ -50,12 +50,22 @@ $router->post('/upload','Procesos\ProcesosController@carga');
 $router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros');
 $router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
 $router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
-$router->get('/procesos/oden-temp/{mes}','Procesos\ProcesosController@generarOrdenTemp');
+$router->get('/procesos/oden-temp','Procesos\ProcesosController@generarOrdenTemp');
 $router->get('/procesos/calcular-consumo','Procesos\ProcesosController@calcularConsumos');
 $router->get('/procesos/valida-lecturas','Procesos\ProcesosController@validarLecturas');
 $router->get('/procesos/valida-consumos','Procesos\ProcesosController@procesarConsumosFinal');
 //$router->get('/procesos/valid','Procesos\ProcesosController@validarLecturas');
 
+
+
+/**
+ * reportes
+ */
+
+$router->post('/reportes/avance','Procesos\ReportesController@consultarLecturas');
+$router->get('/reportes/errores-consumo','Procesos\ReportesController@consultarErroresConsumo');
+$router->get('/reportes/errores-lecturas','Procesos\ReportesController@consultarErroresLecturas');
+$router->get('/reportes/envios/{fecha}','Procesos\ReportesController@consultarEnvios');
 
 /**
  * rutas de app móvil
