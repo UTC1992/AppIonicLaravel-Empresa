@@ -37,4 +37,37 @@ export class ConsultaService {
     );
   }
 
+  getEnviosAlMes(mes: number): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/reportes/envios/"+mes)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
+  getErrorEnConsumos(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/reportes/error-consumos")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
+  getErrorEnLecturas(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/reportes/error-lecturas")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
 }

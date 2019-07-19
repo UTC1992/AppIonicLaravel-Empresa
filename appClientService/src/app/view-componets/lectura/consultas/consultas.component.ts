@@ -38,7 +38,7 @@ export const MY_FORMATS = {
 })
 export class ConsultasComponent implements OnInit {
 
-  //fecha de filtro
+  //fecha de filtro progreso
   mesBuscar: number = 0;
   lectorBuscar: string = 'empty';
   agenciaBuscar: string = 'empty';
@@ -50,6 +50,9 @@ export class ConsultasComponent implements OnInit {
     ]
   );
 
+  //filtro envios
+  mesBuscarEnvio: number = 0;
+
   //tecnicos select
   tecnicosLecturas:Tecnico[]=[];
 
@@ -58,10 +61,17 @@ export class ConsultasComponent implements OnInit {
 
   //tabla
   displayedColumns: string[] = ['index', 'tecnico', 'agencia', 'sector', 'ruta', 'cuenta',
-                                'medidor', 'lec_anterior', 'lec_actual', 'usuario', 'latitud',
+                                'medidor', 'lec_anterior', 'lec_actual','consumo_anterior','consumo_nuevo',
+                                 'usuario', 'latitud',
                                 'longitud', 'hora', 'observacion', 'fechalec'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  //mensaje sin datos
+  sin_datos_progreso: any = false;
+  sin_datos_envio: any = false;
+  sin_datos_error_consumo: any = false;
+  sin_datos_error_lectura: any = false;
 
   constructor(
     private tecnicoService:TecnicolecService,
@@ -112,6 +122,11 @@ export class ConsultasComponent implements OnInit {
     let vectorActual = fechaActual.split('-');
     let mesActual = parseInt(vectorActual[1]);
 
+    if(this.mesBuscar == null || this.mesBuscar == 0){
+      this.showAlert('Alerta!',"Seleccione un mes para consultar.",'warning');
+      return 
+    }
+
     //crear objeto para enviar filtros
     let data: any[] = [];
       data.push({
@@ -127,19 +142,85 @@ export class ConsultasComponent implements OnInit {
       
       this.consultaService.getDataProgreso(data).subscribe(response => {
         console.log(response);
+        if(response.length == 0){
+          this.sin_datos_progreso = true;
+        }  else {
+          this.sin_datos_progreso = false;
+        }
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
+      }, error =>{
+        console.log(error);
       });
       
     } else if (mesActual > this.mesBuscar) {
       console.log("Meses pasados");
       this.consultaService.getDataProgreso(data).subscribe(response => {
         console.log(response);
+        if(response.length == 0){
+          this.sin_datos_progreso = true;
+        } else {
+          this.sin_datos_progreso = false;
+        }
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
+      }, error =>{
+        console.log(error);
       });  
     }
     
+  }
+
+  verEnviosAlMes(){
+    if(this.mesBuscarEnvio == null || this.mesBuscarEnvio == 0){
+      this.showAlert('Alerta!',"Seleccione un mes para consultar.",'warning');
+      return 
+    }
+    this.consultaService.getEnviosAlMes(this.mesBuscarEnvio).subscribe(response => {
+      console.log(response);
+      if(response.length == 0){
+        this.sin_datos_envio = true;
+      } else {
+        this.sin_datos_envio = false;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  verErroresEnConsumos(){
+    this.consultaService.getErrorEnConsumos().subscribe(response => {
+      console.log(response);
+      if(response.length == 0){
+        this.sin_datos_error_consumo = true;
+      } else {
+        this.sin_datos_error_consumo = false;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  verErroresEnLecturas(){
+    this.consultaService.getErrorEnLecturas().subscribe(response => {
+      console.log(response);
+      if(response.length == 0){
+        this.sin_datos_error_lectura = true;
+      } else {
+        this.sin_datos_error_lectura = false;
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
   }
 
 }
