@@ -29,11 +29,11 @@ class ReportesController extends Controller
      */
      public function consultarLecturas(Request $request){
        try {
-         $fecha=$request->fecha;
-         $lector=$request->lector;
-         $agencia=$request->agencia;
-         $estado=$request->estado;
-         $result = DB::table("decobo_historial")
+         $fecha=$request[0]['fecha'];
+         $lector=$request[0]['lector'];
+         $agencia=$request[0]['agencia'];
+         $estado=$request[0]['estado'];
+         $result = DB::table("decobo_orden_temp")
                   ->where("mes",$fecha)
                   ->where(function($query) use($agencia){
                     if($agencia!="empty")

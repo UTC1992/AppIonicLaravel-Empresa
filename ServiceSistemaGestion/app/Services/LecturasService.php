@@ -161,8 +161,8 @@ class LecturasService
 /**
  * generar orden de trabajo para lecturas
  */
-  public function generarOrdenTempService($mes){
-    return $this->performRequest('GET',"/procesos/oden-temp/{$mes}");
+  public function generarOrdenTempService(){
+    return $this->performRequest('GET',"/procesos/oden-temp");
   }
 
   /**
@@ -188,21 +188,21 @@ class LecturasService
   /**
    * validar lecturas
    */
-   public function validarLecturasServices(){
-     return $this->performRequest('GET',"/procesos/valida-lecturas");
+   public function validarLecturasServices($agencia){
+     return $this->performRequest('GET',"/procesos/valida-lecturas-final/{$agencia}");
    }
 
    /**
     * calcular consumos
     */
-    public function calculaConsumosService(){
-      return $this->performRequest('GET',"/procesos/calcular-consumo");
+    public function calculaConsumosService($agencia){
+      return $this->performRequest('GET',"/procesos/calcular-consumo/{$agencia}");
     }
   /**
    * valida consumos
    */
-   public function validaConsumosService(){
-     return $this->performRequest('GET',"/procesos/valida-consumos");
+   public function validaConsumosService($agencia){
+     return $this->performRequest('GET',"/procesos/valida-consumos/{$agencia}");
    }
 
 /**
@@ -210,29 +210,34 @@ class LecturasService
  */
 
  public function getReporteLecturasService($data){
-  return $this->performRequest('POST',"/reportes/avance",$data);
-}
-
-/**
- * errores de consumo
- */
- public function getReporteErroresConsumoService(){
-   return $this->performRequest('GET',"/reportes/errores-consumo");
+   return $this->performRequest('POST',"/reportes/avance",$data);
  }
 
-/**
-* errores lecturas
-*/
-public function getReporteErroresLecturasService(){
-  return $this->performRequest('GET',"/reportes/errores-lecturas");
-}
+ /**
+  * errores de consumo
+  */
+  public function getReporteErroresConsumoService(){
+    return $this->performRequest('GET',"/reportes/errores-consumo");
+  }
 
 /**
- * reporte sobre envios
+ * errores lecturas
  */
- public function getReporteEnviosService($mes){
-   return $this->performRequest('GET',"/reportes/envios/{$mes}");
+ public function getReporteErroresLecturasService(){
+   return $this->performRequest('GET',"/reportes/errores-lecturas");
  }
 
+ /**
+  * reporte sobre envios
+  */
+  public function getReporteEnviosService($mes){
+    return $this->performRequest('GET',"/reportes/envios/{$mes}");
+  }
 
+  /**
+   * valida lectura menores
+   */
+   public function validaLecturasMenoresServices($agencia){
+     return $this->performRequest('GET',"/procesos/valida-lectura-menor/{$agencia}");
+   }
 }

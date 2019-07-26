@@ -57,7 +57,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}/{tipo}','Angular\OrdenTempController@deleteDistribucion');
     //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
     Route::post('delete-activities','Angular\ActividadDiariaController@eliminarActividades');
-	  Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
+    Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
     Route::get('planes','AuthApi\PermisosController@getPlanEmpresa');
 
     // gateway routes
@@ -79,11 +79,11 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('catastros/proceso','Gateway\Lecturas\LecturasController@procesarCatastros');
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
     Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
-    Route::get('procesos/orden-trabajo/{mes}','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
-    
-    Route::get('procesos/valida-lecturas','Gateway\Lecturas\LecturasController@validarLecturas');
-    Route::get('procesos/valida-consumos','Gateway\Lecturas\LecturasController@validaConsumos');
-    Route::get('procesos/calcula-consumos','Gateway\Lecturas\LecturasController@calculaConsumosService');
+    Route::get('procesos/orden-trabajo','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
+    Route::get('procesos/valida-lecturas-final/{agencia}','Gateway\Lecturas\LecturasController@validarLecturas');
+    Route::get('procesos/valida-consumos/{agencia}','Gateway\Lecturas\LecturasController@validaConsumos');
+    Route::get('procesos/calcula-consumos/{agencia}','Gateway\Lecturas\LecturasController@calculaConsumosService');
+    Route::get('procesos/valida-lecturas-menores/{agencia}','Gateway\Lecturas\LecturasController@validaLecturasMenores');
 
 
     // observaciones

@@ -7,6 +7,9 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import Swal from 'sweetalert2';
+//tabla
+//tablas
+import {MatTableDataSource, MatPaginator} from '@angular/material';
 
 export const MY_FORMATS = {
   parse: {
@@ -48,6 +51,15 @@ export class LoadfileComponent implements OnInit {
     ]
   );
 
+  //tabla sectores y procesos
+  //tabla
+  displayedColumns: string[] = ['index', 'agencia', 'validar_lecturas', 'calcular_consumos', 
+                                'validar_consumos','lecturas_cero'];
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  //agencias
+  agenciasList: any[] = [];
   constructor(
     private formbuilder: FormBuilder,
     private lecturaService: LecturasService,
@@ -61,6 +73,11 @@ export class LoadfileComponent implements OnInit {
 
   ngOnInit() {
     this.llenarMeses();
+    this.llenarAgencias();
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   llenarMeses(){
@@ -73,6 +90,20 @@ export class LoadfileComponent implements OnInit {
       });
     }
     console.log(this.meses);
+  }
+
+  llenarAgencias(){
+    this.agenciasList = [];
+    let agencias = ['01','02','03','04','05','06','07','95'];
+    let ciudades = ['Latacunga','Salcedo','Pujilí','Saquisilí','Sigchos','La Mana','Pangua','CENEL'];
+    for (let i = 0; i < agencias.length; i++) {
+      this.agenciasList.push({
+        numero: agencias[i],
+        agencia: ciudades[i]
+      });
+    }
+    this.dataSource = new MatTableDataSource(this.agenciasList);
+    this.dataSource.paginator = this.paginator;
   }
 
   getFechaBorrar(pickerInput: string): void {
@@ -153,9 +184,9 @@ export class LoadfileComponent implements OnInit {
     });
   }
 
-  calcularConsumos(){
+  calcularConsumos(agencia){
     this.showCargando();
-    this.validacionService.calcularConsumos().subscribe(response => {
+    this.validacionService.calcularConsumos(agencia).subscribe(response => {
       console.log(response);
       this.showAlert("Éxito !","Los consumos se han calculado exitosamente","success");
     }, error => {
@@ -164,9 +195,9 @@ export class LoadfileComponent implements OnInit {
     });
   }
 
-  validarConsumos(){
+  validarConsumos(agencia){
     this.showCargando();
-    this.validacionService.validarConsumos().subscribe(response => {
+    this.validacionService.validarConsumos(agencia).subscribe(response => {
       console.log(response);
       this.showAlert("Éxito !","Los consumos se han validado exitosamente","success");
     }, error => {
@@ -175,18 +206,35 @@ export class LoadfileComponent implements OnInit {
     });
   }
 
-  validarLecturasCero(){
+  validarLecturasCero(agencia){
     this.showCargando();
-    this.validacionService.validarLecturasCero().subscribe(response => {
+    this.validacionService.validarLecturasCero(agencia).subscribe(response => {
       console.log(response);
-      this.showAlert("Éxito !","Las lecturas se han validado exitosamente","success");
+      this.showAlert("Éxito !","Las lecturas en cero validadas exitosamente","success");
     }, error => {
-      this.showAlert("Error !","Error al validar las lecturas","error");
+      this.showAlert("Error !","Error al validar las lecturas en cero","error");
       console.log(error);
     });
   }
 
+  validarLecturasMenor(agencia){
+    this.showCargando();
+    this.validacionService.validarLecturasMenores(agencia).subscribe(response => {
+      console.log(response);
+      this.showAlert("Éxito !","Las lecturas menores se validaron","success");
+    }, error => {
+      this.showAlert("Error !","Error al validar las lecturas menores","error");
+      console.log(error);
+    });
+  }
 
+  generarTemporalNuevoMes(){
+    this.lecturaService.generarDataNuevoMes().subscribe(response => {
+      console.log(response);
+    }, error => {
+
+    });
+  }
 
   showAlert(title, text, type){
     Swal.fire({

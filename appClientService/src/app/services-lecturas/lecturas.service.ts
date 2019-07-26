@@ -150,5 +150,19 @@ export class LecturasService {
     })
     );
   }
+
+  /**
+   * generar tabla temporal para el nuevo mes
+   */
+  generarDataNuevoMes(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/orden-trabajo")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
   
 }

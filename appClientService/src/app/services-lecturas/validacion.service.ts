@@ -8,6 +8,7 @@ import { Url } from '../models/Url';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ValidacionService {
   url: Url = new Url();
   baseUrl= this.url.base;
@@ -19,8 +20,8 @@ export class ValidacionService {
     
    }
 
-  calcularConsumos(): Observable<any[]>{
-    return this.http.get<any[]>(this.baseUrl+"/procesos/calcula-consumos")
+  validarLecturasMenores(agencia: string): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/valida-lecturas-menores/"+agencia)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         //console.error(e.error.mensaje);
@@ -30,8 +31,8 @@ export class ValidacionService {
     );
   }
 
-  validarConsumos(): Observable<any[]>{
-    return this.http.get<any[]>(this.baseUrl+"/procesos/valida-consumos")
+  calcularConsumos(agencia: any): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/calcula-consumos/"+agencia)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         //console.error(e.error.mensaje);
@@ -41,8 +42,19 @@ export class ValidacionService {
     );
   }
 
-  validarLecturasCero(): Observable<any[]>{
-    return this.http.get<any[]>(this.baseUrl+"/procesos/valida-lecturas")
+  validarConsumos(agencia: any): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/valida-consumos/"+agencia)
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
+
+  validarLecturasCero(agencia: any): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/procesos/valida-lecturas-final/"+agencia)
     .pipe(catchError( e => {
       if(e.error.mensaje){
         //console.error(e.error.mensaje);

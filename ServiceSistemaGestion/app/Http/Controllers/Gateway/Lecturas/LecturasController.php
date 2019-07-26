@@ -191,10 +191,10 @@ class LecturasController extends Controller
 /**
  *servicio generar orden de trabajo temporal
  */
-  public function generarOrdenTrabajo($mes){
+  public function generarOrdenTrabajo(){
     try {
       $ID_EMP=$this->getIdEmpUserAuth();
-      $result=$this->lecturasService->generarOrdenTempService($mes);
+      $result=$this->lecturasService->generarOrdenTempService();
       return response($result)->header('Content-Type', 'applicationIjson');
     } catch (\Exception $e) {
       return response()->json("Error :".$e);
@@ -247,9 +247,9 @@ class LecturasController extends Controller
   /**
    *  servicio que validar lecturas
    */
-   public function validarLecturas(){
+   public function validarLecturas($agencia){
      try {
-       $result=$this->lecturasService->validarLecturasServices();
+       $result=$this->lecturasService->validarLecturasServices($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
@@ -260,9 +260,9 @@ class LecturasController extends Controller
   /**
    * calcula consumos desde servcioo lectuyras
    */
-   public function calculaConsumosService(){
+   public function calculaConsumosService($agencia){
      try {
-       $result=$this->lecturasService->calculaConsumosService();
+       $result=$this->lecturasService->calculaConsumosService($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
@@ -273,16 +273,18 @@ class LecturasController extends Controller
   /**
    * valida consumos service
    */
-   public function validaConsumos(){
+   public function validaConsumos($agencia){
      try {
-       $result= $this->lecturasService->validaConsumosService();
+       $result= $this->lecturasService->validaConsumosService($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
      }
+
    }
 
-   public function getLecturasTrabajo(Request $request){
+
+  public function getLecturasTrabajo(Request $request){
     try {
       $result= $this->lecturasService->getReporteLecturasService($request->all());
       return response($result)->header('Content-Type', 'applicationIjson');
@@ -319,8 +321,16 @@ class LecturasController extends Controller
     } catch (\Exception $e) {
       return response()->json("Error :".$e);
     }
+
   }
 
+  public function validaLecturasMenores($agencia){
+    try {
+      $result= $this->lecturasService->validaLecturasMenoresServices($agencia);
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
 
-
+  }
 }

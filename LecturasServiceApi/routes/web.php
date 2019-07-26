@@ -35,6 +35,8 @@ $router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRut
 $router->get('/rutas','Procesos\OrdenTrabajoController@obtenerRutasDecobo');
 $router->get('/rutas/tecnicos','Procesos\OrdenTrabajoController@obtenerDistribucionTecnicos');
 $router->post('/rutas/delete-asignacion','Procesos\OrdenTrabajoController@deleteRutaTecnico');
+
+$router->post('/lecturas/update','Procesos\LecturasController@subirRespaldos');
 /**
  * rutras de orden trabaja distribucion
  */
@@ -44,6 +46,8 @@ $router->post('/rutas/delete-asignacion','Procesos\OrdenTrabajoController@delete
 $router->post('/upload','Procesos\ProcesosController@carga');
 
 
+
+
 /**
  * rutas de procesos
  */
@@ -51,9 +55,10 @@ $router->get('/catastros/proceso','Procesos\ProcesosController@procesarCatastros
 $router->get('/procesos/actualiar','Procesos\ProcesosController@actualizarOrdenTrabajo');
 $router->get('/procesos/historial','Procesos\ProcesosController@generarGuardarHistorialDecobo');
 $router->get('/procesos/oden-temp','Procesos\ProcesosController@generarOrdenTemp');
-$router->get('/procesos/calcular-consumo','Procesos\ProcesosController@calcularConsumos');
-$router->get('/procesos/valida-lecturas','Procesos\ProcesosController@validarLecturas');
-$router->get('/procesos/valida-consumos','Procesos\ProcesosController@procesarConsumosFinal');
+$router->get('/procesos/calcular-consumo/{agencia}','Procesos\ProcesosController@calcularConsumos');
+$router->get('/procesos/valida-lecturas-final/{agencia}','Procesos\ProcesosController@validarLecturas');
+$router->get('/procesos/valida-consumos/{agencia}','Procesos\ProcesosController@procesarConsumosFinal');
+$router->get('/procesos/valida-lectura-menor/{agencia}','Procesos\ProcesosController@validaLecturaMenor');
 //$router->get('/procesos/valid','Procesos\ProcesosController@validarLecturas');
 
 

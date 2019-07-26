@@ -752,11 +752,12 @@ public function  procesarCatastros(){
 /**
  * procesar lecturas y validar consumos
  */
- public function procesarConsumosFinal(){
+ public function procesarConsumosFinal($agencia){
    try {
      $dataResult=array();
      $cont=0;
      $result = DB::table("decobo_orden_temp")
+              ->where("agencia",$agencia)
                ->get();
 
      foreach ($result as $key => $value) {
@@ -771,6 +772,7 @@ public function  procesarCatastros(){
      $dataResult["mensaje"]="Consumos Validados con exito";
      $dataResult["cantidad"]=$cont;
      $dataResult["status"]=true;
+     return response()->json($dataResult);
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
@@ -780,12 +782,13 @@ public function  procesarCatastros(){
 /**
  * calcula consumos correctos
  */
- public function calcularConsumos(){
+ public function calcularConsumos($agencia){
    try {
      $dataResult=array();
      $cont=0;
           $result = DB::table("decobo_orden_temp")
-                    ->where("nueva_lectura",">","lectura")
+                    ->whereRaw("nueva_lectura > lectura")
+                    ->where("agencia",$agencia)
                     ->get();
           foreach ($result as $key => $value) {
             if($value->nueva_lectura!="0"){
@@ -823,12 +826,12 @@ public function  procesarCatastros(){
 
 
 
-private function validaLecturaMayor(){
+public function validaLecturaMenor($agencia){
   try {
     $result= DB::table("decobo_orden_temp")
-            ->where("nueva_lectura","<","lectura")
+            ->whereRaw("nueva_lectura < lectura")
             ->where("nueva_lectura","!=","0")
-            ->where("procesado",0)
+            ->where("agencia",$agencia)
             ->get();
     $contador=0;
     $dataIds=array();
@@ -841,7 +844,10 @@ private function validaLecturaMayor(){
           ->whereIn("id",$dataIds)
           ->update(["alerta"=>1,"referencia_alerta"=>"LECTURA MENOR","procesado"=>1]);
     }
-    return true;
+    $dataResult["mensaje"]="Lecturas validadas correctamente";
+    $dataResult["cantidad"]=$contador;
+    $dataResult["status"]=true;
+    return response()->json($dataResult);
   } catch (\Exception $e) {
      return response()->json("error: ".$e);
   }
@@ -854,13 +860,14 @@ private function validaLecturaMayor(){
  * valida lecturas
  */
 
- public function validarLecturas()
+ public function validarLecturas($agencia)
  {
-   $this->validaLecturaMayor();
+
 
    $result= DB::table("decobo_orden_temp")
            ->where("nueva_lectura","=","0")
            ->where("procesado",0)
+           ->where("agencia",$agencia)
            ->get();
     foreach ($result as $key => $value) {
       if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
@@ -880,7 +887,7 @@ private function validaLecturaMayor(){
 
  private function promediarConsumo($medidor,$desde,$hasta){
    $rs1 = DB::table("decobo_historial")
-         ->whereBetween("secuencial",$desde,$hasta])
+         ->whereBetween("secuencial",[$desde,$hasta])
          ->where("medidor",$medidor)
          ->get();
          if(count($rs1)>0){
