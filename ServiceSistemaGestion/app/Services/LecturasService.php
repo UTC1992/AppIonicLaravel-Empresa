@@ -168,41 +168,41 @@ class LecturasService
   /**
    * generar orden de trabajo para lecturas
    */
-    public function obtenerRutasDecobo(){
+  public function obtenerRutasDecobo(){
       return $this->performRequest('GET',"/rutas");
-    }
+  }
 
     /**
      * obtiene rutas tecnicos decobo
      */
-    public function obtenerRutasAsignadasTecnicos(){
+  public function obtenerRutasAsignadasTecnicos(){
       return $this->performRequest('GET',"/rutas/tecnicos");
-    }
+  }
     /**
        * eliminar asignacion tecnicos decobo
       */
-      public function deleteAsignacion($data){
+  public function deleteAsignacion($data){
         return $this->performRequest('POST',"/rutas/delete-asignacion",$data);
-      }
+    }
 
   /**
    * validar lecturas
    */
-   public function validarLecturasServices(){
-     return $this->performRequest('GET',"/procesos/valida-lecturas");
+   public function validarLecturasServices($agencia){
+     return $this->performRequest('GET',"/procesos/valida-lecturas-final/{$agencia}");
    }
 
    /**
     * calcular consumos
     */
-    public function calculaConsumosService(){
-      return $this->performRequest('GET',"/procesos/calcular-consumo");
+    public function calculaConsumosService($agencia){
+      return $this->performRequest('GET',"/procesos/calcular-consumo/{$agencia}");
     }
   /**
    * valida consumos
    */
-   public function validaConsumosService(){
-     return $this->performRequest('GET',"/procesos/valida-consumos");
+   public function validaConsumosService($agencia){
+     return $this->performRequest('GET',"/procesos/valida-consumos/{$agencia}");
    }
 
 /**
@@ -232,5 +232,19 @@ class LecturasService
   */
   public function getReporteEnviosService($mes){
     return $this->performRequest('GET',"/reportes/envios/{$mes}");
+  }
+
+  /**
+   * valida lectura menores
+   */
+  public function validaLecturasMenoresServices($agencia){
+    return $this->performRequest('GET',"/procesos/valida-lectura-menor/{$agencia}");
+  }
+
+  /**
+   * actualiza registros de lecturas
+   */
+  public function uploadBackupFileService($data){
+     return $this->performRequestFileBackup('POST',"/lecturas/update",$data);
   }
 }

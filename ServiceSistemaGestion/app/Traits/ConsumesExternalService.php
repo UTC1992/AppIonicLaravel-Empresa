@@ -59,5 +59,30 @@ trait ConsumesExternalService
         return $response->getBody()->getContents();
   }
 
+  /**
+   * envia archivos al servicio
+   */
+    public function performRequestFileBackup($method,$requestUrl,$file){
+      $client= new Client([
+        'base_uri'=>$this->baseUrl,
+      ]);
+
+      if(isset($this->secret)){
+        $headers['Authorization']=$this->secret;
+      }
+
+      $response = $client->request($method, $requestUrl, [
+          'multipart' => [
+            [
+                  'name'     => 'file',
+                  'contents' => fopen($file, 'r')
+            ],
+
+          ],
+          'headers'=>$headers
+          ]);
+
+          return $response->getBody()->getContents();
+    }
 
 }

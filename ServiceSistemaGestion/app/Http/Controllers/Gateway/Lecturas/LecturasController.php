@@ -247,9 +247,9 @@ class LecturasController extends Controller
   /**
    *  servicio que validar lecturas
    */
-   public function validarLecturas(){
+   public function validarLecturas($agencia){
      try {
-       $result=$this->lecturasService->validarLecturasServices();
+       $result=$this->lecturasService->validarLecturasServices($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
@@ -260,9 +260,9 @@ class LecturasController extends Controller
   /**
    * calcula consumos desde servcioo lectuyras
    */
-   public function calculaConsumosService(){
+   public function calculaConsumosService($agencia){
      try {
-       $result=$this->lecturasService->calculaConsumosService();
+       $result=$this->lecturasService->calculaConsumosService($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
@@ -273,9 +273,9 @@ class LecturasController extends Controller
   /**
    * valida consumos service
    */
-   public function validaConsumos(){
+   public function validaConsumos($agencia){
      try {
-       $result= $this->lecturasService->validaConsumosService();
+       $result= $this->lecturasService->validaConsumosService($agencia);
        return response($result)->header('Content-Type', 'applicationIjson');
      } catch (\Exception $e) {
        return response()->json("Error :".$e);
@@ -323,4 +323,28 @@ class LecturasController extends Controller
     }
 
   }
+
+  public function validaLecturasMenores($agencia){
+    try {
+      $result= $this->lecturasService->validaLecturasMenoresServices($agencia);
+      return response($result)->header('Content-Type', 'applicationIjson');
+    } catch (\Exception $e) {
+      return response()->json("Error :".$e);
+    }
+
+  }
+
+  /**
+   * subir archivo txt de respaldo al servidor, se conecta al servicio de lecturas api
+   */
+   public function uploadBackupFile(Request $request){
+       try {
+         $file=$request->file;
+         $ID_EMP=$this->getIdEmpUserAuth();
+         $result=$this->lecturasService->uploadBackupFileService($file);
+         return response($result)->header('Content-Type', 'applicationIjson');
+       } catch (\Exception $e) {
+         return response()->json("Error :".$e);
+       }
+   }
 }

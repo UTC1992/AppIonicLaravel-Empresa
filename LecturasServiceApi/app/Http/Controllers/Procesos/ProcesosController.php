@@ -82,6 +82,9 @@ class ProcesosController extends Controller
                   }
                 }
 
+
+
+
                   if(($data["este"]!="0" && $data["norte"]!="0") && (!is_null($data["este"]) && !is_null($data["norte"]))){
                     $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
                     $longitud=round($coordenadas["lon"],6);
@@ -174,7 +177,7 @@ class ProcesosController extends Controller
     private function createRegister($table,$data){
 
     //  DB::table($table)->insert($data);
-      DB::table("decobo_orden_temp")->insert($data);
+      DB::table("decobo_historial")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 
@@ -571,13 +574,13 @@ public function generarOrdenTemp(){
           $dataValue["referencia_alerta"]=null;
           $dataValue["recibido"]=0;
           $dataValue["obtenido"]=0;
-          $dataValue["hora"]=$value->hora;
-          $dataValue["observacion"]=$value->observacion;
-          $dataValue["foto"]=$value->foto;
+          $dataValue["hora"]=null;
+          $dataValue["observacion"]=null;//$value->observacion;
+          $dataValue["foto"]=null;
           $dataValue["lectura_actual"]=null;
           $dataValue["lat"]=$value->lat;
           $dataValue["lon"]=$value->lon;
-          $dataValue["fecha_lectura"]=$value->fecha_lectura;
+          $dataValue["fecha_lectura"]=null;
           $dataValue["tecnico_id"]=$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
           $dataValue["cedula_tecnico"]=$value->cedula_tecnico;
           $dataValue["consumo_anterior"]=$value->nuevo_consumo;
@@ -752,15 +755,12 @@ public function  procesarCatastros(){
 /**
  * procesar lecturas y validar consumos
  */
- public function procesarConsumosFinal(){
+ public function procesarConsumosFinal($agencia){
    try {
      $dataResult=array();
      $cont=0;
-     //$this->calcularConsumos();
-     $this->validarObservacion();
-     $this->promediaConsuloSinLecturaSinObs();
      $result = DB::table("decobo_orden_temp")
-               ->where("procesado",0)
+              ->where("agencia",$agencia)
                ->get();
 
      foreach ($result as $key => $value) {
@@ -770,61 +770,30 @@ public function  procesarCatastros(){
           ->where("medidor",$value->medidor)
           ->update(["alerta"=>2,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
        }
-       DB::table("decobo_orden_temp")
-        ->where("medidor",$value->medidor)
-        ->update(["procesado"=>1]);
-        $cont++;
+
      }
      $dataResult["mensaje"]="Consumos Validados con exito";
      $dataResult["cantidad"]=$cont;
      $dataResult["status"]=true;
+       return response()->json($dataResult);
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
 
  }
 
-private function promediaConsuloSinLecturaSinObs(){
-  try {
-  $result =  DB::table("decobo_orden_temp")
-        ->where("nueva_lectura","0")
-        ->where("observacion","is null")
-        ->where("lectura","!=","0")
-        ->get();
-
-        if(count($result)>0){
-          foreach ($result as $key => $value) {
-            $rs1 = DB::table("decobo_historial")
-                  ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
-                  ->where("medidor",$value->medidor)
-                  ->get();
-                  if(count($rs1)>0){
-                    $contador=0;
-                    $consumo=0;
-                    $nl=0;
-                    foreach ($variable as $key => $value2) {
-                      $consumo = $consumo + $value2->nuevo_consumo;
-                    }
-                    $consumo = $consumo / count($rs1);
-                    $nl = $consumo + $value->lectura;
-
-                    DB::table("decobo_orden_temp")
-                      ->where("medidor",$value->medidor)
-                      ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);
-                  }
-          }
-        }
-  } catch (\Exception $e) {
-     return response()->json("error: ".$e);
-  }
-
-}
-
- public function calcularConsumos(){
+/**
+ * calcula consumos correctos
+ */
+ public function calcularConsumos($agencia){
    try {
      $dataResult=array();
      $cont=0;
-          $result = DB::table("decobo_orden_temp")->get();
+
+          $result = DB::table("decobo_orden_temp")
+                    ->whereRaw("nueva_lectura > lectura")
+                    ->where("agencia",$agencia)
+                    ->get();
           foreach ($result as $key => $value) {
             if($value->nueva_lectura!="0"){
               $consumo = (int)$value->nueva_lectura - (int)$value->lectura;
@@ -836,138 +805,42 @@ private function promediaConsuloSinLecturaSinObs(){
           $dataResult["mensaje"]="Consumos calculados correctamente";
           $dataResult["cantidad"]=$cont;
           $dataResult["status"]=true;
-          return response()->json($dataResult);;
+          return response()->json($dataResult);
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
 
  }
 
- private function calcularNuevoConsumo2(){
-   $cont=0;
-        $result = DB::table("decobo_orden_temp")->get();
-        foreach ($result as $key => $value) {
-          $consumo = (int)$value->nueva_lectura - (int)$value->lectura;
-          $result = DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["nuevo_consumo"=>$consumo]);
-          $cont++;
-        }
-        return $cont;
- }
+
 
   private function calcularPorcentajeMasMenos15($nuevo_consumo, $consumo_anterior){
-
+    try {
+      $valor=$consumo_anterior;
       $resultMas15 = $valor + ($valor*0.15);
       $resultMenos15 = $valor - ($valor*0.15);
-
       if($nuevo_consumo <= $resultMas15 || $nuevo_consumo >= $resultMenos15){
         return true;
       }
       return false;
-  }
-
-  private function validarObservacion(){
-    $result =DB::table("decobo_orden_temp")
-            ->orWhere("observacion","borroso")
-            ->orWhere("observacion","alto")
-            ->orWhere("observacion","obstruido")
-            ->where("procesado",0)
-            ->get();
-    if(count($result)>0){
-      foreach ($result as $key => $value) {
-        $rs1 = DB::table("decobo_historial")
-              ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
-              ->where("medidor",$value->medidor)
-              ->get();
-              if(count($rs1)>0){
-                $contador=0;
-                $consumo=0;
-                $nl=0;
-                foreach ($variable as $key => $value2) {
-                  $consumo = $consumo + $value2->nuevo_consumo;
-                }
-                $consumo = $consumo / count($rs1);
-                $nl = $consumo + $value->lectura;
-
-                DB::table("decobo_orden_temp")
-                  ->where("medidor",$value->medidor)
-                  ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);
-              }
-      }
-    }
-    return true;
-  }
-
-  /**
-   * validar lecturas
-   */
-  public function validarLecturas(){
-    try {
-
-      $result =DB::table("decobo_orden_temp")
-                ->where("nueva_lectura","0")
-                ->where("procesado","=",0)
-                ->get();
-        $cont=0;
-        $cont_lecturas=0;
-        $cont_coordenadas=0;
-        $dataResult=array();
-        foreach ($result as $key => $value) {
-            $lectura_anterior_cero=DB::table("decobo_historial")
-                                  ->where('secuencial', ($value->secuencial)-1)
-                                  ->where('nueva_lectura', '0')
-                                  ->where('medidor', $value->medidor)
-                                  ->where('observacion', 'like','%MEDIDOR RETIRADO%')
-                                  ->exists();
-            if($lectura_anterior_cero){
-              DB::table("decobo_orden_temp")->where("medidor",$value->medidor)->update(["lectura"=>"0","observacion"=>"MEDIDOR RETIRADO","procesado"=>1]);
-            }
-
-            $lecturas_anteriores = DB::table("decobo_historial")
-                                      ->whereBetween("secuencial",[$value->secuencial-3,$value->secuencial-1])
-                                      ->where("nueva_lectura","0")
-                                      ->where("medidor",$value->medidor)
-                                      ->get();
-
-            if(count($lecturas_anteriores)>0){
-              foreach ($lecturas_anteriores as $key => $value) {
-                DB::table("decobo_orden_temp")
-                ->where("medidor",$value->medidor)
-                ->update(["observacion"=>$value->observacion,"lectura"=>$value->lectura,"procesado"=>1]);
-              }
-            }
-            $cont_lecturas++;
-
-          if((is_null($value->longitud) || is_null($value->latitud) || ($value->longitud=="" || $value->latitud=="")) && ($value->lectura=="0" || is_null($value->lectura))){
-
-              DB::table("decobo_orden_temp")
-              ->where("medidor",$value->medidor)
-              ->update(["lectura"=>"0","observacion"=>"SIN COORDENADAS","procesado"=>1]);
-              $cont_coordenadas++;
-          }
-          $cont++;
-        }
-
-      // valida lectura menor que la anterior
-      $r = $this->validaLecturaMayor();
-
-
-      $dataResult["mensaje"]="Proceso terminado con exito";
-      $dataResult["cantidad_lecturas_cero"]=$cont;
-      $dataResult["status"]=true;
-
-      return response()->json($dataResult);
-
     } catch (\Exception $e) {
-       return response()->json("error: ".$e);
+      return response()->json("error: ".$e);
     }
+
+
   }
 
 
-private function validaLecturaMayor(){
+
+
+
+
+public function validaLecturaMenor($agencia){
   try {
     $result= DB::table("decobo_orden_temp")
-            ->where("nueva_lectura","<","lectura")
-            ->where("procesado",0)
+            ->whereRaw("nueva_lectura < lectura")
+            ->where("nueva_lectura","!=","0")
+            ->where("agencia",$agencia)
             ->get();
     $contador=0;
     $dataIds=array();
@@ -978,15 +851,86 @@ private function validaLecturaMayor(){
     if(count($dataIds)>0){
       DB::table("decobo_orden_temp")
           ->whereIn("id",$dataIds)
-          ->update(["alerta"=>1,"referencia_alerta"=>"LECTURA MENOR QUE LA ANTERIOR","procesado"=>1]);
+          ->update(["alerta"=>1,"referencia_alerta"=>"LECTURA MENOR","procesado"=>1]);
     }
-    return true;
+    $dataResult["mensaje"]="Lecturas validadas correctamente";
+    $dataResult["cantidad"]=$contador;
+    $dataResult["status"]=true;
+    return response()->json($dataResult);
   } catch (\Exception $e) {
      return response()->json("error: ".$e);
   }
 
-
 }
+
+
+/**
+ * valida lecturas
+ */
+
+ public function validarLecturas($agencia)
+ {
+
+
+   $result= DB::table("decobo_orden_temp")
+           ->where("nueva_lectura","=","0")
+           ->where("procesado",0)
+           ->where("agencia",$agencia)
+           ->get();
+    foreach ($result as $key => $value) {
+      if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
+        if($value->lectura!="0"){
+          $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+        }else{
+          $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+        }
+      }
+      if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
+        $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+      }
+    }
+
+ }
+
+
+ private function promediarConsumo($medidor,$desde,$hasta){
+   $rs1 = DB::table("decobo_historial")
+         ->whereBetween("secuencial",[$desde,$hasta])
+         ->where("medidor",$medidor)
+         ->get();
+         if(count($rs1)>0){
+           $contador=0;
+           $consumo=0;
+           $nl=0;
+           foreach ($rs1 as $key => $value2) {
+             $consumo = $consumo + $value2->nuevo_consumo;
+           }
+           $consumo = $consumo / count($rs1);
+           $nl = $consumo + $value->lectura;
+           DB::table("decobo_orden_temp")
+             ->where("medidor",$value->medidor)
+             ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);
+         }
+ }
+
+/**
+ *
+ */
+   private function actualizarDesdeDataAnterior($medidor,$ultimo_secuencial){
+     $result= DB::table("decobo_historial")
+             ->where("medidor",$medidor)
+             ->where("secuencial",$ultimo_secuencial)
+             ->first();
+      if($result){
+        DB::table("decobo_orden_temp")->where("medidor",$medidor)->update(["nueva_lectura"=>$result->nueva_lectura,"observacion"=>$result->observacion,"procesado"=>1]);
+        return true;
+      }
+      else{
+        return fale;
+      }
+
+
+   }
 
   public function validarConsumos2(){
     try {
@@ -999,4 +943,8 @@ private function validaLecturaMayor(){
   }
 
 
+
+  public function getLectura(){
+
+  }
 }

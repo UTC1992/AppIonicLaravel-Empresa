@@ -74,4 +74,54 @@ class LecturasController extends Controller
       }
 
 
+      /**
+       * subir respaldos desde txt
+       */
+
+       public function subirRespaldos(Request $request){
+         try {
+
+
+           $filename = $request->file;
+           //return $filename;
+           $contador_registros=0;
+             if (file_exists($filename) && is_readable ($filename)) {
+             $fileResource  = fopen($filename, "r");
+             if ($fileResource) {
+                 while (($line = fgets($fileResource)) !== false) {
+                   $lineArray=array();
+                   $lineArray = explode("|", $line);
+                   $dataUpdate=array();
+                   //return $lineArray;
+                   $medidor=$lineArray[0];
+                   $dataUpdate["nueva_lectura"]=$lineArray[1];
+                   $dataUpdate["estado"]=$lineArray[2];
+                   $dataUpdate["fecha_lectura"]=$lineArray[3];
+                   $dataUpdate["hora"]=$lineArray[4];
+                   $dataUpdate["lat"]=$lineArray[5];
+                   $dataUpdate["lon"]=$lineArray[6];
+                   $dataUpdate["observacion"]=$lineArray[7];
+                   $dataUpdate["foto"]=$lineArray[8];
+                   $dataUpdate["recibido"]=1;
+
+                   $res= DB::table("decobo_orden_temp")
+                         ->where("medidor",$medidor)
+                         ->update($dataUpdate);
+                 }
+                 fclose($fileResource);
+             }
+
+             }
+             $dataResponse["mensaje"]="El archivo ha sido subido correctamente";
+             $dataResponse["status"]=true;
+             return response()->json($dataResponse);
+
+         } catch (\Exception $e) {
+
+           return response()->json("error: ".$e);
+         }
+       }
+
+
+
 }

@@ -126,5 +126,24 @@ class LecturasAppController extends Controller
 
    }
 
-   
+   /**
+    * consulta permiso de borrado de tecnico
+    */
+   public function consultarPermisoBorradoTecnico($cedula,$tipo){
+     try {
+       $result= Tecnico::where("cedula",$cedula)->where("actividad",$tipo)->first();
+
+       if($result){
+         if($result->permiso_borrado==1){
+           return response()->json(true);
+         }
+         return response()->json(false);
+       }
+       return response()->json("error");
+
+     } catch (\Exception $e) {
+       return response()->json("Error :".$e);
+     }
+
+   }
 }

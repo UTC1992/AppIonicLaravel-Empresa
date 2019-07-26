@@ -80,9 +80,10 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('procesos/orden-temp','Gateway\Lecturas\LecturasController@procesarActualizarOrdenTemporal');
     Route::get('procesos/historial','Gateway\Lecturas\LecturasController@guardarHistorial');
     Route::get('procesos/orden-trabajo','Gateway\Lecturas\LecturasController@generarOrdenTrabajo');
-    Route::get('procesos/valida-lecturas','Gateway\Lecturas\LecturasController@validarLecturas');
-    Route::get('procesos/valida-consumos','Gateway\Lecturas\LecturasController@validaConsumos');
-    Route::get('procesos/calcula-consumos','Gateway\Lecturas\LecturasController@calculaConsumosService');
+    Route::get('procesos/valida-lecturas-final/{agencia}','Gateway\Lecturas\LecturasController@validarLecturas');
+    Route::get('procesos/valida-consumos/{agencia}','Gateway\Lecturas\LecturasController@validaConsumos');
+    Route::get('procesos/calcula-consumos/{agencia}','Gateway\Lecturas\LecturasController@calculaConsumosService');
+    Route::get('procesos/valida-lecturas-menores/{agencia}','Gateway\Lecturas\LecturasController@validaLecturasMenores');
 
 
     // observaciones
@@ -100,6 +101,9 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('reportes/error-consumos','Gateway\Lecturas\LecturasController@reporteErroresConsumos');
     Route::get('reportes/error-lecturas','Gateway\Lecturas\LecturasController@reporteErroresLecturas');
     Route::get('reportes/envios/{mes}','Gateway\Lecturas\LecturasController@reporteEnviosLecturas');
+
+    //lecturas backups
+    Route::post('lecturas/update','Gateway\Lecturas\LecturasController@uploadBackupFile');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -120,6 +124,7 @@ Route::group(['prefix' => 'mobile'], function(){
       Route::post('lecturas','Gateway\Lecturas\LecturasAppController@updateLecturas');
       Route::get('observaciones/{id}','Gateway\Lecturas\LecturasAppController@getObservaciones');
       Route::post('catastros/create','Gateway\Lecturas\LecturasAppController@insertarCatastros');
+      Route::get('permisos/borrado/{cedula}/{tipo}','Gateway\Lecturas\LecturasAppController@consultarPermisoBorradoTecnico');
   });
 
   /**
