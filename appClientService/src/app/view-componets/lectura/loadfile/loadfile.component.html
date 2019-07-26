@@ -78,6 +78,7 @@
     </mat-accordion>
   </mat-card-content>
 </div>
+
 <div class="card card-body" style="margin-bottom: 10px;">
   <div class="d-flex justify-content-center">
     <h5 class="">Validaciones</h5>
@@ -162,6 +163,7 @@
     </mat-accordion>
   </mat-card-content>
 </div>
+
 <div class="card card-body" style="margin-bottom: 10px;">
   <div class="d-flex justify-content-center">
     <h5 class="">Finalización del mes</h5>
@@ -190,3 +192,34 @@
     </mat-accordion>
   </mat-card-content>
 </div>
+
+<div class="card card-body" style="margin-bottom: 10px;">
+    <div class="d-flex justify-content-center">
+      <h5 class="">Subir respaldo</h5>
+    </div>
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+              Expandir para subir respaldos
+          </mat-expansion-panel-header>
+          <div class="row">
+              <div class="col d-flex justify-content-center">
+                <form [formGroup]="formloadRespaldo" (ngSubmit)="onSubmitRespaldo()">
+                  <div class="form-group">
+                    <input type="file" class="btn btn-primary btn-sm"  id="respaldo"  
+                    name="respaldo" (change)="onFileChangeRespaldo($event)" #fileInputRespaldo >
+                  </div>
+                  <div class="form-group">
+                    <button mat-button type="submit"  class="btn btn-success btn-sm">
+                      Recuperar información
+                      <mat-icon>backup</mat-icon>
+                    </button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </div>

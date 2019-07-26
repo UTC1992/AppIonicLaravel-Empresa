@@ -36,8 +36,10 @@ export const MY_FORMATS = {
 export class LoadfileComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInputRespaldo') fileInputRespaldo: ElementRef;
 
   formload: FormGroup;
+  formloadRespaldo: FormGroup;
 
   //meses
   mesElegido: any = null;
@@ -69,6 +71,7 @@ export class LoadfileComponent implements OnInit {
   ) {
     this.dateAdapter.setLocale('es'); 
     this.createForm();
+    this.createFormRespaldo();
   }
 
   ngOnInit() {
@@ -112,18 +115,25 @@ export class LoadfileComponent implements OnInit {
   }
 
   createForm() {
+    //formulario para rutas
     this.formload = this.formbuilder.group({
       archivo: [null],
       mes:[null]
     });
   }
 
+  createFormRespaldo() {
+    //formulario para respaldo
+    this.formloadRespaldo = this.formbuilder.group({
+      respaldo: [null]
+    });
+  }
+
   /**
-   * 
+   * Subir respaldo
    */
   onSubmit(){
     console.log(this.formload.value);
-    this.showCargando();
     if(this.formload.get('archivo').value==null || this.formload.get('archivo').value==""){
       this.showAlert('Alerta!',"Seleccione un archivo",'warning');
       return;
@@ -132,6 +142,7 @@ export class LoadfileComponent implements OnInit {
       this.showAlert('Alerta!',"Seleccione un mes",'warning');
       return;
     }
+    this.showCargando();
     const formModel = this.prepareSave();
     this.lecturaService.uploadFile(formModel).subscribe(result=>{
         console.log(result);
@@ -144,7 +155,28 @@ export class LoadfileComponent implements OnInit {
   }
 
   /**
-   * 
+   * Subir respaldo
+   */
+  onSubmitRespaldo(){
+    console.log(this.formloadRespaldo.value);
+    if(this.formloadRespaldo.get('respaldo').value==null || this.formloadRespaldo.get('respaldo').value==""){
+      this.showAlert('Alerta!',"Seleccione un archivo de respaldo",'warning');
+      return;
+    }
+    this.showCargando();
+    const formModel = this.prepareSaveRespaldo();
+    this.lecturaService.uploadFileRespaldo(formModel).subscribe(result=>{
+        console.log(result);
+        this.showAlert('Éxito','Respaldo subido exitosamente','success');
+        this.clearFileRespaldo();
+      }, error => {
+        console.log(error);
+    });
+    
+  }
+
+  /**
+   * asignar archivos para envio
    */
   prepareSave(): any {
     let input = new FormData();
@@ -154,12 +186,29 @@ export class LoadfileComponent implements OnInit {
   }
 
   /**
-   * 
+   * asignar archivos para envio RESPALDO
+   */
+  prepareSaveRespaldo(): any {
+    let input = new FormData();
+    input.append('file', this.formloadRespaldo.get('respaldo').value);
+    return input;
+  }
+
+  /**
+   * limpiar datos de form ruta 
    */
   clearFile() {
     this.formload.get('archivo').setValue(null);
     this.formload.get('mes').setValue(null);
     this.fileInput.nativeElement.value = '';
+  }
+
+  /**
+   * limpiar datos de form respaldo
+   */
+  clearFileRespaldo() {
+    this.formloadRespaldo.get('respaldo').setValue(null);
+    this.fileInputRespaldo.nativeElement.value = '';
   }
 
   /**
@@ -170,6 +219,17 @@ export class LoadfileComponent implements OnInit {
     if(event.target.files.length > 0) {
       let file = event.target.files[0];
       this.formload.get('archivo').setValue(file);
+    }
+  }
+
+  /**
+   * 
+   * @param event 
+   */
+  onFileChangeRespaldo(event) {
+    if(event.target.files.length > 0) {
+      let file = event.target.files[0];
+      this.formloadRespaldo.get('respaldo').setValue(file);
     }
   }
 
