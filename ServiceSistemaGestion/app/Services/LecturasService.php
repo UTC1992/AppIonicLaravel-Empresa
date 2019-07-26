@@ -168,22 +168,22 @@ class LecturasService
   /**
    * generar orden de trabajo para lecturas
    */
-    public function obtenerRutasDecobo(){
+  public function obtenerRutasDecobo(){
       return $this->performRequest('GET',"/rutas");
-    }
+  }
 
     /**
      * obtiene rutas tecnicos decobo
      */
-    public function obtenerRutasAsignadasTecnicos(){
+  public function obtenerRutasAsignadasTecnicos(){
       return $this->performRequest('GET',"/rutas/tecnicos");
-    }
+  }
     /**
        * eliminar asignacion tecnicos decobo
       */
-      public function deleteAsignacion($data){
+  public function deleteAsignacion($data){
         return $this->performRequest('POST',"/rutas/delete-asignacion",$data);
-      }
+    }
 
   /**
    * validar lecturas
@@ -237,7 +237,14 @@ class LecturasService
   /**
    * valida lectura menores
    */
-   public function validaLecturasMenoresServices($agencia){
-     return $this->performRequest('GET',"/procesos/valida-lectura-menor/{$agencia}");
-   }
+  public function validaLecturasMenoresServices($agencia){
+    return $this->performRequest('GET',"/procesos/valida-lectura-menor/{$agencia}");
+  }
+
+  /**
+   * actualiza registros de lecturas
+   */
+  public function uploadBackupFileService($data){
+     return $this->performRequestFileBackup('POST',"/lecturas/update",$data);
+  }
 }

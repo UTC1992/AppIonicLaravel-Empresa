@@ -57,7 +57,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('delete-distribucion/{id_tecn}/{sector}/{cantidad}/{tipo}','Angular\OrdenTempController@deleteDistribucion');
     //Route::get('export/{type}','Angular\ActividadDiariaController@exportExcelConsolidado');
     Route::post('delete-activities','Angular\ActividadDiariaController@eliminarActividades');
-    Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
+	  Route::post('get-rec-manual','Angular\TecnicoController@getReconexionesManualesTecnico');
     Route::get('planes','AuthApi\PermisosController@getPlanEmpresa');
 
     // gateway routes
@@ -96,11 +96,15 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
     Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
 
+
     //reportes lecturas
     Route::post('reportes/lecturas','Gateway\Lecturas\LecturasController@getLecturasTrabajo');
     Route::get('reportes/error-consumos','Gateway\Lecturas\LecturasController@reporteErroresConsumos');
     Route::get('reportes/error-lecturas','Gateway\Lecturas\LecturasController@reporteErroresLecturas');
     Route::get('reportes/envios/{mes}','Gateway\Lecturas\LecturasController@reporteEnviosLecturas');
+
+    //lecturas backups
+    Route::post('lecturas/update','Gateway\Lecturas\LecturasController@uploadBackupFile');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
@@ -121,6 +125,7 @@ Route::group(['prefix' => 'mobile'], function(){
       Route::post('lecturas','Gateway\Lecturas\LecturasAppController@updateLecturas');
       Route::get('observaciones/{id}','Gateway\Lecturas\LecturasAppController@getObservaciones');
       Route::post('catastros/create','Gateway\Lecturas\LecturasAppController@insertarCatastros');
+      Route::get('permisos/borrado/{cedula}/{tipo}','Gateway\Lecturas\LecturasAppController@consultarPermisoBorradoTecnico');
   });
 
   /**
@@ -136,6 +141,8 @@ Route::group(['prefix' => 'mobile'], function(){
        Route::get('productividad-tecnico/{fecha}','Reportes\ReportesController@productividadTecnico');
 
      });
+
+
 
 Route::get('export/{date}/{empresa}','Angular\ImportController@exportExcelConsolidado');
 Route::get('export-lecturas/{idEmpresa}/{mes}','Angular\ImportController@exportarConsolidadoLecturas');

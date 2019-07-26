@@ -10,6 +10,6 @@ export class Tecnico {
     email:string;
     estado:string;
     password:string;
-
+    permiso_borrado: number;
    
 }

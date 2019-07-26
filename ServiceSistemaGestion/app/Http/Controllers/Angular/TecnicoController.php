@@ -94,7 +94,8 @@ class TecnicoController extends Controller
         $tecnico->actividad=$request->actividad;
         $tecnico->asignado=0;
         $tecnico->borrado=0;
-        $tecnico->password='123456';
+        $tecnico->password=$request->password;
+        $tecnico->permiso_borrado=$request->permiso_borrado;
         $tecnico->id_emp=$this->getIdEmpUserAuth();
         $tecnico->save();
         if($tecnico){
@@ -159,10 +160,10 @@ class TecnicoController extends Controller
       $tecnico->email=$request->email;
       $tecnico->estado=$request->estado;
       $tecnico->actividad=$request->actividad;
-      $tecnico->asignado=0;
-      $tecnico->borrado=0;
-      $pass="123456";
-      $tecnico->password=$pass;
+    //  $tecnico->asignado=0;
+    //  $tecnico->borrado=0;
+      $tecnico->password=$request->password;
+      $tecnico->permiso_borrado=$request->permiso_borrado;
       $tecnico->id_emp=$this->getIdEmpUserAuth();
       $result = $tecnico->save();
       $this->createHistoryUser("Editar","Edita Tecnico","Tecnicos");

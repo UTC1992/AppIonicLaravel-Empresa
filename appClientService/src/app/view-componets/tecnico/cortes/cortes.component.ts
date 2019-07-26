@@ -19,7 +19,8 @@ export class CortesComponent implements OnInit {
   tecn:any;
   tecnicos:Observable<Tecnico[]>;
 
-  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 'email', 'estado','actividad', 'acciones'];
+  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 
+  'email','actividad', 'acciones'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

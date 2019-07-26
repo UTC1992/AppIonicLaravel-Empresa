@@ -138,6 +138,5 @@ class PermisosController extends Controller
     $observacion=Observacion::find($id_obs);
     return response()->json($observacion);
   }
-
-
+  
 }

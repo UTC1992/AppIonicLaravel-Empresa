@@ -11,7 +11,7 @@ import { MatTableModule, MatToolbarModule, MatButtonModule,
   MatSidenavModule, MatIconModule, MatListModule, 
   MatGridListModule, MatCardModule, MatMenuModule, 
   MatTabsModule, MatDatepickerModule, MatNativeDateModule, 
-  MatTableDataSource, MatSelectModule } from '@angular/material';
+  MatTableDataSource, MatSelectModule, MatRadioModule } from '@angular/material';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe';
@@ -73,7 +73,8 @@ import { LecturasComponent } from './lecturas/lecturas.component';
     ChartsModule,
     MatProgressBarModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatRadioModule
   ],
   declarations: [
     PanelComponent,

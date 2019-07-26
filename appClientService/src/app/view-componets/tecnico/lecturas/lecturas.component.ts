@@ -19,7 +19,8 @@ export class LecturasComponent implements OnInit {
   tecn:any;
   tecnicos:Observable<Tecnico[]>;
 
-  displayedColumns: string[] = ['id_tecn', 'nombres', 'cedula', 'telefono', 'email', 'estado','actividad', 'acciones'];
+  displayedColumns: string[] = ['id_tecn', 'nombres', 'permiso_borrado', 'cedula', 'telefono', 
+  'email','actividad',  'acciones'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -41,12 +42,12 @@ export class LecturasComponent implements OnInit {
     public modalRef: BsModalRef,
     private permisoService: PermisosService
   ) { 
-    this.iniciarFormulario();
+
   }
 
   ngOnInit() {
     this.mostrarTecnicos();
-
+    this.iniciarFormulario();
   }
 
   mostrarTecnicos(){
@@ -108,6 +109,7 @@ export class LecturasComponent implements OnInit {
       response=>{
         //this.tecn= this.createformEdit(res);
         if(response != null){
+          //console.log(response);
           this.tecnicoEdit = this.iniciarFormularioEdit(response);
           //this.iniciarFormularioEdit();
           this.modalRef = this.modalService.show(template);
@@ -147,7 +149,8 @@ export class LecturasComponent implements OnInit {
       telefono: [object.telefono, Validators.required],
       email: [object.email, Validators.required],
       actividad:[object.actividad,Validators.required],
-      estado:['1', Validators.required]
+      estado:['1', Validators.required],
+      permiso_borrado:[object.permiso_borrado, Validators.required]
     });
   }
 
@@ -159,7 +162,8 @@ export class LecturasComponent implements OnInit {
       telefono: ["", Validators.required],
       email: ["", Validators.required],
       actividad:["lecturas",Validators.required],
-      estado:['1', Validators.required]
+      estado:['1', Validators.required],
+      permiso_borrado:["", Validators.required]
     });
   }
 
@@ -174,6 +178,7 @@ export class LecturasComponent implements OnInit {
     input.append('email', this.formData.get('email').value);
     input.append('actividad', this.formData.get('actividad').value);
     input.append('estado', this.formData.get('estado').value);
+    input.append('permiso_borrado', this.formData.get('permiso_borrado').value);
     return input;
   }
 

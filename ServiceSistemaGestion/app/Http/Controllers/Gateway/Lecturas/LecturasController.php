@@ -333,4 +333,18 @@ class LecturasController extends Controller
     }
 
   }
+
+  /**
+   * subir archivo txt de respaldo al servidor, se conecta al servicio de lecturas api
+   */
+   public function uploadBackupFile(Request $request){
+       try {
+         $file=$request->file;
+         $ID_EMP=$this->getIdEmpUserAuth();
+         $result=$this->lecturasService->uploadBackupFileService($file);
+         return response($result)->header('Content-Type', 'applicationIjson');
+       } catch (\Exception $e) {
+         return response()->json("Error :".$e);
+       }
+   }
 }
