@@ -82,6 +82,9 @@ class ProcesosController extends Controller
                   }
                 }
 
+
+
+
                   if(($data["este"]!="0" && $data["norte"]!="0") && (!is_null($data["este"]) && !is_null($data["norte"]))){
                     $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
                     $longitud=round($coordenadas["lon"],6);
@@ -173,8 +176,8 @@ class ProcesosController extends Controller
 
     private function createRegister($table,$data){
 
-      DB::table($table)->insert($data);
-      //DB::table("decobo_orden_temp")->insert($data);
+    //  DB::table($table)->insert($data);
+      DB::table("decobo")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 
@@ -578,7 +581,7 @@ public function generarOrdenTemp(){
           $dataValue["lat"]=$value->lat;
           $dataValue["lon"]=$value->lon;
           $dataValue["fecha_lectura"]=null;
-          $dataValue["tecnico_id"]=$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
+          $dataValue["tecnico_id"]=$value->tecnico_id;//$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
           $dataValue["cedula_tecnico"]=$value->cedula_tecnico;
           $dataValue["consumo_anterior"]=$value->nuevo_consumo;
           $dataValue["nuevo_consumo"]="0";
@@ -643,6 +646,8 @@ public function actualizarOrdenTrabajo()
       $dataRe["total_procesados"]=0;
     }
     $cont=0;
+    $contador_registros=0;
+    $dataInsert=array();
     foreach ($decobo_temp1 as $key => $value) {
         $data=array();
         $data['zona']=$value->zona;
@@ -676,7 +681,7 @@ public function actualizarOrdenTrabajo()
         $data['nuevo_consumo']=0;
         $data['procesado']=0;
         $res=DB::table('decobo_orden_temp')
-                 ->where('medidor',$value->medidor)->first();
+                 ->where('medidor',$value->medidor)->where("cuenta",$value->cuenta)->first();
         if($res){
             if(is_null($res->nueva_lectura) || $res->nueva_lectura==''){
               DB::table('decobo_orden_temp')
@@ -691,11 +696,22 @@ public function actualizarOrdenTrabajo()
                   ->update($dataUpdate);
             }
         }else{
-          DB::table('decobo_orden_temp')->insert($data);
+          $data["tecnico_id"]=0;
+          $dataInsert[$contador_registros]=$data;
+          if($contador_registros===1200){
+            DB::table('decobo_orden_temp')->insert($dataInsert);
+            $contador_registros=0;
+            $dataInsert=array();
+          }
+          $contador_registros++;
+
         }
         $cont++;
     }
 
+    if(count($dataInsert)>0){
+        DB::table('decobo_orden_temp')->insert($dataInsert);
+    }
 
     $dataRe["mensaje"]="Proceso finalizado con exito";
     $dataRe["status"]=true;
@@ -772,7 +788,7 @@ public function  procesarCatastros(){
      $dataResult["mensaje"]="Consumos Validados con exito";
      $dataResult["cantidad"]=$cont;
      $dataResult["status"]=true;
-     return response()->json($dataResult);
+       return response()->json($dataResult);
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
@@ -786,6 +802,7 @@ public function  procesarCatastros(){
    try {
      $dataResult=array();
      $cont=0;
+
           $result = DB::table("decobo_orden_temp")
                     ->whereRaw("nueva_lectura > lectura")
                     ->where("agencia",$agencia)
@@ -801,7 +818,7 @@ public function  procesarCatastros(){
           $dataResult["mensaje"]="Consumos calculados correctamente";
           $dataResult["cantidad"]=$cont;
           $dataResult["status"]=true;
-          return response()->json($dataResult);;
+          return response()->json($dataResult);
    } catch (\Exception $e) {
      return response()->json("error: ".$e);
    }
@@ -811,14 +828,19 @@ public function  procesarCatastros(){
 
 
   private function calcularPorcentajeMasMenos15($nuevo_consumo, $consumo_anterior){
+    try {
       $valor=$consumo_anterior;
       $resultMas15 = $valor + ($valor*0.15);
       $resultMenos15 = $valor - ($valor*0.15);
-
       if($nuevo_consumo <= $resultMas15 || $nuevo_consumo >= $resultMenos15){
         return true;
       }
       return false;
+    } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+    }
+
+
   }
 
 
@@ -851,7 +873,6 @@ public function validaLecturaMenor($agencia){
   } catch (\Exception $e) {
      return response()->json("error: ".$e);
   }
-
 
 }
 
@@ -899,7 +920,6 @@ public function validaLecturaMenor($agencia){
            }
            $consumo = $consumo / count($rs1);
            $nl = $consumo + $value->lectura;
-
            DB::table("decobo_orden_temp")
              ->where("medidor",$value->medidor)
              ->update(["nueva_lectura"=>$nl,"nuevo_consumo"=>$consumo,"procesado"=>1]);

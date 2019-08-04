@@ -237,7 +237,7 @@ export class LoadfileComponent implements OnInit {
     this.showCargando();
     this.lecturaService.procesarDatosSubidos().subscribe(response => {
       console.log(response);
-      this.showAlert("Éxito !","Los datos subidos han sido procesados exitosamente","success");
+      this.showAlert("Éxito !","Los datos se procesaron exitosamente","success");
     }, error => {
       this.showAlert("Error !","Error al procesar los datos","error");
       console.log(error);
@@ -293,6 +293,37 @@ export class LoadfileComponent implements OnInit {
       console.log(response);
     }, error => {
 
+    });
+  }
+
+  eliminarRutaSubida(){
+    this.lecturaService.truncateTableDeCobo().subscribe(response =>{
+      console.log(response);
+      if(response){
+        this.showAlert("Éxito !","Los datos se eliminarion éxitosamente","success");
+      } else {
+        this.showAlert("Alerta !","No se puedo eliminar los datos subidos","warning");
+      }
+      
+    }, error => {
+      console.log("Error al eliminar la datos subidos");
+    });
+  }
+
+  confirmarEliminarRuta(){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Se eliminará el archivo subido",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.value) {
+        this.eliminarRutaSubida();
+      }
     });
   }
 

@@ -347,4 +347,29 @@ class LecturasController extends Controller
          return response()->json("Error :".$e);
        }
    }
+
+   /**
+    * actualizar ritas distribucion
+    */
+
+    public function actualizarDistribuciones(){
+      try {
+        $result=$this->lecturasService->actualizarDistribucionService();
+        return response($result)->header('Content-Type', 'applicationIjson');
+      } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+      }
+
+    }
+
+    public function borrarTablaDecobo(){
+      try {
+        $result=$this->lecturasService->borrarTablaDecoboService();
+        return response($result)->header('Content-Type', 'applicationIjson');
+      } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+      }
+
+    }
+    
 }

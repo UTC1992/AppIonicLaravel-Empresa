@@ -396,6 +396,11 @@ export class DistribucionComponent implements OnInit {
     this.getTenicosLecturas();
     this.obtenerRutas();
     this.getTenicosConLecturas();
+    this.showAlert(
+      'Éxito!',
+      'Página actualizada exitosamente.',
+      'success'
+    );
   }
 
   reasignarRutaTecnico(id){
@@ -443,6 +448,23 @@ export class DistribucionComponent implements OnInit {
       
     }, error => {
       console.log("Error al eliminar la asignacion");
+      this.actualizarVista();
+    });
+  }
+
+  actualizarDistribucionesTablaTemporal(){
+    this.showCargando();
+    this.distribucionService.updateDistribuciones().subscribe(response => {
+      console.log(response);
+      if(response){
+        this.actualizarVista();
+        this.showAlert('Éxito!','Las distribuciones se actualizaron exitosamente','success');
+      }else {
+        this.actualizarVista();
+        this.showAlert('Éxito!','No se pudo actualizar la distribución','warning');
+      }
+    }, error => {
+      console.log(error);
       this.actualizarVista();
     });
   }

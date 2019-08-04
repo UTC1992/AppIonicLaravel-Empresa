@@ -182,5 +182,19 @@ export class LecturasService {
     })
     );
   }
+
+  /**
+    * eliminar datos tabla decobo 
+    */
+   truncateTableDeCobo():Observable<Filtro[]>{
+    return this.http.get<Filtro[]>(this.baseUrl+"/decobo/truncate")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+   }
   
 }

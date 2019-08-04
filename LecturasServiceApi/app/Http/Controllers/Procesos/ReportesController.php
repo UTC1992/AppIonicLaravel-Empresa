@@ -33,25 +33,52 @@ class ReportesController extends Controller
          $lector=$request[0]['lector'];
          $agencia=$request[0]['agencia'];
          $estado=$request[0]['estado'];
-         $result = DB::table("decobo_orden_temp")
-                  ->where("mes",$fecha)
-                  ->where(function($query) use($agencia){
-                    if($agencia!="empty")
-                      $query->where("agencia",$agencia);
-                    })
-                  ->where(function($query) use($lector){
-                    if($lector!="empty")
-                      $query->where("tecnico_id",$lector);
-                    })
-                  ->where(function($query) use($estado){
-                    if($estado!="empty")
-                        $query->where("estado",$estado);
+         if($this->validaMesActual($fecha)){
+           $result = DB::table("decobo_orden_temp")
+                    ->where("mes",$fecha)
+                    ->where(function($query) use($agencia){
+                      if($agencia!="empty")
+                        $query->where("agencia",$agencia);
                       })
-                  ->get();
-          return response()->json($result);
+                    ->where(function($query) use($lector){
+                      if($lector!="empty")
+                        $query->where("tecnico_id",$lector);
+                      })
+                    ->where(function($query) use($estado){
+                      if($estado!="empty")
+                          $query->where("estado",$estado);
+                        })
+                    ->get();
+            return response()->json($result);
+         }else{
+           $result = DB::table("decobo_historial")
+                    ->where("mes",$fecha)
+                    ->where(function($query) use($agencia){
+                      if($agencia!="empty")
+                        $query->where("agencia",$agencia);
+                      })
+                    ->where(function($query) use($lector){
+                      if($lector!="empty")
+                        $query->where("tecnico_id",$lector);
+                      })
+                    ->where(function($query) use($estado){
+                      if($estado!="empty")
+                          $query->where("estado",$estado);
+                        })
+                    ->get();
+            return response()->json($result);
+         }
+
        } catch (\Exception $e) {
          return response()->json("error: ".$e);
        }
+
+     }
+
+     private function validaMesActual($mes){
+
+       $result= DB::table("decobo_orden_temp")->where("mes",$mes)->exists();
+       return $result;
 
      }
    /**

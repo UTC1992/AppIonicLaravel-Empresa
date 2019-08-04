@@ -35,6 +35,8 @@ $router->post('/rutas/distribuir','Procesos\OrdenTrabajoController@distribuirRut
 $router->get('/rutas','Procesos\OrdenTrabajoController@obtenerRutasDecobo');
 $router->get('/rutas/tecnicos','Procesos\OrdenTrabajoController@obtenerDistribucionTecnicos');
 $router->post('/rutas/delete-asignacion','Procesos\OrdenTrabajoController@deleteRutaTecnico');
+$router->get('/rutas/actualizar','Procesos\OrdenTrabajoController@actualizarDistribuciones');
+$router->get('/rutas/borrar/decobo','Procesos\OrdenTrabajoController@truncateTableDecobo');
 
 $router->post('/lecturas/update','Procesos\LecturasController@subirRespaldos');
 /**

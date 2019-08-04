@@ -78,5 +78,19 @@ export class DistribucionService {
       })
     );
   }
+
+  /**
+   * actualizar distribución luego de pasar los datos a la tabla temporal
+   */
+  updateDistribuciones(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/distribiciones/actualizar")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
   
 }
