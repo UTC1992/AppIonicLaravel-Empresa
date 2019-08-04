@@ -120,8 +120,8 @@ export class LecturasComponent implements OnInit {
 
   openModalCreate(template: TemplateRef<any>) {
     this.permisoService.getPlan().subscribe(response =>{
-      ////console.log(response);
-      let datos = response.find(x=>x.id_modulo == 'energy_lc');
+      console.log(response);
+      let datos = response.find(x=>x.id_modulo == 'energy_lec');
       ////console.log(datos['num_tecnicos']);
       if(datos == null){
         this.showAlert('Alerta!', 'No estas suscrito al módulo de lecturas.', 'warning');        
@@ -142,7 +142,7 @@ export class LecturasComponent implements OnInit {
 
   iniciarFormularioEdit(object){
     this.formData = this.formBuilder.group({
-      id:[object.id_tecn, Validators.required],
+      id_tecn:[object.id_tecn, Validators.required],
       nombres: [object.nombres, Validators.required],
       apellidos: [object.apellidos, Validators.required],
       cedula: [object.cedula, Validators.required],
@@ -150,7 +150,7 @@ export class LecturasComponent implements OnInit {
       email: [object.email, Validators.required],
       actividad:[object.actividad,Validators.required],
       estado:['1', Validators.required],
-      permiso_borrado:[object.permiso_borrado, Validators.required]
+      permiso_borrado:[parseInt(object.permiso_borrado), Validators.required]
     });
   }
 
@@ -168,9 +168,9 @@ export class LecturasComponent implements OnInit {
   }
 
   private prepareSave(): any {
-    //console.log("APELLIDOS"+this.formData.get('apellidos').value);
+    console.log("PERMISOS ==> "+this.formData.get('permiso_borrado').value);
     let input = new FormData();
-    input.append('id_tecn', this.formData.get('id').value);
+    input.append('id_tecn', this.formData.get('id_tecn').value);
     input.append('nombres', this.formData.get('nombres').value);
     input.append('apellidos', this.formData.get('apellidos').value);
     input.append('cedula', this.formData.get('cedula').value);
@@ -205,9 +205,9 @@ export class LecturasComponent implements OnInit {
       });
     }
     if(this.tipoAccion == "edit"){
-      const formModel = this.prepareSave();
-      //this.loading = true;
-      this.tecnicoService.updateTecnico(formModel).subscribe( response =>{
+      //const formModel = this.prepareSave();
+      console.log(this.formData.value);
+      this.tecnicoService.updateTecnico(this.formData.value).subscribe( response =>{
         //console.log(response);
         if(response){
           //console.log('Tecnico editado');

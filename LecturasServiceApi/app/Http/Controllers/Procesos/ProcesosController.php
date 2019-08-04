@@ -173,8 +173,8 @@ class ProcesosController extends Controller
 
     private function createRegister($table,$data){
 
-    //  DB::table($table)->insert($data);
-      DB::table("decobo_orden_temp")->insert($data);
+      DB::table($table)->insert($data);
+      //DB::table("decobo_orden_temp")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 

@@ -102,7 +102,7 @@ export class TecnicoService {
     );
   }
   //metodo edita y actualiza el técnico
-  updateTecnico(form:Object){
+  updateTecnico(form){
     return this.http.post(this.baseUrl+"/update-tecnico",form)
     .pipe(
       map((response: any) => response),

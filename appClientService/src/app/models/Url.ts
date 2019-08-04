@@ -1,8 +1,9 @@
 export class Url {
-    public base = "http://192.168.1.2:8000/api/angular";
-    public baseLogin = "http://192.168.1.2:8000/";
-    public basePermisos = "http://192.168.1.2:8000/api";
-    public baseReportes = "http://192.168.1.2:8000/api";
-    public baseDescargaExcel = "http://192.168.1.2:8000/api/export";
-    public basePerfil = "http://192.168.1.2:8000/api";
+    url = "http://gateway.energyosec.com";
+    public base = this.url+"/api/angular";
+    public baseLogin = this.url+"/";
+    public basePermisos = this.url+"/api";
+    public baseReportes = this.url+"/api";
+    public baseDescargaExcel = this.url+"/api/export";
+    public basePerfil = this.url+"/api";
 }

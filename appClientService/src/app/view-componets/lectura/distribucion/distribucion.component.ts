@@ -300,7 +300,7 @@ export class DistribucionComponent implements OnInit {
       }
       this.rutasList = [];
       this.rutasList = vectorAux;
-      this.cantidad_lecturas -= cantidad;
+      this.cantidad_lecturas -= parseInt(cantidad.toString());
       //console.log(this.rutasList);
     } else {
       for (let i = 0; i < this.rutasObtenidas.length; i++) {
@@ -310,7 +310,7 @@ export class DistribucionComponent implements OnInit {
           ) {
             
             this.rutasList.push(this.rutasObtenidas[i]);
-            this.cantidad_lecturas += this.rutasObtenidas[i].cantidad;
+            this.cantidad_lecturas += parseInt(this.rutasObtenidas[i].cantidad.toString());
             //console.log(this.rutasList);
           
         }
@@ -368,7 +368,7 @@ export class DistribucionComponent implements OnInit {
           rutas:data
         });
       }
-      //console.log(dataEnvio);
+      console.log(dataEnvio);
       this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
           console.log(result);

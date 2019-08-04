@@ -54,7 +54,7 @@ class OrdenTrabajoController extends Controller
                                             ->where("sector",$value["sector"])
                                             ->where("ruta",$value["ruta"])
                                             ->update(["tecnico_id"=>$value['idTecnico']]);
-              DB::table("dashboard_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
+              DB::table("energy_produccion.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
                                                   ->update(["asignado"=>1]);
               $cont++;
             }
@@ -257,7 +257,7 @@ class OrdenTrabajoController extends Controller
                     ->get();
 
         if(count($result3) == 0){
-          $result4 = DB::table("dashboard_db.tbl_tecnico")
+          $result4 = DB::table("energy_produccion.tbl_tecnico")
                     ->where("id_tecn",$input['idTecnico'])
                     ->update(["asignado"=>0]);
         }
