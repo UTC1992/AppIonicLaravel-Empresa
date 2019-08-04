@@ -44,17 +44,19 @@ class OrdenTrabajoController extends Controller
             $input=$request->all();
 
             foreach ($input as $key => $value) {
+              $cedula=$this->obtenerCedulaTecnico($value['idTecnico']);
               $dataInsert=array();
               $dataInsert["tecnico_id"]=$value["idTecnico"];
               $dataInsert["agencia"]=$value["agencia"];
               $dataInsert["sector"]=$value["sector"];
               $dataInsert["ruta"]=$value["ruta"];
+              $dataInsert["cedula"]=$cedula;
               DB::table("rutas_tecnicos_decobo")->insert($dataInsert);
               DB::table("decobo_orden_temp")->where("agencia",$value["agencia"])
                                             ->where("sector",$value["sector"])
                                             ->where("ruta",$value["ruta"])
-                                            ->update(["tecnico_id"=>$value['idTecnico']]);
-              DB::table("dashboard_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
+                                            ->update(["tecnico_id"=>$value['idTecnico'],"cedula_tecnico"=>$cedula]);
+              DB::table("empresa_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
                                                   ->update(["asignado"=>1]);
               $cont++;
             }
@@ -75,6 +77,11 @@ class OrdenTrabajoController extends Controller
           }
         }
 
+    private function obtenerCedulaTecnico($id_tecnico)
+    {
+      $tecnico= DB::table("empresa_db.tbl_tecnico")->where("id",$id_tecnico)->first();
+      return $tecnico->cedula;
+    }
     // metodo devuelve actividades del dia por idempresa y paginado
     public function getAllRutasByEmpresa(Request $request){
       try {
@@ -273,5 +280,41 @@ class OrdenTrabajoController extends Controller
       }
     }
 
+    /**
+     * actualiza distribucion
+     */
+    public function actualizarDistribuciones(){
+      try {
+        $result= DB::table("rutas_tecnicos_decobo")->get();
+        foreach ($result as $key => $value) {
+            $id_tecn=$value->tecnico_id;
+            $cedula=$value->cedula;
+            $res=DB::table("decobo_orden_temp")
+                ->where("agencia",$value->agencia)
+                ->where("sector",$value->sector)
+                ->where("ruta",$value->ruta)
+                ->where("tecnico_id",0)
+                ->update(["tecnico_id"=>$id_tecn,"cedula_tecnico"=>$cedula]);
+        }
 
+        return response()->json(true);
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+
+    }
+
+
+/**
+ * borrar orden temp decobo
+ */
+ public function truncateTableDecobo(){
+   try {
+     DB::table('decobo')->truncate();
+     return response()->json(true);
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
+
+ }
 }

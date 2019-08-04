@@ -68,6 +68,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('rutas/distribucion','Gateway\Lecturas\LecturasController@distribuirRuta');
 
 
+
     Route::post('upload','Gateway\Lecturas\LecturasController@uploadFile');
     Route::get('filtros','Gateway\Lecturas\LecturasController@getFilterFiels');
     Route::get('data-first','Gateway\Lecturas\LecturasController@getFirstFilterFields');
@@ -94,7 +95,8 @@ Route::group(['prefix' => 'angular'], function(){
 
     Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
     Route::post('delete-distribution','Gateway\Lecturas\LecturasController@deleteAsignacionLecturas');
-
+    Route::get('distribiciones/actualizar','Gateway\Lecturas\LecturasController@actualizarDistribuciones');
+    Route::get('decobo/truncate','Gateway\Lecturas\LecturasController@borrarTablaDecobo');
 
     //reportes lecturas
     Route::post('reportes/lecturas','Gateway\Lecturas\LecturasController@getLecturasTrabajo');

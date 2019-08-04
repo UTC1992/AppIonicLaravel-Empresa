@@ -247,4 +247,19 @@ class LecturasService
   public function uploadBackupFileService($data){
      return $this->performRequestFileBackup('POST',"/lecturas/update",$data);
   }
+
+  /**
+   * sctualiza distribucion temoral decobo
+   */
+
+   public function actualizarDistribucionService(){
+     return $this->performRequest('GET',"/rutas/actualizar");
+   }
+
+   /**
+    * borrar decobo tabla
+    */
+    public function borrarTablaDecoboService(){
+       return $this->performRequest('GET',"/rutas/borrar/decobo");
+    }
 }

@@ -177,7 +177,7 @@ class ProcesosController extends Controller
     private function createRegister($table,$data){
 
     //  DB::table($table)->insert($data);
-      DB::table("decobo_historial")->insert($data);
+      DB::table("decobo")->insert($data);
       //BaseDatosDecobo::insert($data);
     }
 
@@ -581,7 +581,7 @@ public function generarOrdenTemp(){
           $dataValue["lat"]=$value->lat;
           $dataValue["lon"]=$value->lon;
           $dataValue["fecha_lectura"]=null;
-          $dataValue["tecnico_id"]=$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
+          $dataValue["tecnico_id"]=$value->tecnico_id;//$this->getTecnicoAsignacion($value->agencia,$value->sector,$value->ruta);
           $dataValue["cedula_tecnico"]=$value->cedula_tecnico;
           $dataValue["consumo_anterior"]=$value->nuevo_consumo;
           $dataValue["nuevo_consumo"]="0";
@@ -646,6 +646,8 @@ public function actualizarOrdenTrabajo()
       $dataRe["total_procesados"]=0;
     }
     $cont=0;
+    $contador_registros=0;
+    $dataInsert=array();
     foreach ($decobo_temp1 as $key => $value) {
         $data=array();
         $data['zona']=$value->zona;
@@ -679,7 +681,7 @@ public function actualizarOrdenTrabajo()
         $data['nuevo_consumo']=0;
         $data['procesado']=0;
         $res=DB::table('decobo_orden_temp')
-                 ->where('medidor',$value->medidor)->first();
+                 ->where('medidor',$value->medidor)->where("cuenta",$value->cuenta)->first();
         if($res){
             if(is_null($res->nueva_lectura) || $res->nueva_lectura==''){
               DB::table('decobo_orden_temp')
@@ -694,11 +696,22 @@ public function actualizarOrdenTrabajo()
                   ->update($dataUpdate);
             }
         }else{
-          DB::table('decobo_orden_temp')->insert($data);
+          $data["tecnico_id"]=0;
+          $dataInsert[$contador_registros]=$data;
+          if($contador_registros===1200){
+            DB::table('decobo_orden_temp')->insert($dataInsert);
+            $contador_registros=0;
+            $dataInsert=array();
+          }
+          $contador_registros++;
+
         }
         $cont++;
     }
 
+    if(count($dataInsert)>0){
+        DB::table('decobo_orden_temp')->insert($dataInsert);
+    }
 
     $dataRe["mensaje"]="Proceso finalizado con exito";
     $dataRe["status"]=true;
