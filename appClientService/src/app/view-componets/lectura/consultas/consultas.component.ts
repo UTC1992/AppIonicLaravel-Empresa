@@ -60,12 +60,19 @@ export class ConsultasComponent implements OnInit {
   mesesList: any[] = [];
 
   //tabla
-  displayedColumns: string[] = ['index', 'tecnico', 'agencia', 'sector', 'ruta', 'cuenta',
+  displayedColumns: string[] = ['index', 'agencia', 'sector', 'ruta', 'cuenta',
                                 'medidor', 'lec_anterior', 'lec_actual','consumo_anterior','consumo_nuevo',
                                  'usuario', 'latitud',
                                 'longitud', 'hora', 'observacion', 'fechalec'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  //tabla
+  displayedColumnsErrorLec: string[] = ['index', 'agencia', 'sector', 'ruta', 'cuenta',
+                                'medidor', 'referencia_alerta','lec_anterior', 'lec_actual','consumo_anterior','consumo_nuevo',
+                                'observacion'];
+  dataSourceErrorLec = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginatorErrorLec: MatPaginator;
 
   //mensaje sin datos
   sin_datos_progreso: any = false;
@@ -87,6 +94,10 @@ export class ConsultasComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  applyFilterErrorLec(filterValue: string) {
+    this.dataSourceErrorLec.filter = filterValue.trim().toLowerCase();
   }
 
   llenarTecnicosSelect(){
@@ -209,6 +220,8 @@ export class ConsultasComponent implements OnInit {
       } else {
         this.sin_datos_error_lectura = false;
       }
+      this.dataSourceErrorLec = new MatTableDataSource(response);
+      this.dataSourceErrorLec.paginator = this.paginatorErrorLec;
     }, error => {
       console.log(error);
     });

@@ -150,7 +150,8 @@ export class LecturasComponent implements OnInit {
       email: [object.email, Validators.required],
       actividad:[object.actividad,Validators.required],
       estado:['1', Validators.required],
-      permiso_borrado:[parseInt(object.permiso_borrado), Validators.required]
+      permiso_borrado:[parseInt(object.permiso_borrado), Validators.required],
+      password:[object.password,Validators.required]
     });
   }
 
@@ -163,7 +164,8 @@ export class LecturasComponent implements OnInit {
       email: ["", Validators.required],
       actividad:["lecturas",Validators.required],
       estado:['1', Validators.required],
-      permiso_borrado:["", Validators.required]
+      permiso_borrado:["", Validators.required],
+      password:["",Validators.required]
     });
   }
 

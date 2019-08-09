@@ -13,7 +13,7 @@
             <div class="col d-flex justify-content-center">
               <form [formGroup]="formload" (ngSubmit)="onSubmit()">
                 <div class="form-group">
-                  <input type="file" class="btn btn-primary btn-sm"  id="archivo"  
+                  <input type="file" class="btn btn-outline-primary btn-sm"  id="archivo"  
                   name="archivo" (change)="onFileChange($event)" #fileInput >
                 </div>
                 <div class="selectMes">
@@ -37,7 +37,7 @@
 
           <div class="col d-flex justify-content-center">
             <div class="col col-lg-6 col-md-6 col-sm-6  ">
-              <div class="form-group input-formulario">	
+              <div>	
                 <label>Puede borrar la ruta que acaba de subir:</label>
                 <button mat-button type="button" 
                 (click)="confirmarEliminarRuta()" class="btn btn-danger btn-sm">
@@ -164,13 +164,13 @@
             Expandir para procesar datos para el nuevo mes
         </mat-expansion-panel-header>
         <div class="row">
-          <div class="col col-lg-2">
+          <div class="col col-lg-3">
             <button mat-button type="button" 
             (click)="enviarAlHistorial()" class="btn btn-warning btn-sm">
             <mat-icon>cached</mat-icon>
             Enviar al historial</button>
           </div>
-          <div class="col col-lg-2">
+          <div class="col col-lg-3">
             <button mat-button type="button" 
             (click)="generarTemporalNuevoMes()" class="btn btn-success btn-sm">
             <mat-icon>cached</mat-icon>
