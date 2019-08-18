@@ -138,10 +138,15 @@ export class ConsultasComponent implements OnInit {
       return 
     }
 
+    if(this.lectorBuscar == null || this.lectorBuscar == "empty"){
+      this.showAlert('Alerta!',"Seleccione un técnico para consultar.",'warning');
+      return 
+    }
+
     //crear objeto para enviar filtros
     let data: any[] = [];
       data.push({
-        fecha : this.mesBuscar,
+        fecha : parseInt(this.mesBuscar+""),
         lector : this.lectorBuscar,
         agencia : this.agenciaBuscar,
         estado : this.estadoBuscar,
