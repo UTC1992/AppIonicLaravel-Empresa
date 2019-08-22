@@ -208,7 +208,7 @@ export class LecturasComponent implements OnInit {
     }
     if(this.tipoAccion == "edit"){
       //const formModel = this.prepareSave();
-      console.log(this.formData.value);
+      //console.log(this.formData.value);
       this.tecnicoService.updateTecnico(this.formData.value).subscribe( response =>{
         //console.log(response);
         if(response){

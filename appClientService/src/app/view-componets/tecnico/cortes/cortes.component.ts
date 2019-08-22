@@ -147,6 +147,7 @@ export class CortesComponent implements OnInit {
       telefono: [object.telefono, Validators.required],
       email: [object.email, Validators.required],
       actividad:[object.actividad,Validators.required],
+      permiso_borrado:[1, Validators.required],
       estado:['1', Validators.required]
     });
   }
@@ -159,6 +160,7 @@ export class CortesComponent implements OnInit {
       telefono: ["", Validators.required],
       email: ["", Validators.required],
       actividad:["cortes",Validators.required],
+      permiso_borrado:[1, Validators.required],
       estado:['1', Validators.required]
     });
   }
@@ -174,6 +176,7 @@ export class CortesComponent implements OnInit {
     input.append('email', this.formData.get('email').value);
     input.append('actividad', this.formData.get('actividad').value);
     input.append('estado', this.formData.get('estado').value);
+    input.append('permiso_borrado', this.formData.get('permiso_borrado').value);
     return input;
   }
 
