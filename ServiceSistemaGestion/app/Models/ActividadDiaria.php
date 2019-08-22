@@ -57,6 +57,7 @@ class ActividadDiaria extends Model
     'estado',
     'latitud',
     'longitud',
+    'consolidado',
     'id_emp',
   ];
   protected $hidden = [

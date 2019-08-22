@@ -115,7 +115,7 @@ class LecturasAppController extends Controller
        if(count($result)>0){
          $data["observaciones"]=$result;
          $data["status"]=true;
-         return response()->json($data);
+         return response()->json($result);
        }
        $data["mensaje"]="No hay observaciones creadas para empresa con ID: ".$ID_EMP;
        $data["status"]=false;

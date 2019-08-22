@@ -14,6 +14,7 @@ class Observacion extends Model
     'descripcion',
     'tipo',
     'codigo',
+    'permite_lec',
     'created_at',
     'updated_at'
   ];

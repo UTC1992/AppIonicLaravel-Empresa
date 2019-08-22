@@ -55,7 +55,8 @@ class PermisosController extends Controller
     }
 
   }
-//CRUD DE OBSERVACIONES
+    
+    //CRUD DE OBSERVACIONES
   /**
    * obtener observaciones
    */

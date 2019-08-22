@@ -56,7 +56,7 @@ class OrdenTrabajoController extends Controller
                                             ->where("sector",$value["sector"])
                                             ->where("ruta",$value["ruta"])
                                             ->update(["tecnico_id"=>$value['idTecnico'],"cedula_tecnico"=>$cedula]);
-              DB::table("empresa_db.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
+              DB::table("energy_produccion.tbl_tecnico")->where("id_tecn",$value['idTecnico'])
                                                   ->update(["asignado"=>1]);
               $cont++;
             }
@@ -79,7 +79,7 @@ class OrdenTrabajoController extends Controller
 
     private function obtenerCedulaTecnico($id_tecnico)
     {
-      $tecnico= DB::table("empresa_db.tbl_tecnico")->where("id",$id_tecnico)->first();
+      $tecnico= DB::table("energy_produccion.tbl_tecnico")->where("id_tecn",$id_tecnico)->first();
       return $tecnico->cedula;
     }
     // metodo devuelve actividades del dia por idempresa y paginado
@@ -264,7 +264,7 @@ class OrdenTrabajoController extends Controller
                     ->get();
 
         if(count($result3) == 0){
-          $result4 = DB::table("dashboard_db.tbl_tecnico")
+          $result4 = DB::table("energy_produccion.tbl_tecnico")
                     ->where("id_tecn",$input['idTecnico'])
                     ->update(["asignado"=>0]);
         }
@@ -295,6 +295,8 @@ class OrdenTrabajoController extends Controller
                 ->where("ruta",$value->ruta)
                 ->where("tecnico_id",0)
                 ->update(["tecnico_id"=>$id_tecn,"cedula_tecnico"=>$cedula]);
+            DB::table("energy_produccion.tbl_tecnico")->where("id_tecn",$id_tecn)
+                                                  ->update(["asignado"=>1]);
         }
 
         return response()->json(true);

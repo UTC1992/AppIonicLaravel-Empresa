@@ -29,10 +29,12 @@ class ReportesController extends Controller
      */
      public function consultarLecturas(Request $request){
        try {
+           
          $fecha=$request[0]['fecha'];
          $lector=$request[0]['lector'];
          $agencia=$request[0]['agencia'];
          $estado=$request[0]['estado'];
+
          if($this->validaMesActual($fecha)){
            $result = DB::table("decobo_orden_temp")
                     ->where("mes",$fecha)
@@ -75,7 +77,7 @@ class ReportesController extends Controller
 
      }
 
-     private function validaMesActual(){
+     private function validaMesActual($mes){
 
        $result= DB::table("decobo_orden_temp")->where("mes",$mes)->exists();
        return $result;

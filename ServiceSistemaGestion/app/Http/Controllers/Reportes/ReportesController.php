@@ -174,7 +174,7 @@ class ReportesController extends Controller
       }
 
     }
-
+   
    // obtener id empresa de usuario autenticado
    private function getIdEmpUserAuth(){
      try {

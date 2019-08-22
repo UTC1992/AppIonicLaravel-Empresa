@@ -36,7 +36,7 @@ class LecturasController extends Controller
 
 
      /**
-      * obtener campos filtro de distribuci√≥n de rutas
+      * obtener campos filtro de distribuci®Æn de rutas
       */
       public function getFilterFiels(){
         try {
@@ -82,7 +82,7 @@ class LecturasController extends Controller
       }
 
       /**
-       * obtener datos del primer filtro de distribuci√≥n
+       * obtener datos del primer filtro de distribuci®Æn
        */
     public function getFirstFilterFields(){
       try {
@@ -97,7 +97,7 @@ class LecturasController extends Controller
 
 
     /**
-     * distribuir ruta a t√©cnico
+     * distribuir ruta a t®¶cnico
      */
 
      public function distribuirRuta(Request $request){

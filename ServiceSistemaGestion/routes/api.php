@@ -91,6 +91,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('observaciones','AuthApi\PermisosController@getObservacionesEmpresa');
     Route::post('observaciones','AuthApi\PermisosController@crearObservacion');
     Route::post('update-observacion','AuthApi\PermisosController@actualizarObservacion');
+    Route::get('get-observacion/{id_obs}','AuthApi\PermisosController@getObservacionById');
     Route::get('borrar-observacion/{id_obs}','AuthApi\PermisosController@borrarObservacion');
 
     Route::get('tecnicos-con-lecturas','Angular\TecnicoController@getTecnicosConActividadesLecturas');
