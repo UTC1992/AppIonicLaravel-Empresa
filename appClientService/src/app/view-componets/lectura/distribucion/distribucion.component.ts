@@ -111,11 +111,11 @@ export class DistribucionComponent implements OnInit {
 
   obtenerRutas(){
     this.distribucionService.getRutasAll().subscribe(response1 => {
-      console.log(response1);
+      //console.log(response1);
       this.rutasObtenidas = response1;
       
       this.distribucionService.getDistribuciones().subscribe(response => {
-        console.log(response);
+        //console.log(response);
         this.rutasAsignadas = response;
   
         for (let i = 0; i < this.rutasAsignadas.length; i++) {
@@ -138,17 +138,17 @@ export class DistribucionComponent implements OnInit {
           var valor = this.primerFiltro.find(x => x.agencia == this.rutasObtenidas[i].agencia);
           if (!valor) {
             this.primerFiltro.push(this.rutasObtenidas[i]);
-            //console.log(this.primerFiltro);
+            ////console.log(this.primerFiltro);
           }
         }
         
-        //console.log(this.rutasObtenidas);
+        ////console.log(this.rutasObtenidas);
       }, error => {
-        console.log(error);
+        //console.log(error);
       });
 
     }, error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 
@@ -159,10 +159,10 @@ export class DistribucionComponent implements OnInit {
     this.tecnicoService.getTecnicosLecturasSinAsignar().subscribe(
       result=>{
         this.tecnicosLecturas=result;
-        //console.log("tecnicos"+this.tecnicosLecturas);
+        ////console.log("tecnicos"+this.tecnicosLecturas);
       }
     , error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 
@@ -173,11 +173,11 @@ export class DistribucionComponent implements OnInit {
     this.tecnicoService.getTecnicosLecturasConAsignacion().subscribe(
       result=>{
         this.tecnicosConLecturas=result;
-        //console.log("Tecnicos con asignaciones");
-        //console.log(this.tecnicosConLecturas);
+        ////console.log("Tecnicos con asignaciones");
+        ////console.log(this.tecnicosConLecturas);
         this.agruparDistribucion();
       }, error => {
-        //console.log(error);
+        ////console.log(error);
       });
   }
 
@@ -210,7 +210,7 @@ export class DistribucionComponent implements OnInit {
     }
     this.dataSource = new MatTableDataSource(dataAux);
     this.dataSource.paginator = this.paginator;
-    console.log(dataAux);
+    //console.log(dataAux);
   }
 
   inicializarFiltros(){
@@ -232,7 +232,7 @@ export class DistribucionComponent implements OnInit {
   getSectores($event){
     this.inicializarFiltros();
     
-    //console.log($event.value);
+    ////console.log($event.value);
     let agencia = $event.value;
     if(agencia == 'empty'){
       this.agenciaElegida = null;  
@@ -245,7 +245,7 @@ export class DistribucionComponent implements OnInit {
         let valor2 = this.segundoFiltro.find(x => x.sector == this.rutasObtenidas[i].sector);
         if(!valor2){
           this.segundoFiltro.push(this.rutasObtenidas[i]);
-          //console.log(this.segundoFiltro);
+          ////console.log(this.segundoFiltro);
           this.mostrarFiltro2 = true;
         }
         
@@ -265,7 +265,7 @@ export class DistribucionComponent implements OnInit {
     this.mostrarCantidad = false;
     this.formRutas = new FormControl();
 
-    //console.log($event.value);
+    ////console.log($event.value);
     let sector = $event.value;
     this.sectorElegido = sector;
     for (let i = 0; i < this.rutasObtenidas.length; i++) {
@@ -273,7 +273,7 @@ export class DistribucionComponent implements OnInit {
         let valor3 = this.tercerFiltro.find(x => x.ruta == this.rutasObtenidas[i].ruta);
         if(!valor3){
           this.tercerFiltro.push(this.rutasObtenidas[i]);
-          //console.log(this.tercerFiltro);
+          ////console.log(this.tercerFiltro);
           this.mostrarFiltro3 = true;
         }
         
@@ -284,7 +284,7 @@ export class DistribucionComponent implements OnInit {
 
   getCantidad(dato : any){
     this.mostrarCantidad = true;
-    console.log(dato);
+    //console.log(dato);
     let ruta = dato;
     this.rutaElegida = ruta;
     //se obtiene el valor de cantidad
@@ -301,7 +301,7 @@ export class DistribucionComponent implements OnInit {
       this.rutasList = [];
       this.rutasList = vectorAux;
       this.cantidad_lecturas -= parseInt(cantidad.toString());
-      //console.log(this.rutasList);
+      ////console.log(this.rutasList);
     } else {
       for (let i = 0; i < this.rutasObtenidas.length; i++) {
         if (this.rutasObtenidas[i].sector == this.sectorElegido 
@@ -311,7 +311,7 @@ export class DistribucionComponent implements OnInit {
             
             this.rutasList.push(this.rutasObtenidas[i]);
             this.cantidad_lecturas += parseInt(this.rutasObtenidas[i].cantidad.toString());
-            //console.log(this.rutasList);
+            ////console.log(this.rutasList);
           
         }
       }
@@ -325,7 +325,7 @@ export class DistribucionComponent implements OnInit {
   onSelection(e, list){
     this.tecnicoSeleccionado = e.option.value;
     this.listTecnicosSeleccionados = list;
-    console.log(this.listTecnicosSeleccionados);
+    //console.log(this.listTecnicosSeleccionados);
   }
 
   /** 
@@ -352,7 +352,7 @@ export class DistribucionComponent implements OnInit {
     if(this.agenciaElegida != null && this.sectorElegido != null 
       && this.rutasList.length > 0 && this.listTecnicosSeleccionados.length == 1){
       this.showCargando();
-      //console.log(this.listTecnicosSeleccionados[0].value);
+      ////console.log(this.listTecnicosSeleccionados[0].value);
 
       let dataEnvio : any[] = [];
       let data: any[] = [];
@@ -368,10 +368,10 @@ export class DistribucionComponent implements OnInit {
           rutas:data
         });
       }
-      console.log(dataEnvio);
+      //console.log(dataEnvio);
       this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
-          console.log(result);
+          //console.log(result);
           if(result){
             //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');
@@ -383,13 +383,13 @@ export class DistribucionComponent implements OnInit {
             this.actualizarVista();
           }
         }, error => {
-          console.log(error);
+          //console.log(error);
           Swal.close();
         }
       );
     }
         
-    //console.log(this.idsLecturas);
+    ////console.log(this.idsLecturas);
   }
 
   actualizarVista(){
@@ -405,7 +405,7 @@ export class DistribucionComponent implements OnInit {
 
   reasignarRutaTecnico(id){
     this.tecnicoService.changeStateTecnico(id).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if(response){
         this.actualizarVista();
         this.showAlert(
@@ -423,7 +423,7 @@ export class DistribucionComponent implements OnInit {
       }
       
     }, error => {
-      console.log(error);
+      //console.log(error);
       this.actualizarVista();
     });
   }
@@ -437,7 +437,7 @@ export class DistribucionComponent implements OnInit {
       ruta : ruta,
     });
     this.distribucionService.deleteRutasTecnico(data).subscribe(response =>{
-      console.log(response);
+      //console.log(response);
       if(response){
         this.actualizarVista();
         this.showAlert("Éxito !","La asignación se elimino éxitosamente","success");
@@ -447,7 +447,7 @@ export class DistribucionComponent implements OnInit {
       }
       
     }, error => {
-      console.log("Error al eliminar la asignacion");
+      //console.log("Error al eliminar la asignacion");
       this.actualizarVista();
     });
   }
@@ -455,7 +455,7 @@ export class DistribucionComponent implements OnInit {
   actualizarDistribucionesTablaTemporal(){
     this.showCargando();
     this.distribucionService.updateDistribuciones().subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if(response){
         this.actualizarVista();
         this.showAlert('Éxito!','Las distribuciones se actualizaron exitosamente','success');
@@ -464,7 +464,7 @@ export class DistribucionComponent implements OnInit {
         this.showAlert('Éxito!','No se pudo actualizar la distribución','warning');
       }
     }, error => {
-      console.log(error);
+      //console.log(error);
       this.actualizarVista();
     });
   }

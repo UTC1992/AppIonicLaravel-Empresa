@@ -40,14 +40,14 @@ export class ObservacionesComponent implements OnInit {
 
   getObservaciones(){
     this.observacionService.getObservacionAll().subscribe(response => {
-      //console.log(response);
+      ////console.log(response);
       this.observacionesList = [];
       for (let i = 0; i < response.length; i++) {
         if(response[i].tipo == 'lecturas'){
           this.observacionesList.push(response[i]);
         }
       }
-      console.log(this.observacionesList);
+      //console.log(this.observacionesList);
       this.dataSource = new MatTableDataSource(this.observacionesList);
       this.dataSource.paginator = this.paginator;
     });
@@ -91,7 +91,7 @@ export class ObservacionesComponent implements OnInit {
     this.tituloModal = "Editar datos de la observación";
     this.tipoAccion = "edit";
     this.observacionService.getObservacionById(id).subscribe(response=>{
-        console.log(response);
+        //console.log(response);
         if(response != null){
           this.observacionEdit = response;
           this.iniciarFormularioEdit();
@@ -102,40 +102,40 @@ export class ObservacionesComponent implements OnInit {
   }
 
   enviarDatos(){
-    //console.log(this.formData.value);
-    //console.log("Tipo de accion ==> "+this.tipoAccion);
+    ////console.log(this.formData.value);
+    ////console.log("Tipo de accion ==> "+this.tipoAccion);
     if(this.tipoAccion == "create"){
       this.observacionService.insertObservacion(this.formData.value).subscribe(response => {
-        //console.log(response);
+        ////console.log(response);
         if(response){
-          //console.log('Tecnico guardado');
+          ////console.log('Tecnico guardado');
           this.getObservaciones();
           this.cerrarModal();
           this.showAlert('Éxito', 'Observación creada con éxito!', 'success');
         } else {
-          //console.log('Tecnico no guardado');
+          ////console.log('Tecnico no guardado');
           this.showAlert('Alerta!', 'No se pudo crear la obserbación!', 'warning');
         }
       }, error => {
-        console.log(error);
+        //console.log(error);
       });
     }
 
     if(this.tipoAccion == "edit"){
-      console.log(this.formData.value);
+      //console.log(this.formData.value);
       this.observacionService.updateObservacion(this.formData.value).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if(response){
-          //console.log('Tecnico guardado');
+          ////console.log('Tecnico guardado');
           this.getObservaciones();
           this.cerrarModal();
           this.showAlert('Éxito', 'Observación actualizada con éxito!', 'success');
         } else {
-          //console.log('Tecnico no guardado');
+          ////console.log('Tecnico no guardado');
           this.showAlert('Alerta!', 'No se pudo actualizar la observación!', 'warning');
         }
       }, error => {
-        console.log(error);
+        //console.log(error);
       });
     }
   }
@@ -143,7 +143,7 @@ export class ObservacionesComponent implements OnInit {
   deleteObservacion(id: number){
     this.observacionService.deleteObservacion(id).subscribe(resp=>{
         if(resp){
-          //console.log(resp);
+          ////console.log(resp);
           this.showAlert(
             'Éxito!',
             'La observación ha sido eliminada.',
@@ -151,7 +151,7 @@ export class ObservacionesComponent implements OnInit {
           )
           this.getObservaciones();   
         } else {
-          //console.log(resp);
+          ////console.log(resp);
           this.showAlert(
             'Alerta!',
             'No se pudo eliminar la observación.',

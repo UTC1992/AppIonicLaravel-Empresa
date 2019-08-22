@@ -102,14 +102,14 @@ export class ConsultasComponent implements OnInit {
 
   llenarTecnicosSelect(){
     this.tecnicoService.getTecnicosLecturas().subscribe(response => {
-      console.log(response);
+      ////console.log(response);
       this.tecnicosLecturas = response;
     });
   }
 
   getFecha(pickerInput: string): void {
     //this.fechaBuscar = pickerInput;
-    //console.log(this.fechaBuscar);
+    ////console.log(this.fechaBuscar);
   }
 
   llenarMeses(){
@@ -127,7 +127,7 @@ export class ConsultasComponent implements OnInit {
   verProgresoLecturas(){
     //obtener mes actual
     let fecha = new Date();
-    console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
+    ////console.log(formatDate(fecha, "yyyy-MM-dd",'en'));
     let fechaActual = formatDate(fecha, "yyyy-MM-dd",'en');
     //obtener datos anio mes dia separados 
     let vectorActual = fechaActual.split('-');
@@ -151,13 +151,13 @@ export class ConsultasComponent implements OnInit {
         agencia : this.agenciaBuscar,
         estado : this.estadoBuscar,
       });
-      console.log(data);
+      ////console.log(data);
 
     if(mesActual == this.mesBuscar){
-      console.log("Meses iguales");
+      //console.log("Meses iguales");
       
       this.consultaService.getDataProgreso(data).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if(response.length == 0){
           this.sin_datos_progreso = true;
         }  else {
@@ -166,13 +166,13 @@ export class ConsultasComponent implements OnInit {
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
       }, error =>{
-        console.log(error);
+        //console.log(error);
       });
       
     } else if (mesActual > this.mesBuscar) {
-      console.log("Meses pasados");
+      //console.log("Meses pasados");
       this.consultaService.getDataProgreso(data).subscribe(response => {
-        console.log(response);
+        //console.log(response);
         if(response.length == 0){
           this.sin_datos_progreso = true;
         } else {
@@ -181,7 +181,7 @@ export class ConsultasComponent implements OnInit {
         this.dataSource = new MatTableDataSource(response);
         this.dataSource.paginator = this.paginator;
       }, error =>{
-        console.log(error);
+        //console.log(error);
       });  
     }
     
@@ -193,33 +193,33 @@ export class ConsultasComponent implements OnInit {
       return 
     }
     this.consultaService.getEnviosAlMes(this.mesBuscarEnvio).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if(response.length == 0){
         this.sin_datos_envio = true;
       } else {
         this.sin_datos_envio = false;
       }
     }, error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 
   verErroresEnConsumos(){
     this.consultaService.getErrorEnConsumos().subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if(response.length == 0){
         this.sin_datos_error_consumo = true;
       } else {
         this.sin_datos_error_consumo = false;
       }
     }, error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 
   verErroresEnLecturas(){
     this.consultaService.getErrorEnLecturas().subscribe(response => {
-      console.log(response);
+      //console.log(response);
       if(response.length == 0){
         this.sin_datos_error_lectura = true;
       } else {
@@ -228,7 +228,7 @@ export class ConsultasComponent implements OnInit {
       this.dataSourceErrorLec = new MatTableDataSource(response);
       this.dataSourceErrorLec.paginator = this.paginatorErrorLec;
     }, error => {
-      console.log(error);
+      //console.log(error);
     });
   }
 

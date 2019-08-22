@@ -7,6 +7,7 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { ReportesCortes } from '../../../services/reportes-cortes.service';
 import { LoginService } from '../../../services/login.service';
+import Swal from 'sweetalert2';
 
 export const MY_FORMATS = {
   parse: {
@@ -81,6 +82,11 @@ export class EstadisticasCortesComponent implements OnInit {
   }
 
   mostrarReporteDiario(){
+    if(this.fechaDiarioInicio == null || this.fechaDiarioFin == null){
+      this.showAlert('Alerta !', 'Debe elegir una fecha de inicio y una de fin para consultar', 'warning');
+      return
+    }
+    
     let empresa = this.loginService.usuario.id_emp;
     var dateInicio = this.fechaDiarioInicio;
     var vectorInicio = dateInicio.split("-");
@@ -89,6 +95,7 @@ export class EstadisticasCortesComponent implements OnInit {
     var dateFin = this.fechaDiarioFin;
     var vectorFin = dateFin.split("-");
     var fechaFin=vectorFin[2]+"-"+vectorFin[1]+"-"+vectorFin[0];
+
     let data: any[] = [];
     data.push({ 
       'empresa': empresa,
@@ -122,6 +129,15 @@ export class EstadisticasCortesComponent implements OnInit {
 
   public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
     //console.log(event, active);
+  }
+
+  showAlert(title, text, type){
+    Swal.fire({
+      title: title,
+      text: text,
+      type: type,
+      allowOutsideClick: false
+    });
   }
 
 }

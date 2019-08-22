@@ -92,7 +92,7 @@ export class LoadfileComponent implements OnInit {
         nombre:mesesVector[i]
       });
     }
-    console.log(this.meses);
+    //console.log(this.meses);
   }
 
   llenarAgencias(){
@@ -111,7 +111,7 @@ export class LoadfileComponent implements OnInit {
 
   getFechaBorrar(pickerInput: string): void {
     this.fechaBorrado = pickerInput;
-    //console.log(this.fechaBuscar);
+    ////console.log(this.fechaBuscar);
   }
 
   createForm() {
@@ -133,7 +133,7 @@ export class LoadfileComponent implements OnInit {
    * Subir respaldo
    */
   onSubmit(){
-    console.log(this.formload.value);
+    //console.log(this.formload.value);
     if(this.formload.get('archivo').value==null || this.formload.get('archivo').value==""){
       this.showAlert('Alerta!',"Seleccione un archivo",'warning');
       return;
@@ -145,11 +145,11 @@ export class LoadfileComponent implements OnInit {
     this.showCargando();
     const formModel = this.prepareSave();
     this.lecturaService.uploadFile(formModel).subscribe(result=>{
-        console.log(result);
+        //console.log(result);
         this.showAlert('Éxito','Datos subidos exitosamente','success');
         this.clearFile();
       }, error => {
-        console.log(error);
+        //console.log(error);
     });
     
   }
@@ -158,7 +158,7 @@ export class LoadfileComponent implements OnInit {
    * Subir respaldo
    */
   onSubmitRespaldo(){
-    console.log(this.formloadRespaldo.value);
+    //console.log(this.formloadRespaldo.value);
     if(this.formloadRespaldo.get('respaldo').value==null || this.formloadRespaldo.get('respaldo').value==""){
       this.showAlert('Alerta!',"Seleccione un archivo de respaldo",'warning');
       return;
@@ -166,11 +166,11 @@ export class LoadfileComponent implements OnInit {
     this.showCargando();
     const formModel = this.prepareSaveRespaldo();
     this.lecturaService.uploadFileRespaldo(formModel).subscribe(result=>{
-        console.log(result);
+        //console.log(result);
         this.showAlert('Éxito','Respaldo subido exitosamente','success');
         this.clearFileRespaldo();
       }, error => {
-        console.log(error);
+        //console.log(error);
     });
     
   }
@@ -236,61 +236,61 @@ export class LoadfileComponent implements OnInit {
   enviarDatosATemporal(){
     this.showCargando();
     this.lecturaService.procesarDatosSubidos().subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.showAlert("Éxito !","Los datos se procesaron exitosamente","success");
     }, error => {
       this.showAlert("Error !","Error al procesar los datos","error");
-      console.log(error);
+      //console.log(error);
     });
   }
 
   calcularConsumos(agencia){
     this.showCargando();
     this.validacionService.calcularConsumos(agencia).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.showAlert("Éxito !","Los consumos se han calculado exitosamente","success");
     }, error => {
       this.showAlert("Error !","Error al calcular consumos","error");
-      console.log(error);
+      //console.log(error);
     });
   }
 
   validarConsumos(agencia){
     this.showCargando();
     this.validacionService.validarConsumos(agencia).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.showAlert("Éxito !","Los consumos se han validado exitosamente","success");
     }, error => {
       this.showAlert("Error !","Error al validar los consumos","error");
-      console.log(error);
+      //console.log(error);
     });
   }
 
   validarLecturasCero(agencia){
     this.showCargando();
     this.validacionService.validarLecturasCero(agencia).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.showAlert("Éxito !","Las lecturas en cero validadas exitosamente","success");
     }, error => {
       this.showAlert("Error !","Error al validar las lecturas en cero","error");
-      console.log(error);
+      //console.log(error);
     });
   }
 
   validarLecturasMenor(agencia){
     this.showCargando();
     this.validacionService.validarLecturasMenores(agencia).subscribe(response => {
-      console.log(response);
+      //console.log(response);
       this.showAlert("Éxito !","Las lecturas menores se validaron","success");
     }, error => {
       this.showAlert("Error !","Error al validar las lecturas menores","error");
-      console.log(error);
+      //console.log(error);
     });
   }
 
   generarTemporalNuevoMes(){
     this.lecturaService.generarDataNuevoMes().subscribe(response => {
-      console.log(response);
+      //console.log(response);
     }, error => {
 
     });
@@ -298,7 +298,7 @@ export class LoadfileComponent implements OnInit {
 
   eliminarRutaSubida(){
     this.lecturaService.truncateTableDeCobo().subscribe(response =>{
-      console.log(response);
+      //console.log(response);
       if(response){
         this.showAlert("Éxito !","Los datos se eliminarion éxitosamente","success");
       } else {
@@ -306,7 +306,7 @@ export class LoadfileComponent implements OnInit {
       }
       
     }, error => {
-      console.log("Error al eliminar la datos subidos");
+      //console.log("Error al eliminar la datos subidos");
     });
   }
 
