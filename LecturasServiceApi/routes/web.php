@@ -75,7 +75,7 @@ $router->get('/reportes/errores-lecturas','Procesos\ReportesController@consultar
 $router->get('/reportes/envios/{fecha}','Procesos\ReportesController@consultarEnvios');
 
 /**
- * rutas de app m¨®vil
+ * rutas de app mï¿½ï¿½vil
  */
 $router->get('/data-movil/{idEmpresa}/{idTecnico}','Movil\MobileController@index');
 $router->post('/catastros-insert','Movil\MobileController@insertCatastros');

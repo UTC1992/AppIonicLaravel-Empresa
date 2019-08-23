@@ -927,11 +927,11 @@ public function validaLecturaMenor($agencia){
           ->where("agencia",$agencia)
           ->get();
 
-  if(count($resut)>0){
+  if(count($result)>0){
     foreach ($resut as $key => $value) {
       $lectura_historial = DB::table("decobo_historial")->where("medidor",$value->medidor)->count();
       if($lectura_historial>0){
-        
+
         if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
           if($value->lectura!="0"){
             $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
@@ -962,6 +962,7 @@ public function validaLecturaMenor($agencia){
         }
       }
     }
+
   }
 /*
    foreach ($result as $key => $value) {
@@ -977,6 +978,12 @@ public function validaLecturaMenor($agencia){
      }
    }
 */
+$dataResult=array();
+$dataResult["mensaje"]="Proceso terminado con exito";
+$dataResult["status"]=true;
+$dataResult["cantidad"]=count($result);
+
+return response()->json($dataResult);
  }
 
 
