@@ -755,12 +755,42 @@ private function validarConsumos($medidor,$lecturaNueva,$mes){
  */
 public function  procesarCatastros(){
   try {
-    $result=DB::table('catastros')->get();
+    $result=DB::table('catastros')->where("estado",0)->get();
     foreach ($result as $key => $value) {
       $res= DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->exists();
       if($res){
-        DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura]);
-        DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+        if(!is_null($value->lectura)){
+          DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura,"catastro"=>1]);
+          DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+        }else{
+          $lectura_historial = DB::table("decobo_historial")->where("medidor",$value->medidor)->count();
+          if($lectura_historial>0){
+
+          }else{
+            if((!is_null($value->latitud) || $value->latitud!="") && (!is_null($value->longitud) || $value->longitud!="") ){
+              if($this->validarCoordenada($value->latitud) || $this->validarCoordenada($value->longitud)){
+                DB::table("decobo_orden_temp")
+                    ->where("medidor",$value->medidor)
+                    ->Update(["lectura"=>"0","observacion"=>"Medidor no localizado","catastro"=>1]);
+                DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+              }else{
+                DB::table("decobo_orden_temp")
+                    ->where("medidor",$value->medidor)
+                    ->Update(["lectura"=>"0","observacion"=>"Coordenada incorrecta","catastro"=>1]);
+                DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+              }
+
+            }else{
+              DB::table("decobo_orden_temp")
+                  ->where("medidor",$value->medidor)
+                  ->Update(["lectura"=>"0","observacion"=>"Sin coordenadas","catastro"=>1]);
+              DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+            }
+
+          }
+
+        }
+
       }
     }
     return response()->json(true);
@@ -891,25 +921,62 @@ public function validaLecturaMenor($agencia){
  public function validarLecturas($agencia)
  {
 
+  $result = DB::table("decobo_orden_temp")
+          ->where("nueva_lectura","=","0")
+          ->where("procesado",0)
+          ->where("agencia",$agencia)
+          ->get();
 
-   $result= DB::table("decobo_orden_temp")
-           ->where("nueva_lectura","=","0")
-           ->where("procesado",0)
-           ->where("agencia",$agencia)
-           ->get();
-    foreach ($result as $key => $value) {
-      if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
-        if($value->lectura!="0"){
-          //$this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+  if(count($resut)>0){
+    foreach ($resut as $key => $value) {
+      $lectura_historial = DB::table("decobo_historial")->where("medidor",$value->medidor)->count();
+      if($lectura_historial>0){
+        
+        if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
+          if($value->lectura!="0"){
+            $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+          }else{
+            $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+          }
+        }
+        if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
+          $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+        }
+
+      }else{
+        if((!is_null($value->este) || $value->este!="") && (!is_null($value->norte) || $value->norte!="") ){
+          if($this->validarCoordenada($value->latitud) || $this->validarCoordenada($value->longitud)){
+            DB::table("decobo_orden_temp")
+                ->where("medidor",$value->medidor)
+                ->Update(["lectura"=>"0","observacion"=>"Medidor no localizado"]);
+          }else{
+            DB::table("decobo_orden_temp")
+                ->where("medidor",$value->medidor)
+                ->Update(["lectura"=>"0","observacion"=>"Coordenada incorrecta"]);
+          }
+
         }else{
-          //$this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+          DB::table("decobo_orden_temp")
+              ->where("medidor",$value->medidor)
+              ->Update(["lectura"=>"0","observacion"=>"Sin coordenadas"]);
         }
       }
-      if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
-        //$this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
-      }
     }
-
+  }
+/*
+   foreach ($result as $key => $value) {
+     if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
+       if($value->lectura!="0"){
+         $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+       }else{
+         $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+       }
+     }
+     if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
+       $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+     }
+   }
+*/
  }
 
 
