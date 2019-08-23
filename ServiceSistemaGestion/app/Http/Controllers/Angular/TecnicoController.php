@@ -109,8 +109,6 @@ class TecnicoController extends Controller
         return response()->json("Error: ".$e);
       }
 
-
-
     }
 
 
@@ -283,13 +281,13 @@ class TecnicoController extends Controller
         return response()->json("Error: ".$e);
       }
     }
-
+    
     //tecnicos sin asignar actividades de lecturas
     public function getTecnicosConActividadesLecturas(){
       $result=DB::select("SELECT t0.id_tecn, t0.nombres, t0.apellidos, t1.agencia, t1.sector, t1.ruta,
-                          (SELECT COUNT(*) FROM lecturasdb.decobo_orden_temp t3
+                          (SELECT COUNT(*) FROM lecturas_pruebas.decobo_orden_temp t3
                           WHERE t3.ruta=t1.ruta AND t3.sector=t1.sector AND t3.agencia=t1.agencia) as cantidad
-                          from dashboard_db.tbl_tecnico t0, lecturasdb.rutas_tecnicos_decobo t1
+                          from energy_produccion.tbl_tecnico t0, lecturas_pruebas.rutas_tecnicos_decobo t1
                           WHERE t0.id_tecn=t1.tecnico_id AND t0.id_emp=".$this->getIdEmpUserAuth()
                           , []);
       return response()->json($result);

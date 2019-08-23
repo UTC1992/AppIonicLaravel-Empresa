@@ -55,7 +55,8 @@ class PermisosController extends Controller
     }
 
   }
-//CRUD DE OBSERVACIONES
+    
+    //CRUD DE OBSERVACIONES
   /**
    * obtener observaciones
    */
@@ -138,5 +139,5 @@ class PermisosController extends Controller
     $observacion=Observacion::find($id_obs);
     return response()->json($observacion);
   }
-  
+
 }

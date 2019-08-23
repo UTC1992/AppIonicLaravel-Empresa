@@ -262,5 +262,4 @@ class LecturasService
     public function borrarTablaDecoboService(){
        return $this->performRequest('GET',"/rutas/borrar/decobo");
     }
-
 }

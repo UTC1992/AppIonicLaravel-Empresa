@@ -68,6 +68,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::post('rutas/distribucion','Gateway\Lecturas\LecturasController@distribuirRuta');
 
 
+
     Route::post('upload','Gateway\Lecturas\LecturasController@uploadFile');
     Route::get('filtros','Gateway\Lecturas\LecturasController@getFilterFiels');
     Route::get('data-first','Gateway\Lecturas\LecturasController@getFirstFilterFields');

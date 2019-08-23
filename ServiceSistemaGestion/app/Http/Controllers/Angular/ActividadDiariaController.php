@@ -128,12 +128,17 @@ class ActividadDiariaController extends Controller
         $actividad=new ActividadDiaria();
         $ID_EMP=$this->getIdEmpUserAuth();
         $result=$actividad->where('estado',0)->where('id_emp',$ID_EMP)->where('n9cono','=','040')->get();
+        $cont=0;
         foreach ($result as $key => $value) {
-          $result_rec=ReconexionManual::where('estado',0)->where('id_emp',$ID_EMP)->where('medidor',$value->n9meco)->where('observacion','Sin novedad')->first();
-          if(!is_null($result_rec)){
+            
+          $result_rec=new ReconexionManual();
+          $reconexiones= $result_rec->where('id_emp',$ID_EMP)->where('estado',0)->where('observacion','Sin novedad')->where('medidor',''.$value["n9meco"].'')->first();
+            
+          if(!is_null($reconexiones)){
+
               $act=ActividadDiaria::find($value->id_act);
-              $act->n9leco=$value_rec->lectura;
-              $act->n9lect=$value_rec->lectura;
+              $act->n9leco=$reconexiones->lectura;
+              $act->n9lect=$reconexiones->lectura;
               $act->n9feco=date('Y')."".date('m')."".date('d');
               $act->n9fecl=date('Y')."".date('m')."".date('d');
               $act->estado=2;
@@ -141,21 +146,19 @@ class ActividadDiariaController extends Controller
               $act->save();
             // insertar registro orden trabajo tecnico
               $ordenTrabajo=new OrdenTrabajo();
-              $ordenTrabajo->id_tecn=$value_rec->id_tecn;
-              $ordenTrabajo->id_act=$value->id_act;
+              $ordenTrabajo->id_tecn=$reconexiones->id_tecn;
+              $ordenTrabajo->id_act=$value["id_act"];
               $ordenTrabajo->estado=1;
               $ordenTrabajo->fecha=date('Y-m-d');
-              $ordenTrabajo->observacion=$value_rec->observacion;
+              $ordenTrabajo->observacion=$reconexiones->observacion;
               $ordenTrabajo->tipo_actividad="40";
               $ordenTrabajo->save();
-
-              ReconexionManual::where('id_rec',$value_rec->id_rec)->update(['estado'=>1]);
-
+              ReconexionManual::where('id_rec',$reconexiones->id_rec)->update(['estado'=>1]);
             }
           }
-          //actualiza estado rec manuales
+         // actualiza estado rec manuales
         ReconexionManual::where('estado',0)->update(['estado'=>1]);
-        $this->createHistoryUser("Actividades Manuales","Valida Actividades manuales","Cortes");
+       $this->createHistoryUser("Actividades Manuales","Valida Actividades manuales","Cortes");
         return response()->json(true);
       } catch (\Exception $e) {
         return response()->json("Error: ".$e);
@@ -256,7 +259,7 @@ class ActividadDiariaController extends Controller
         }
 
         $actividad_diaria=new ActividadDiaria();
-        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('consolidado','!=',1)->delete();
+        $res=$actividad_diaria->where('created_at','like','%'.$fecha.'%')->where('id_emp',$ID_EMP)->where('consolidado','!=1')->delete();
         if($res>0){
             $this->createHistoryUser("Eliminar Ruta","Se elimina actividades de la fecha: ".$fecha." e ID_EMP: ".$ID_EMP."","Cortes");
           return response()->json(true);
