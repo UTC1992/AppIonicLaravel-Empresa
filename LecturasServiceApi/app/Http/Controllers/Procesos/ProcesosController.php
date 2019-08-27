@@ -586,6 +586,9 @@ public function generarOrdenTemp(){
           $dataValue["consumo_anterior"]=$value->nuevo_consumo;
           $dataValue["nuevo_consumo"]="0";
           $dataValue["procesado"]=0;
+          $dataValue["catastro"]=0;
+          $dataValue["revision"]=0;
+          $dataValue["obtenido"]=0;
           $dataValue["secuencial"]=$ultimo_secuencial+1;
           $dataInsert[$contador]=$dataValue;
           if($contador===1100){
@@ -703,6 +706,10 @@ public function generarOrdenTemp(){
            $data["tecnico_id"]=0;
            $data["nuevo_consumo"]=0;
            $data["nueva_lectura"]=0;
+           $data["procesado"]=0;
+           $data["catastro"]=0;
+           $data["revision"]=0;
+           $data["obtenido"]=0;
            $dataInsert[$contador_registros]=$data;
            if($contador_registros===1200){
              DB::table('decobo_orden_temp')->insert($dataInsert);
@@ -827,7 +834,7 @@ private  function verificaLecturaEnTemporal($medidor){
         }else{
           DB::table("decobo_orden_temp")
            ->where("medidor",$value->medidor)
-           ->update(["alerta"=>23,"referencia_alerta"=>"alerta revision","procesado"=>1]);
+           ->update(["revision"=>1,"referencia_alerta"=>"alerta revision","procesado"=>1]);
         }
 
       }
@@ -993,7 +1000,7 @@ public function validaLecturaMenor($agencia){
              }else{
                DB::table("decobo_orden_temp")
                    ->where("medidor",$value->medidor)
-                   ->Update(["alerta"=>13,"referencia_alerta"=>"medidor con data sin historial","procesado"=>1]);
+                   ->Update(["revision"=>1,"referencia_alerta"=>"medidor con data sin historial","procesado"=>1]);
              }
            }
          }else{
@@ -1006,7 +1013,7 @@ public function validaLecturaMenor($agencia){
                }else{
                  DB::table("decobo_orden_temp")
                      ->where("medidor",$value->medidor)
-                     ->Update(["alerta"=>13,"referencia_alerta"=>"medidor con data sin historial","procesado"=>1]);
+                     ->Update(["revision"=>1,"referencia_alerta"=>"medidor con data sin historial","procesado"=>1]);
                }
              }
            }

@@ -20,7 +20,7 @@ class MobileController extends Controller
     }
 
     /**
-     * Obtiene lecturas a realziar por t¨¦cnico y empresa
+     * Obtiene lecturas a realziar por tï¿½ï¿½cnico y empresa
      */
     public function index($idEmpresa,$idTecnico){
       try {
@@ -36,6 +36,12 @@ class MobileController extends Controller
                           ->where('sector',$value->sector)
                           ->where('ruta',$value->ruta)
                           ->get();
+                          /*actualiza obetnido*/
+                          DB::table('decobo_orden_temp')
+                                          ->where('agencia',$value->agencia)
+                                          ->where('sector',$value->sector)
+                                          ->where('ruta',$value->ruta)
+                                          ->update(["obtenido"=>1]);
               for ($i=0; $i < count($dataSelect) ; $i++) {
                 array_push($dataResult, $dataSelect[$i]);
               }
@@ -51,7 +57,7 @@ class MobileController extends Controller
 
 
     /**
-     * recibe data desde m¨®vil para proceso
+     * recibe data desde mï¿½ï¿½vil para proceso
      */
     public function recibirLecturas(Request $request){
       try {
@@ -75,6 +81,7 @@ class MobileController extends Controller
          $dataProcArray["foto"]=$value["foto"];
          $dataProcArray["estado"]=$value["estado"];
          $dataProcArray["recibido"]=1;
+         $dataProcArray["procesado"]=0;
          DB::table($tablaLecturasCompany)
               ->where('medidor',$value["medidor"])
               ->update($dataProcArray);
@@ -127,7 +134,7 @@ class MobileController extends Controller
     }
 
     /**
-     * obtiene configuraci¨®n de la empresa
+     * obtiene configuraciï¿½ï¿½n de la empresa
      */
     private function getConfigCompany($idCompany){
       try {
@@ -139,7 +146,7 @@ class MobileController extends Controller
     }
 
     /**
-     * obtiene nombre de tabla de actividades de la configuraci¨®n de la empresa
+     * obtiene nombre de tabla de actividades de la configuraciï¿½ï¿½n de la empresa
      */
         private function getTableCompany($idEmpresa){
           try {
