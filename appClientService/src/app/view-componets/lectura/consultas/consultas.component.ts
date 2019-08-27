@@ -219,7 +219,7 @@ export class ConsultasComponent implements OnInit {
 
   verErroresEnLecturas(){
     this.consultaService.getErrorEnLecturas().subscribe(response => {
-      //console.log(response);
+      console.log(response);
       if(response.length == 0){
         this.sin_datos_error_lectura = true;
       } else {
