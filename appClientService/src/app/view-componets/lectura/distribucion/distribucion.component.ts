@@ -359,19 +359,20 @@ export class DistribucionComponent implements OnInit {
       for (let i = 0; i < this.rutasList.length; i++) {
         
         data.push({
-          idTecnico : this.listTecnicosSeleccionados[0].value,
+          idTecnico : parseInt(this.listTecnicosSeleccionados[0].value),
           agencia : this.rutasList[i].agencia,
           sector : this.rutasList[i].sector,
           ruta : this.rutasList[i].ruta,
         });
+        
         dataEnvio.push({
           rutas:data
         });
       }
-      //console.log(dataEnvio);
+      console.log(data);
       this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
-          //console.log(result);
+          console.log(result);
           if(result){
             //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');

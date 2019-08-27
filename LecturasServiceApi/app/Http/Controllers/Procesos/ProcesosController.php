@@ -27,7 +27,7 @@ class ProcesosController extends Controller
       try {
 
         $mes=0;
-        $contador_registros=0;
+        $contador_registros=1;
         $mes=$request->mes;
         $dataResponse=array();
         /*
@@ -635,93 +635,99 @@ public function generarOrdenTemp(){
 /**
  *actualiza la orden de trabajo
  */
-public function actualizarOrdenTrabajo()
-{
-  try {
-    $dataRe=array();
-    $decobo_temp1=DB::table('decobo')->get();
-    if(count($decobo_temp1)<=0){
-      $dataRe["error"]="No se proceso ningun registro";
-      $dataRe["status"]=false;
-      $dataRe["total_procesados"]=0;
-    }
-    $cont=0;
-    $contador_registros=0;
-    $dataInsert=array();
-    foreach ($decobo_temp1 as $key => $value) {
-        $data=array();
-        $data['zona']=$value->zona;
-        $data['agencia']=$value->agencia;
-        $data['sector']=$value->sector;
-        $data['ruta']=$value->ruta;
-        $data['cuenta']=$value->cuenta;
-        $data['medidor']=$value->medidor;
-        $data['campo_a']=$value->campo_a;
-        $data['campo_n']=$value->campo_n;
-        $data['lectura']=$value->lectura;
-        $data['campo_0']=$value->campo_0;
-        $data['secuencia']=$value->columna2;
-        $data['columna2']=$value->campo_n;
-        $data['fechaultimalec']=$value->fechaultimalec;
-        $data['equipo']=$value->equipo;
-        $data['lector']=$value->lector;
-        $data['esferas']=$value->esferas;
-        $data['tarifa']=$value->tarifa;
-        $data['nombre']=$value->nombre;
-        $data['direccion']=$value->direccion;
-        $data['campo10']=$value->campo10;
-        $data['columna4']=$value->columna4;
-        $data['este']=$value->este;
-        $data['norte']=$value->norte;
-        $data['estado']=$value->estado;
-        $data['longitud']=$value->longitud;
-        $data['latitud']=$value->latitud;
-        $data['idEmpresa']=$value->idEmpresa;
-        $data['mes']=$value->mes;
-        $data['nuevo_consumo']=0;
-        $data['procesado']=0;
-        $res=DB::table('decobo_orden_temp')
-                 ->where('medidor',$value->medidor)->where("cuenta",$value->cuenta)->first();
-        if($res){
-            if(is_null($res->nueva_lectura) || $res->nueva_lectura==''){
-              DB::table('decobo_orden_temp')
+ public function actualizarOrdenTrabajo()
+ {
+   try {
+     $dataRe=array();
+     $decobo_temp1=DB::table('decobo')->get();
+     if(count($decobo_temp1)<=0){
+       $dataRe["error"]="No se proceso ningun registro";
+       $dataRe["status"]=false;
+       $dataRe["total_procesados"]=0;
+     }
+     $cont=0;
+     $contador_registros=0;
+     $dataInsert=array();
+     foreach ($decobo_temp1 as $key => $value) {
+         $data=array();
+         $data['zona']=$value->zona;
+         $data['agencia']=$value->agencia;
+         $data['sector']=$value->sector;
+         $data['ruta']=$value->ruta;
+         $data['cuenta']=$value->cuenta;
+         $data['medidor']=$value->medidor;
+         $data['campo_a']=$value->campo_a;
+         $data['campo_n']=$value->campo_n;
+         $data['lectura']=$value->lectura;
+         $data['campo_0']=$value->campo_0;
+         $data['secuencia']=$value->columna2;
+         $data['columna2']=$value->campo_n;
+         $data['fechaultimalec']=$value->fechaultimalec;
+         $data['equipo']=$value->equipo;
+         $data['lector']=$value->lector;
+         $data['esferas']=$value->esferas;
+         $data['tarifa']=$value->tarifa;
+         $data['nombre']=$value->nombre;
+         $data['direccion']=$value->direccion;
+         $data['campo10']=$value->campo10;
+         $data['columna4']=$value->columna4;
+         $data['este']=$value->este;
+         $data['norte']=$value->norte;
+         $data['estado']=$value->estado;
+         $data['longitud']=$value->longitud;
+         $data['latitud']=$value->latitud;
+         $data['idEmpresa']=$value->idEmpresa;
+         $data['mes']=$value->mes;
+         $data['nuevo_consumo']=0;
+         $data['procesado']=0;
+         $res=DB::table('decobo_orden_temp')
+                  ->where("cuenta",$value->cuenta)
                   ->where('medidor',$value->medidor)
-                  ->update($data);
-            }else{
-              $dataUpdate=array();
-              $dataUpdate["mes"]=$value->mes;
-              $dataUpdate['nuevo_consumo']=null;
-              DB::table('decobo_orden_temp')
-                  ->where('medidor',$value->medidor)
-                  ->update($dataUpdate);
-            }
-        }else{
-          $data["tecnico_id"]=0;
-          $dataInsert[$contador_registros]=$data;
-          if($contador_registros===1200){
-            DB::table('decobo_orden_temp')->insert($dataInsert);
-            $contador_registros=0;
-            $dataInsert=array();
-          }
-          $contador_registros++;
+                  ->first();
+         if($res){
+             if(is_null($res->nueva_lectura) || $res->nueva_lectura=='0'){
+               DB::table('decobo_orden_temp')
+                   ->where("cuenta",$value->cuenta)
+                   ->where('medidor',$value->medidor)
+                   ->update($data);
+             }else{
+               $dataUpdate=array();
+               $dataUpdate["mes"]=$value->mes;
+               $dataUpdate['nuevo_consumo']=0;
+               DB::table('decobo_orden_temp')
+                   ->where("cuenta",$value->cuenta)
+                   ->where('medidor',$value->medidor)
+                   ->update($dataUpdate);
+             }
+         }else{
+           $data["tecnico_id"]=0;
+           $data["nuevo_consumo"]=0;
+           $data["nueva_lectura"]=0;
+           $dataInsert[$contador_registros]=$data;
+           if($contador_registros===1200){
+             DB::table('decobo_orden_temp')->insert($dataInsert);
+             $contador_registros=0;
+             $dataInsert=array();
+           }
+           $contador_registros++;
 
-        }
-        $cont++;
-    }
+         }
+         $cont++;
+     }
 
-    if(count($dataInsert)>0){
-        DB::table('decobo_orden_temp')->insert($dataInsert);
-    }
+     if(count($dataInsert)>0){
+         DB::table('decobo_orden_temp')->insert($dataInsert);
+     }
 
-    $dataRe["mensaje"]="Proceso finalizado con exito";
-    $dataRe["status"]=true;
-    $dataRe["total_procesados"]=$cont;
-    return response()->json($dataRe);
-  } catch (\Exception $e) {
-    return response()->json("error: ".$e);
-  }
+     $dataRe["mensaje"]="Proceso finalizado con exito";
+     $dataRe["status"]=true;
+     $dataRe["total_procesados"]=$cont;
+     return response()->json($dataRe);
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
 
-}
+ }
 
 /**
  *
@@ -749,12 +755,42 @@ private function validarConsumos($medidor,$lecturaNueva,$mes){
  */
 public function  procesarCatastros(){
   try {
-    $result=DB::table('catastros')->get();
+    $result=DB::table('catastros')->where("estado",0)->get();
     foreach ($result as $key => $value) {
       $res= DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->exists();
       if($res){
-        DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura]);
-        DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+        if(!is_null($value->lectura)){
+          DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['lectura'=>$value->lectura,"catastro"=>1]);
+          DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+        }else{
+          $lectura_historial = DB::table("decobo_historial")->where("medidor",$value->medidor)->count();
+          if($lectura_historial>0){
+
+          }else{
+            if((!is_null($value->latitud) || $value->latitud!="") && (!is_null($value->longitud) || $value->longitud!="") ){
+              if($this->validarCoordenada($value->latitud) || $this->validarCoordenada($value->longitud)){
+                DB::table("decobo_orden_temp")
+                    ->where("medidor",$value->medidor)
+                    ->Update(["lectura"=>"0","observacion"=>"Medidor no localizado","catastro"=>1]);
+                DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+              }else{
+                DB::table("decobo_orden_temp")
+                    ->where("medidor",$value->medidor)
+                    ->Update(["lectura"=>"0","observacion"=>"Coordenada incorrecta","catastro"=>1]);
+                DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+              }
+
+            }else{
+              DB::table("decobo_orden_temp")
+                  ->where("medidor",$value->medidor)
+                  ->Update(["lectura"=>"0","observacion"=>"Sin coordenadas","catastro"=>1]);
+              DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
+            }
+
+          }
+
+        }
+
       }
     }
     return response()->json(true);
@@ -779,9 +815,10 @@ public function  procesarCatastros(){
      foreach ($result as $key => $value) {
        $rs = $this->calcularPorcentajeMasMenos15($value->nuevo_consumo,$value->consumo_anterior);
        if(!$rs){
+           /*
          DB::table("decobo_orden_temp")
           ->where("medidor",$value->medidor)
-          ->update(["alerta"=>2,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);
+          ->update(["alerta"=>2,"referencia_alerta"=>"CONSUMO FUERA DE RANGO","procesado"=>1]);*/
        }
 
      }
@@ -884,25 +921,69 @@ public function validaLecturaMenor($agencia){
  public function validarLecturas($agencia)
  {
 
+  $result = DB::table("decobo_orden_temp")
+          ->where("nueva_lectura","=","0")
+          ->where("procesado",0)
+          ->where("agencia",$agencia)
+          ->get();
 
-   $result= DB::table("decobo_orden_temp")
-           ->where("nueva_lectura","=","0")
-           ->where("procesado",0)
-           ->where("agencia",$agencia)
-           ->get();
-    foreach ($result as $key => $value) {
-      if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
-        if($value->lectura!="0"){
-          $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
-        }else{
-          $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+  if(count($result)>0){
+    foreach ($resut as $key => $value) {
+      $lectura_historial = DB::table("decobo_historial")->where("medidor",$value->medidor)->count();
+      if($lectura_historial>0){
+
+        if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
+          if($value->lectura!="0"){
+            $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+          }else{
+            $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+          }
         }
-      }
-      if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
-        $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+        if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
+          $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+        }
+
+      }else{
+        if((!is_null($value->este) || $value->este!="") && (!is_null($value->norte) || $value->norte!="") ){
+          if($this->validarCoordenada($value->latitud) || $this->validarCoordenada($value->longitud)){
+            DB::table("decobo_orden_temp")
+                ->where("medidor",$value->medidor)
+                ->Update(["lectura"=>"0","observacion"=>"Medidor no localizado"]);
+          }else{
+            DB::table("decobo_orden_temp")
+                ->where("medidor",$value->medidor)
+                ->Update(["lectura"=>"0","observacion"=>"Coordenada incorrecta"]);
+          }
+
+        }else{
+          DB::table("decobo_orden_temp")
+              ->where("medidor",$value->medidor)
+              ->Update(["lectura"=>"0","observacion"=>"Sin coordenadas"]);
+        }
       }
     }
 
+  }
+/*
+   foreach ($result as $key => $value) {
+     if(is_null($value->hora) && is_null($value->fecha_lectura) && is_null($value->observacion)){
+       if($value->lectura!="0"){
+         $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+       }else{
+         $this->actualizarDesdeDataAnterior($value->medidor,$value->secuencial-1);
+       }
+     }
+     if(($value->observacion=="borroso" || $value->observacion=="alto" || $value->observacion=="obstruido") && !is_null($value->fecha_lectura) && !is_null($value->hora)){
+       $this->promediarConsumo($value->medidor,$value->secuencial-4,$value->secuencial-1);
+     }
+   }
+*/
+$dataResult=array();
+$dataResult["mensaje"]="Proceso terminado con exito";
+$dataResult["status"]=true;
+$dataResult["cantidad"]=count($result);
+
+return response()->json($dataResult);
  }
 
 

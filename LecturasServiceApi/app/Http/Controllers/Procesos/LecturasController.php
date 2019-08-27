@@ -36,7 +36,7 @@ class LecturasController extends Controller
 
 
     /**
-     * obtiene nombre de tabla de actividades de la configuraci√≥n de la empresa
+     * obtiene nombre de tabla de actividades de la configuraci®Æn de la empresa
      */
         private function getTableCompany($idEmpresa){
           try {

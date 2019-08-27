@@ -1,5 +1,6 @@
 export class Url {
-    url = "http://gateway.energyosec.com";
+    //url = "http://gateway.energyosec.com";
+    url = "http://192.168.1.5:8000";
     public base = this.url+"/api/angular";
     public baseLogin = this.url+"/";
     public basePermisos = this.url+"/api";

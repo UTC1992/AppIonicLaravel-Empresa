@@ -20,7 +20,7 @@ class MobileController extends Controller
     }
 
     /**
-     * Obtiene lecturas a realziar por t√©cnico y empresa
+     * Obtiene lecturas a realziar por t®¶cnico y empresa
      */
     public function index($idEmpresa,$idTecnico){
       try {
@@ -51,7 +51,7 @@ class MobileController extends Controller
 
 
     /**
-     * recibe data desde m√≥vil para proceso
+     * recibe data desde m®Ævil para proceso
      */
     public function recibirLecturas(Request $request){
       try {
@@ -127,7 +127,7 @@ class MobileController extends Controller
     }
 
     /**
-     * obtiene configuraci√≥n de la empresa
+     * obtiene configuraci®Æn de la empresa
      */
     private function getConfigCompany($idCompany){
       try {
@@ -139,7 +139,7 @@ class MobileController extends Controller
     }
 
     /**
-     * obtiene nombre de tabla de actividades de la configuraci√≥n de la empresa
+     * obtiene nombre de tabla de actividades de la configuraci®Æn de la empresa
      */
         private function getTableCompany($idEmpresa){
           try {
