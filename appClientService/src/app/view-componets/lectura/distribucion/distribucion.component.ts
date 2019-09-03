@@ -369,10 +369,10 @@ export class DistribucionComponent implements OnInit {
           rutas:data
         });
       }
-      console.log(data);
+      //console.log(data);
       this.distribucionService.distribuirRutasTecnico(data).subscribe(
         result=>{
-          console.log(result);
+          //console.log(result);
           if(result){
             //this.getTenicosLecturas();
             this.showAlert('Éxito', 'Ruta asignada correctamente', 'success');

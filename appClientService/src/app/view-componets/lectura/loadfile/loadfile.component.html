@@ -78,17 +78,27 @@
         <mat-expansion-panel-header>
             Expandir para validar datos
         </mat-expansion-panel-header>
-        <mat-grid-list cols="2" rowHeight="1:0.2">
-          <mat-grid-tile>
-            Puede realizar una busqueda:
-          </mat-grid-tile>
-          <mat-grid-tile>
-              <mat-form-field class="col-lg-6 col-md-6 col-sm-6">
-                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
-              </mat-form-field>
-          </mat-grid-tile>
-        </mat-grid-list>
         <div class="table-responsive">
+          <mat-grid-list cols="3" rowHeight="1:0.2" class="col-lg-12 col-md-12 col-sm-12">
+              <mat-grid-tile>
+                <div style="width: 200px;" class="col-lg-6">
+                    <button mat-button type="button" 
+                    (click)="procesarCatastros()" class="btn btn-success btn-sm">
+                    <mat-icon>cached</mat-icon>
+                    Procesar catastros</button>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile>
+                  <div style="width: 200px;" class="col-lg-6">
+                    Puede realizar una busqueda:
+                  </div>
+              </mat-grid-tile>
+              <mat-grid-tile>
+                  <mat-form-field class="col-lg-6 col-md-6 col-sm-6">
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar">
+                  </mat-form-field>
+              </mat-grid-tile>
+          </mat-grid-list>
           <table mat-table [dataSource]="dataSource" class="table table-sm table-striped ">
               <!-- Id Column -->
               <ng-container matColumnDef="index">

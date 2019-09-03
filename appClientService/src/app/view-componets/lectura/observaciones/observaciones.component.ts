@@ -72,7 +72,7 @@ export class ObservacionesComponent implements OnInit {
       codigo: [this.observacionEdit.codigo, Validators.required],
       descripcion: [this.observacionEdit.descripcion, Validators.required],
       tipo: ["lecturas"],
-      permite_lec: [this.observacionEdit.permite_lec, Validators.required]
+      permite_lec: [parseInt(this.observacionEdit.permite_lec), Validators.required]
     });
   }
 

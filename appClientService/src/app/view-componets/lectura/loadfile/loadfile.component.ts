@@ -310,6 +310,17 @@ export class LoadfileComponent implements OnInit {
     });
   }
 
+  procesarCatastros(){
+    this.showCargando();
+    this.validacionService.procesarCatastros().subscribe(response => {
+      //console.log(response);
+      this.showAlert("Éxito !","Los catastros se procesaron","success");
+    }, error => {
+      this.showAlert("Error !","Error al procesar catastros","error");
+      //console.log(error);
+    });
+  }
+
   confirmarEliminarRuta(){
     Swal.fire({
       title: '¿Está seguro?',

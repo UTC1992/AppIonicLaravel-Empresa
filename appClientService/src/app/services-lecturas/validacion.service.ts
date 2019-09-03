@@ -63,5 +63,16 @@ export class ValidacionService {
     })
     );
   }
+
+  procesarCatastros(): Observable<any[]>{
+    return this.http.get<any[]>(this.baseUrl+"/catastros/proceso")
+    .pipe(catchError( e => {
+      if(e.error.mensaje){
+        //console.error(e.error.mensaje);
+      }
+      return throwError(e);
+    })
+    );
+  }
   
 }
