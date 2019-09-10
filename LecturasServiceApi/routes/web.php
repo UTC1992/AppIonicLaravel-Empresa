@@ -73,6 +73,7 @@ $router->post('/reportes/avance','Procesos\ReportesController@consultarLecturas'
 $router->get('/reportes/errores-consumo','Procesos\ReportesController@consultarErroresConsumo');
 $router->get('/reportes/errores-lecturas','Procesos\ReportesController@consultarErroresLecturas');
 $router->get('/reportes/envios/{fecha}','Procesos\ReportesController@consultarEnvios');
+$router->post('/reportes/errores','Procesos\ReportesController@consultarErroresDataTemp');
 
 /**
  * rutas de app m��vil

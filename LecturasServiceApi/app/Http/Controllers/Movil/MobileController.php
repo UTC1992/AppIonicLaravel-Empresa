@@ -172,7 +172,7 @@ class MobileController extends Controller
     try {
 
 
-        $data= $request->json()->all();
+        $data= $request->all();
 
         $dataInsert= array();
         $contador=0;
@@ -193,6 +193,9 @@ class MobileController extends Controller
             $dataInsert[$contador]["foto"]=$value["foto"];
             $dataInsert[$contador]["mes"]=$value["mes"];
             $dataInsert[$contador]["created_at"]= date('Y-m-d');
+            $dataInsert[$contador]["agencia"]=$value["agencia"];
+            $dataInsert[$contador]["sector"]=$value["sector"];
+            $dataInsert[$contador]["ruta"]=$value["ruta"];
             if($contador==1200){
               DB::table("catastros")->insert($dataInsert);
               $contador=0;

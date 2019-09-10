@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 
 class MobileController extends Controller
 {
+
+
 //obtiene data para los tecnicos
 public function getTechnicalData($cedula){
   $tecnico=new Tecnico();
