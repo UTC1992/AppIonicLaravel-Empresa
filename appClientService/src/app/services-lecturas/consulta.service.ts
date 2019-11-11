@@ -59,15 +59,24 @@ export class ConsultaService {
     );
   }
 
-  getErrorEnLecturas(): Observable<any[]>{
-    return this.http.get<any[]>(this.baseUrl+"/reportes/error-lecturas")
-    .pipe(catchError( e => {
-      if(e.error.mensaje){
-        //console.error(e.error.mensaje);
-      }
-      return throwError(e);
-    })
+  getErrorEnLecturas(data: any): Observable<any[]>{
+    return this.http.post<any>(this.baseUrl+"/reportes/errores",data)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          //console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
     );
+
   }
+
 
 }

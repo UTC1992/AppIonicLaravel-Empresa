@@ -36,7 +36,7 @@ class LecturasController extends Controller
 
 
      /**
-      * obtener campos filtro de distribuci¨®n de rutas
+      * obtener campos filtro de distribuciï¿½ï¿½n de rutas
       */
       public function getFilterFiels(){
         try {
@@ -82,7 +82,7 @@ class LecturasController extends Controller
       }
 
       /**
-       * obtener datos del primer filtro de distribuci¨®n
+       * obtener datos del primer filtro de distribuciï¿½ï¿½n
        */
     public function getFirstFilterFields(){
       try {
@@ -97,7 +97,7 @@ class LecturasController extends Controller
 
 
     /**
-     * distribuir ruta a t¨¦cnico
+     * distribuir ruta a tï¿½ï¿½cnico
      */
 
      public function distribuirRuta(Request $request){
@@ -371,4 +371,23 @@ class LecturasController extends Controller
       }
 
     }
+
+    /**
+     * reporte de errores
+     */
+    public function obtieneErroresLecturas(Request $request){
+      try {
+        $result = $this->lecturasService->reporteErroresService($request->all());
+        return response($result)->header('Content-Type', 'applicationIjson');
+      } catch (\Exception $e) {
+        return response()->json("Error :".$e);
+      }
+
+
+    }
+
+
+    /**
+     *
+     */
 }

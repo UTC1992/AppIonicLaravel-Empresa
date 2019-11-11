@@ -29,7 +29,7 @@ class ReportesController extends Controller
      */
      public function consultarLecturas(Request $request){
        try {
-           
+
          $fecha=$request[0]['fecha'];
          $lector=$request[0]['lector'];
          $agencia=$request[0]['agencia'];
@@ -127,5 +127,111 @@ class ReportesController extends Controller
       }
 
     }
+
+/**
+ * consulta de data por filtro de errores y agencia
+ */
+    public function consultarErroresDataTemp(Request $request){
+      try {
+
+        $agencia=$request[0]['agencia'];
+        $sector=$request[0]['sector'];
+        $tipo_error=$request[0]['tipo'];
+        $revision=$request[0]["revision"];
+        
+
+        if($agencia!="" && $sector!="" && $tipo_error!=""){
+          $result = DB::table("decobo_orden_temp")
+                        ->where("agencia",$agencia)
+                        ->where("sector",$sector)
+                        ->where(function($query) use($revision){
+                                if($revision!="empty")
+                                  $query->where("revision",$revision);
+                              })
+                        ->where(function($query) use($tipo_error){
+                                if($tipo_error!="empty")
+                                  $query->where("alerta",$tipo_error);
+                            })
+                        ->get();
+        return response()->json($result);
+        }
+
+        return response()->json(false);
+
+      } catch (\Exception $e) {
+        return response()->json("error: ".$e);
+      }
+    }
+
+
+
+/*reporte catastros */
+
+
+public function consultarCatastrosProcesados($mes,$anio,$agencia,$sector){
+  try {
+
+    $result='';
+    if($this->compruebaFechaEnTemporal($mes,$anio)){
+      $result = DB::table("catastros as T0")
+                    ->join("decobo_orden_temp as T1", 'T0.medidor','=','T1.medidor')
+                    ->where("T1.mes",$mes)
+                    ->where("T1.fecha_lectura",'like','%'.$anio.'%')
+                    ->where("T1.agencia",$agencia)
+                    ->where("T1.sector",$sector)
+                    ->get();
+    }else{
+      $result = DB::table("catastros as T0")
+                    ->join("decobo_historial as T1", 'T0.medidor','=','T1.medidor')
+                    ->where("T1.mes",$mes)
+                    ->where("T1.fecha_lectura",'like','%'.$anio.'%')
+                    ->where("T1.agencia",$agencia)
+                    ->where("T1.sector",$sector)
+                    ->get();
+    }
+
+  return response()->json($result);
+
+  } catch (\Exception $e) {
+    return response()->json("error: ".$e);
+  }
+
+}
+
+/**
+ * consultar catastros nuevos
+ */
+
+ public function consultaCatastrosNuevos($mes){
+   try {
+
+     return $result = DB::table("catastros")
+                  ->where("mes",$mes)
+                  ->where("estado",0)
+                  ->get();
+
+   } catch (\Exception $e) {
+     return response()->json("error: ".$e);
+   }
+
+ }
+
+
+/**
+ * comprueba fecha donde consultar
+ */
+private function compruebaFechaEnTemporal($mes,$anio){
+  try {
+    return $res = DB::table("decobo_orden_temp")
+                      ->where("mes",$mes)
+                      ->where("fecha_lectura",'like','%'.$anio.'%')
+                      ->exists();
+  } catch (\Exception $e) {
+      return response()->json("error: ".$e);
+  }
+
+}
+
+/*fin catastros*/
 
 }

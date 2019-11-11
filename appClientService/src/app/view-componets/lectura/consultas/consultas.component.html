@@ -10,7 +10,7 @@
                   Expandir para consultar
               </mat-expansion-panel-header>
               <div class="row">
-                <div class="col col-lg-2">
+                <div class="col col-3">
                     <div class="input-formulario">
                       <mat-form-field>
                         <mat-select matNativeControl placeholder="Mes" 
@@ -21,7 +21,7 @@
                       </mat-form-field>
                     </div>
                 </div>
-                <div class="col col-lg-3">
+                <div class="col col-3">
                     <div class="input-formulario">
                         <mat-form-field>
                             <mat-select matNativeControl placeholder="Técnico" 
@@ -32,7 +32,7 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col col-lg-3">
+                <div class="col col-3">
                     <div class="input-formulario">
                         <mat-form-field>
                             <mat-select matNativeControl placeholder="Agencia" 
@@ -50,7 +50,7 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col col-lg-3">
+                <div class="col col-3">
                     <div class="input-formulario">
                         <mat-form-field>
                             <mat-select matNativeControl placeholder="Estado" 
@@ -218,7 +218,7 @@
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                   </table>
-                  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                  <mat-paginator #paginator1 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
               </div>
           </mat-expansion-panel>
       </mat-accordion>
@@ -320,6 +320,65 @@
               <mat-expansion-panel-header>
                   Expandir para consultar errores en lecturas
               </mat-expansion-panel-header>
+              <div class="row">
+                <div class="col col-3">
+                    <div class="input-formulario form-group">
+                        <mat-form-field>
+                            <mat-select matNativeControl placeholder="Agencia" 
+                            name="actividad" id="actividad" 
+                            (selectionChange)="getSectores($event)" [(ngModel)]="agenciaElegida"> 
+                                <mat-option value="empty">Agencia</mat-option>
+                                <mat-option value="01">Latacunga</mat-option>
+                                <mat-option value="02">Salcedo</mat-option>
+                                <mat-option value="03">Pujilí</mat-option>
+                                <mat-option value="04">Saquisilí</mat-option>
+                                <mat-option value="05">Sigchos</mat-option>
+                                <mat-option value="06">La Mana</mat-option>
+                                <mat-option value="07">Pangua</mat-option>
+                                <mat-option value="95">CENEL</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col col-3" >
+                  <div class="input-formulario form-group">
+                      <mat-form-field>
+                          <mat-select matNativeControl placeholder="Sector" 
+                          name="sector" id="sector" [(ngModel)]="sectorElegido"> 
+                            <mat-option value="empty"></mat-option>
+                            <mat-option *ngFor="let value of segundoFiltro" value="{{value.sector}}" >
+                              {{value.sector}}</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </div>
+                <div class="col col-3" >
+                  <div class="input-formulario form-group">
+                      <mat-form-field>
+                          <mat-select matNativeControl placeholder="Tipo de error" 
+                          name="error" id="error" [(ngModel)]="errorElegido">
+                            <mat-option value="empty">Tipo de error</mat-option> 
+                            <mat-option value="11">Lectura menor</mat-option>
+                            <mat-option value="12">Lectura cero</mat-option>
+                            <mat-option value="21">Consumo alto</mat-option>
+                            <mat-option value="22">Consumo bajo</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </div>
+                <div class="col col-3" >
+                  <div class="input-formulario form-group">
+                      <mat-form-field>
+                          <mat-select matNativeControl placeholder="Revisión" 
+                          name="error" id="error" [(ngModel)]="revisionElegida">
+                            <mat-option value="empty">Revisión</mat-option> 
+                            <mat-option value="0">Faltante</mat-option>
+                            <mat-option value="1">Realizada</mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col col-lg-3">
                   <button mat-button class="btn btn-primary btn-sm" 
@@ -432,7 +491,7 @@
                       <tr mat-header-row *matHeaderRowDef="displayedColumnsErrorLec"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumnsErrorLec;"></tr>
                   </table>
-                  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                  <mat-paginator #paginator2 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
               </div>
           </mat-expansion-panel>
       </mat-accordion>

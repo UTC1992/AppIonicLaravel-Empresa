@@ -77,7 +77,7 @@ class MobileController extends Controller
          $dataProcArray["hora"]=$value["hora"];
          $dataProcArray["lat"]=$value["lat_lectura"];
          $dataProcArray["lon"]=$value["lon_lectura"];
-         $dataProcArray["observacion"]=$value["observacion_code"];;
+         $dataProcArray["observacion"]=$value["observacion"];;
          $dataProcArray["foto"]=$value["foto"];
          $dataProcArray["estado"]=$value["estado"];
          $dataProcArray["recibido"]=1;
@@ -182,7 +182,7 @@ class MobileController extends Controller
           if(!$result){
             $dataInsert[$contador]["idEmpresa"]=$value["idEmpresa"];
             $dataInsert[$contador]["medidor"]=$value["medidor"];
-            $dataInsert[$contador]["observacion"]=$value["observacion_code"];
+            $dataInsert[$contador]["observacion"]=$value["observacion"];
             $dataInsert[$contador]["lectura"]=$value["lectura"];
             $dataInsert[$contador]["fecha"]=$value["fecha"];
             $dataInsert[$contador]["latitud"]=$value["latitud"];
@@ -193,6 +193,9 @@ class MobileController extends Controller
             $dataInsert[$contador]["foto"]=$value["foto"];
             $dataInsert[$contador]["mes"]=$value["mes"];
             $dataInsert[$contador]["created_at"]= date('Y-m-d');
+            $dataInsert[$contador]["agencia"]=$value["agencia"];
+            $dataInsert[$contador]["sector"]=$value["sector"];
+            $dataInsert[$contador]["ruta"]=$value["ruta"];
             if($contador==1200){
               DB::table("catastros")->insert($dataInsert);
               $contador=0;

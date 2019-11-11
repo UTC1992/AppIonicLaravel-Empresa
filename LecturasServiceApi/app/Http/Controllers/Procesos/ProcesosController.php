@@ -82,9 +82,6 @@ class ProcesosController extends Controller
                   }
                 }
 
-
-
-
                   if(($data["este"]!="0" && $data["norte"]!="0") && (!is_null($data["este"]) && !is_null($data["norte"]))){
                     $coordenadas=$this->changeUtmCoordinates($data["este"],$data["norte"],17,false);
                     $longitud=round($coordenadas["lon"],6);
@@ -575,7 +572,7 @@ public function generarOrdenTemp(){
           $dataValue["recibido"]=0;
           $dataValue["obtenido"]=0;
           $dataValue["hora"]=null;
-          $dataValue["observacion"]=null;//$value->observacion;
+          $dataValue["observacion"]=0;
           $dataValue["foto"]=null;
           $dataValue["lectura_actual"]=null;
           $dataValue["lat"]=$value->lat;
@@ -758,7 +755,7 @@ private function validarConsumos($medidor,$lecturaNueva,$mes){
 
 
 /**
- *
+ *procesa catastros y actualiza en alñ data temporal si existe lectura
  */
 public function  procesarCatastros(){
   try {
@@ -771,8 +768,18 @@ public function  procesarCatastros(){
           DB::table('catastros')->where('idcatastro',$value->idcatastro)->update(['estado'=>1]);
           /*valida tiene lectura en catastro*/
           if(!is_null($value->lectura) || $value->lectura !=""){
-            if($this->verificaLecturaEnTemporal($value->medidor)){}else{
-              DB::table('decobo_orden_temp')->where('medidor',$value->medidor)->update(['nueva_lectura'=>$value->lectura]);
+            if($this->verificaLecturaEnTemporal($value->medidor)){
+              $dataUpdate=array();
+              $dataUpdate["nueva_lectura"]=$value->lectura;
+              $dataUpdate["lat"]=$value->latitud;
+              $dataUpdate["lon"]=$value->longitud;
+              $dataUpdate["fecha_lectura"]=$value->fecha;
+              $dataUpdate["pbservacion"]=$value->observacion;
+              $dataUpdate["hora"]=$value->hora;
+              $dataUpdate["foto"]=$value->foto;
+              DB::table('decobo_orden_temp')
+              ->where('medidor',$value->medidor)
+              ->update($dataUpdate);
             }
 
           }
@@ -794,7 +801,7 @@ public function  procesarCatastros(){
 private  function verificaLecturaEnTemporal($medidor){
   return $result = DB::table("decobo_orden_temp")
                        ->where("medidor",$medidor)
-                       ->where("nueva_lectura","!=","0")
+                       ->where("nueva_lectura","=","0")
                        ->exists();
 }
 
@@ -1125,19 +1132,5 @@ private function validaExistenciaCoordenadas($medidor){
 
    }
 
-  public function validarConsumos2(){
-    try {
 
-
-    } catch (\Exception $e) {
-      return response()->json("error: ".$e);
-    }
-
-  }
-
-
-
-  public function getLectura(){
-
-  }
 }

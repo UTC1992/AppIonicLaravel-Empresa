@@ -104,6 +104,7 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('reportes/error-consumos','Gateway\Lecturas\LecturasController@reporteErroresConsumos');
     Route::get('reportes/error-lecturas','Gateway\Lecturas\LecturasController@reporteErroresLecturas');
     Route::get('reportes/envios/{mes}','Gateway\Lecturas\LecturasController@reporteEnviosLecturas');
+    Route::post('reportes/errores','Gateway\Lecturas\LecturasController@obtieneErroresLecturas');
 
     //lecturas backups
     Route::post('lecturas/update','Gateway\Lecturas\LecturasController@uploadBackupFile');

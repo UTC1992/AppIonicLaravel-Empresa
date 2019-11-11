@@ -10,10 +10,7 @@ import { Url } from '../models/Url';
 export class ReportesCortes {
 
   url: Url = new Url();
-  //baseUrl='http://pruebas.tiendanaturalecuador.online/api/angular';
-  //baseUrl="http://gestiondcyk.tecnosolutionscorp.com/api/angular";
   baseUrl: string;
-  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/api/angular';
   constructor(
     private http:HttpClient,
     ) {

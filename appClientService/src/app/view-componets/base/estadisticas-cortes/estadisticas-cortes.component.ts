@@ -102,13 +102,48 @@ export class EstadisticasCortesComponent implements OnInit {
       'inicio': fechaInicio,
       'fin': fechaFin
     });
-    //console.log(data);
+    console.log(data);
     this.reporteService.getCortesDiarios(data).subscribe(response =>{
-      //console.log(response);
+      console.log(response);
+      let dataNot = [];
+      let conNot = 0;
+      let dataCor = [];
+      let conCor = 0;
+      let dataRec = [];
+      let conRec = 0;
+
+      let conLabels = 0;
       for(let i = 0; i < response.length; i++){
-        this.barChartLabels[i] = response[i].fecha;
-        this.barChartData[i].data[0] = response[i].cantidad;
+
+        //console.log("valor encontrado => "+this.barChartLabels.find(barChartLabels => barChartLabels == response[i].fecha));
+
+        if(!this.barChartLabels.find(barChartLabels => barChartLabels == response[i].fecha)){
+          this.barChartLabels[conLabels] = response[i].fecha;
+          conLabels = conLabels + 1;
+        }
+
+        if(response[i].actividad == "NOTIFICACIONES"){
+          dataNot[conNot] = response[i].cantidad;
+          conNot = conNot + 1;
+        }
+        
+        if(response[i].actividad == "CORTE"){
+          dataCor[conCor] = response[i].cantidad;
+          conCor = conCor + 1;
+        }
+
+        if(response[i].actividad == "RECONEXIONES"){
+          dataRec[conRec] = response[i].cantidad;
+          conRec = conRec + 1;
+        }
+
+        
       }
+      this.barChartData[0].data = dataCor;
+      this.barChartData[1].data = dataNot;
+      this.barChartData[2].data = dataRec;
+      //console.log(this.barChartLabels);
+      //console.log(this.barChartData);
        
     });
   }

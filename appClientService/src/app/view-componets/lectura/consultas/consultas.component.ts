@@ -12,7 +12,10 @@ import { Tecnico } from "../../../models/tecnico";
 import {formatDate } from '@angular/common';
 //tablas
 import {MatTableDataSource, MatPaginator} from '@angular/material';
-
+//filtro para busqueda
+import { Filtro} from '../../../modelos-lec/filtro';
+//servicio de distribucion
+import { DistribucionService } from '../../../services-lecturas/distribucion.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -37,6 +40,11 @@ export const MY_FORMATS = {
   ],
 })
 export class ConsultasComponent implements OnInit {
+
+  //array para filtros
+  primerFiltro:Filtro[]=[];
+  segundoFiltro:Filtro[]=[];
+  tercerFiltro:Filtro[]=[];
 
   //fecha de filtro progreso
   mesBuscar: number = 0;
@@ -65,14 +73,15 @@ export class ConsultasComponent implements OnInit {
                                  'usuario', 'latitud',
                                 'longitud', 'hora', 'observacion', 'fechalec'];
   dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator1') paginator: MatPaginator;
 
   //tabla
   displayedColumnsErrorLec: string[] = ['index', 'agencia', 'sector', 'ruta', 'cuenta',
-                                'medidor', 'referencia_alerta','lec_anterior', 'lec_actual','consumo_anterior','consumo_nuevo',
+                                'medidor', 'referencia_alerta','lec_anterior', 'lec_actual',
+                                'consumo_anterior','consumo_nuevo',
                                 'observacion'];
   dataSourceErrorLec = new MatTableDataSource();
-  @ViewChild(MatPaginator) paginatorErrorLec: MatPaginator;
+  @ViewChild('paginator2') paginatorErrorLec: MatPaginator;
 
   //mensaje sin datos
   sin_datos_progreso: any = false;
@@ -80,16 +89,25 @@ export class ConsultasComponent implements OnInit {
   sin_datos_error_consumo: any = false;
   sin_datos_error_lectura: any = false;
 
+  //filtros
+  rutasObtenidas: Filtro[] = null;
+  agenciaElegida: string = null;
+  sectorElegido: string = null;
+  errorElegido: string = null;
+  revisionElegida: string = null;
+
   constructor(
     private tecnicoService:TecnicolecService,
     private consultaService:ConsultaService,
     private adapter: DateAdapter<any>,
     private fb: FormBuilder,
+    private distribucionService: DistribucionService,
   ) { }
 
   ngOnInit() {
     this.llenarTecnicosSelect();
     this.llenarMeses();
+    this.obtenerRutas();
   }
 
   applyFilter(filterValue: string) {
@@ -217,19 +235,90 @@ export class ConsultasComponent implements OnInit {
     });
   }
 
-  verErroresEnLecturas(){
-    this.consultaService.getErrorEnLecturas().subscribe(response => {
-      console.log(response);
-      if(response.length == 0){
-        this.sin_datos_error_lectura = true;
-      } else {
-        this.sin_datos_error_lectura = false;
-      }
-      this.dataSourceErrorLec = new MatTableDataSource(response);
-      this.dataSourceErrorLec.paginator = this.paginatorErrorLec;
+  obtenerRutas(){
+    this.distribucionService.getRutasAll().subscribe(response1 => {
+      console.log(response1);
+      this.rutasObtenidas = response1;
+
     }, error => {
       //console.log(error);
     });
+  }
+
+  //obtener sectores
+  getSectores($event){
+    
+    console.log($event.value);
+    let agencia = $event.value;
+    if(agencia == 'empty'){
+      this.agenciaElegida = null;  
+    } else {
+      this.agenciaElegida = agencia;
+    }
+    for (let i = 0; i < this.rutasObtenidas.length; i++) {
+      var valor = this.rutasObtenidas.find(x => x.agencia == agencia);
+      if (valor) {
+        let valor2 = this.segundoFiltro.find(x => x.sector == this.rutasObtenidas[i].sector);
+        if(!valor2){
+          this.segundoFiltro.push(this.rutasObtenidas[i]);
+          console.log(this.segundoFiltro);
+        }
+        
+      }
+    }
+
+  }
+
+  verErroresEnLecturas(){
+
+    if(this.agenciaElegida == "empty" || this.agenciaElegida == null){
+      this.showAlert('Alerta!',"Seleccione una agencia para consultar.",'warning');
+      return 
+    }
+
+    if(this.sectorElegido == "empty" || this.sectorElegido == null){
+      this.showAlert('Alerta!',"Seleccione un sector para consultar.",'warning');
+      return 
+    }
+
+    if(this.errorElegido == "empty" || this.errorElegido == null){
+      //this.showAlert('Alerta!',"Seleccione un tipo de error para consultar.",'warning');
+      //return
+      this.errorElegido = 'empty'; 
+    }
+
+    //crear objeto para enviar filtros
+    let data: any[] = [];
+    data.push({
+      agencia : this.agenciaElegida,
+      sector : this.sectorElegido,
+      tipo : this.errorElegido,
+      revision : this.revisionElegida
+    });
+    console.log(data);
+      
+    this.consultaService.getErrorEnLecturas(data).subscribe(response => {
+      console.log(response.length);
+      if(response.length == 0){
+        this.sin_datos_error_lectura = true;
+      }
+      
+      if(response.length > 0){
+        this.sin_datos_error_lectura = false;
+      }
+
+      if(!response){
+        this.sin_datos_error_lectura = true; 
+        return
+      }
+
+      this.dataSourceErrorLec = new MatTableDataSource(response);
+      this.dataSourceErrorLec.paginator = this.paginatorErrorLec;
+      
+    }, error => {
+      console.log(error);
+    });  
+    
   }
 
   showAlert(title, text, type){
