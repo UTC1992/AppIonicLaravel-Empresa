@@ -48,6 +48,18 @@ import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter'
 //graficos ng2-charts
 import { ChartsModule } from 'ng2-charts';
 
+//firebase
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { MessagingService } from './shared/messaging.service';
+import { environment } from '../environments/environment';
+import { AsyncPipe } from '../../node_modules/@angular/common';
+
+//notificaciones
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -92,7 +104,16 @@ import { ChartsModule } from 'ng2-charts';
     MatChipsModule,
     MatProgressSpinnerModule,
     ScrollDispatchModule,
-    MatRadioModule
+    MatRadioModule,
+
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+
+    ToastrModule.forRoot({
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     MatDatepickerModule,
@@ -100,7 +121,9 @@ import { ChartsModule } from 'ng2-charts';
     BsModalRef,
     HttpClient,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    MessagingService, 
+    AsyncPipe,
   ],
   bootstrap: [AppComponent],
   schemas: [ NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA ]

@@ -4,6 +4,7 @@ import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { MessagingService } from "../../shared/messaging.service";
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private loginService:LoginService,
     private router:Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private messagingService: MessagingService
     ) { 
       this.usuario = new Usuario();
     }
@@ -66,6 +68,9 @@ export class LoginComponent implements OnInit {
             this.loginService.guardarUsuario(res);
             //obtenemos el usuario
             let usuario = this.loginService.usuario;
+
+            //obtener token
+            this.messagingService.requestPermission(res['idUser']);
             
             this.router.navigate(['/base']);
             //Swal.fire('Login', `Hola ${usuario.name}, has iniciado sesión con éxito`, 'success');

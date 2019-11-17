@@ -4,4 +4,5 @@ export class Usuario {
         public name;
         public empresa;
         public id_emp;
+        public idUser;
 }

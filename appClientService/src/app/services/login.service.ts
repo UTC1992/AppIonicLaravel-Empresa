@@ -15,15 +15,14 @@ export class LoginService {
   private _token: string;
 
   url: Url = new Url();
-
-  //baseUrl='http://pruebas.tiendanaturalecuador.online/';
-  //baseUrl='http://gestiondcyk.tecnosolutionscorp.com/';
   baseUrl: string;
-  //baseUrl='http://pruebascortes.tecnosolutionscorp.com/';
+  baseUrlAngular: string;
+  
   constructor(
     private http:HttpClient,
     ) {
       this.baseUrl = this.url.baseLogin;
+      this.baseUrlAngular = this.url.base;
    }
 
   public get usuario(): Usuario{
@@ -130,6 +129,7 @@ export class LoginService {
     this._usuario.id_emp = user.id_emp;
     this._usuario.username = user.username;
     this._usuario.empresa = user.empresa;
+    this._usuario.idUser = user.idUser;
 
     sessionStorage.setItem('usuario', JSON.stringify(this._usuario));
   }
@@ -156,6 +156,28 @@ export class LoginService {
     return false;
   }
 
+  //actualizando token FCM para notificaciones push
+  updateUserTokenFCM(data){
+    const urlEndPoint = this.baseUrlAngular+"/update-token-admin";
+
+    return this.http.post(urlEndPoint, data)
+    .pipe(
+      map((response: any) => response),
+      catchError(e => {
+
+        if(e.status == 400){
+          return throwError(e);
+        }
+
+        if(e.error.mensaje){
+          //console.error(e.error.mensaje);
+        }
+        return throwError(e);
+      })
+    );
+  }
+
+
 /*
 logout(){
     localStorage.removeItem("empresa");
@@ -168,9 +190,18 @@ logout(){
     }
   */
   logout(): void{
+    let data: any[] = [];
+    data.push({
+      'id_user': this._usuario.idUser,
+      'token': ''
+    });
+    this.updateUserTokenFCM(data).subscribe(res => {
+        //console.log(res);
+    });
     this._token = null;
     this._usuario = null;
     sessionStorage.clear();
+    
     //sessionStorage.removeItem('usuario');
     //sessionStorage.removeItem('token');
   }
