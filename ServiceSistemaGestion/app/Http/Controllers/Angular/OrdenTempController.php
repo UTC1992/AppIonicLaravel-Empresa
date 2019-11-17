@@ -234,6 +234,17 @@ class OrdenTempController extends Controller
    }
  }
 
+
+public function uploadCoordenadas(){
+
+  try {
+
+  } catch (\Exception $e) {
+
+  }
+  
+}
+
   /**
    * Store a newly created resource in storage.
    *
@@ -553,5 +564,40 @@ public function validarCoordenada($coordenada){
     } catch (\Exception $e) {
       return response()->json("Error: ".$e);
     }
+  }
+
+
+  public function uploadFileCoordenadas(){
+
+    try {
+      $dataResponse=array();
+
+      if($request->hasFile('archivo_cordenadas')){
+
+        $path = $request->file('archivo_cordenadas')->getRealPath();
+        $data = \Excel::load($path)->get();
+        if($data->count()>0){
+          $con=0;
+          $actividadArray=array();
+          foreach ($data as $key => $value) {
+            $actividadArray[$con]['id_emp']=$this->getIdEmpUserAuth();
+            $actividadArray[$con]['cuenta']= $value->cuenta;
+            $actividadArray[$con]['medidor']= $value->medidor;
+            $actividadArray[$con]['latitud']= $value->latitud;
+            $actividadArray[$con]['longitud']= $value->longitud;
+            $con++;
+          }
+
+        }else{
+          $dataResponse["mensaje"]="El archivo esta vacío";
+        }
+      }else{
+          $dataResponse["error"]="Debe subir un archivo valido";
+      }
+
+    } catch (\Exception $e) {
+      return response()->json("Error: ".$e);
+    }
+
   }
 }

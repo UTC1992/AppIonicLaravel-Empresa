@@ -137,7 +137,7 @@ class ReportesController extends Controller
         $agencia=$request['agencia'];
         $sector=$request['sector'];
         $tipo_error=$request['tipo'];
-      //  $revision=$request["revision"];
+        $revision=$request["revision"];
         //  return response()->json($agencia)
         /*                        ->where(function($query) use($revision){
                                   if($revision!="empty")
@@ -147,7 +147,14 @@ class ReportesController extends Controller
           $result = DB::table("decobo_orden_temp")
                         ->where("agencia",$agencia)
                         ->where("sector",$sector)
-                        ->where("alerta",$tipo_error)
+                        ->where(function($query) use($revision){
+                                if($revision!="empty")
+                                  $query->where("revision",$revision);
+                              })
+                        ->where(function($query) use($tipo_error){
+                                if($tipo_error!="empty")
+                                  $query->where("alerta",$revision);
+                            })
                         ->get();
           return response()->json($result);
         }
