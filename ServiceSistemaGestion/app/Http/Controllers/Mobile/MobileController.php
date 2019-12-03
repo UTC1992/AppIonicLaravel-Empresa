@@ -13,6 +13,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
+
+use App\User;
+
 class MobileController extends Controller
 {
 
@@ -34,6 +41,7 @@ public function getTechnicalData($cedula){
       DB::table('tbl_ordentrabajo')
              ->whereIn('id_act',$idsActArray)
              ->update(['discharged' => 1]);
+      
       return response()->json($result);
   }else{
     return response()->json(false);
@@ -46,6 +54,7 @@ public function getTechnicalData($cedula){
 
   public function updateActivities(Request $request){
     try {
+      
       if(!is_null($request)){
         $input=$request->json()->all();
         $con=0;
@@ -82,6 +91,7 @@ public function getTechnicalData($cedula){
             $tecnico=Tecnico::find($value['id_tecn']);
             $tecnico->asignado=0;
             $tecnico->save();
+
             $con++;
         }
         if($con>0){
@@ -89,6 +99,9 @@ public function getTechnicalData($cedula){
           DB::table('tbl_ordentrabajo')
                  ->whereIn('id_act',$idsActArray)
                  ->update(['sent' => 1]);
+
+          //$id_tecnico = $tecnico->id_tecn;
+          $this->EnviarNotificacion(34);      
 
           return response()->json(true);
         }
@@ -101,6 +114,49 @@ public function getTechnicalData($cedula){
   }
 
 
+  public function EnviarNotificacion($id_tecnico = 0)
+  {
+    //obteniendo tecnico asignado
+    $tecnico=Tecnico::find($id_tecnico);
+    $id_empresa = $tecnico->id_emp;
+    //$token_usuario = $tecnico->token_fcm;
+
+    $optionBuilder = new OptionsBuilder();
+    $optionBuilder->setTimeToLive(60*20);
+
+    $notificationBuilder = new PayloadNotificationBuilder('Tareas del día');
+    $notificationBuilder->setBody('Hello world Notificaciones 50 Éxitos')
+                ->setSound('default');
+
+    $dataBuilder = new PayloadDataBuilder();
+    $dataBuilder->addData([ 'nombre' => '',
+                            'cantidad' => 0,
+                            'actividad' => '0',
+                            'hora' => '00:00'
+                          ]);
+
+    $option = $optionBuilder->build();
+    $notification = $notificationBuilder->build();
+    $data = $dataBuilder->build();
+
+    //crear objeto User
+    $user = new User();
+    //obtener usuarios de la empresa
+    $result = $user->getUsersByEmpresa($id_empresa);
+
+    //recorrer datos obtenidos y enviar notitificaciones
+    foreach ($result as $key => $value) {
+      
+      $token = $value->token_fcm;
+
+      $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+      
+      $downstreamResponse->numberSuccess();
+      $downstreamResponse->numberFailure();
+      $downstreamResponse->numberModification();
+    }
+
+  }
 
 
 
@@ -146,9 +202,28 @@ public function getTechnicalData($cedula){
 
 
 /**
- * obtener observaciones
- */
+*actualiza token que biene desde la app
+*/
+public function ActualizarToken(Request $request){
 
+    //$cedula, $tipoActividadTecnico,$token
+    $input = $request->json()->all();
+    
+    $cedula = $input[0]['cedula'];
+    $tipoActividadTecnico = $input[0]['actividad'];
+    $token = $input[0]['token'];
+    
+    $tecnico = Tecnico::where('cedula',$cedula)->where('actividad',$tipoActividadTecnico)->first();
+    $tecnico->token_fcm = $token;
+    $result = $tecnico->save();
+    if($result){
+        return response()->json(true);
+    }
+    
+    return response()->json(false);
+  
+
+}
 
 
 }

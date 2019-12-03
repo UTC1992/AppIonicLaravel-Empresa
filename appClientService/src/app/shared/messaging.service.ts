@@ -72,7 +72,7 @@ export class MessagingService {
         });
       },
       (err) => {
-        console.error('Unable to get permission to notify.', err);
+        //console.error('Unable to get permission to notify.', err);
         return null;
       }
     );
@@ -85,7 +85,7 @@ export class MessagingService {
     this.angularFireMessaging.messages.subscribe(
       (payload) => {
         //console.log("Nuevo mensaje recivido. ", payload);
-        this.currentMessage.next(payload);
+        //this.currentMessage.next(payload);
         //console.log(payload['data']['cantidad']);
         /*
         this.showAlert("Éxito",

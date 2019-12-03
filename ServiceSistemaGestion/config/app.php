@@ -148,9 +148,12 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
 
+
+
         /*
          * Package Service Providers...
          */
+        LaravelFCM\FCMServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -211,6 +214,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        'FCM'      => LaravelFCM\Facades\FCM::class,
 
     ],
 

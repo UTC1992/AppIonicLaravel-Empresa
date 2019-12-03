@@ -35,7 +35,7 @@ class User extends Authenticatable
     public function getUserInfo($idUsuario){
       return $actividad = DB::table('users as T0')
             ->join('tbl_empresa as T1','T1.id_emp','=','T0.id_emp')
-            ->select('T0.name','T0.email as username','T1.nombre as empresa','T1.id_emp')
+            ->select('T0.name','T0.email as username', 'T0.id as idUser','T1.nombre as empresa','T1.id_emp')
             ->where('T0.id',$idUsuario)
             ->first();
     }
@@ -51,6 +51,12 @@ class User extends Authenticatable
     {
         //return $user = User::all();
         return $sub = DB::select('select T0.id_emp as idEmp, T0.nombre as nombreEmp, T1.name as name, T1.email as email, T1.id as id from tbl_empresa as T0, users as T1 where T0.id_emp=T1.id_emp and T1.borrado=0', []);
+    }
+
+    public function getUsersByEmpresa($id_emp = 0)
+    {
+        //return $user = User::all();
+        return $users = DB::select('SELECT * FROM users WHERE id_emp=:idEmpresa', ['idEmpresa' => $id_emp]);
     }
 
     public function getById($id='')

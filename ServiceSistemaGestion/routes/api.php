@@ -108,12 +108,16 @@ Route::group(['prefix' => 'angular'], function(){
 
     //lecturas backups
     Route::post('lecturas/update','Gateway\Lecturas\LecturasController@uploadBackupFile');
+
+    //notificaciones FCM
+    Route::post('update-token-admin','Angular\TecnicoController@ActualizarTokenAdmin');
 });
 
 Route::group(['prefix' => 'mobile'], function(){
     Route::get('get-data/{cedula}','Mobile\MobileController@getTechnicalData');
     Route::post('insert-data','Mobile\MobileController@insertReconexionManual');
     Route::post('update-activities','Mobile\MobileController@updateActivities');
+    Route::post('update-token','Mobile\MobileController@ActualizarToken');
     // gateway routes Mobile
   });
 

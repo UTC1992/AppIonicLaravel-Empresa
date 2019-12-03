@@ -13,6 +13,13 @@ use App\Models\ReconexionManual;
 use Illuminate\Support\Facades\Hash;
 use DB;
 
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
+
+use App\User;
+
 class TecnicoController extends Controller
 {
   public function __construct(){
@@ -99,7 +106,7 @@ class TecnicoController extends Controller
         $tecnico->id_emp=$this->getIdEmpUserAuth();
         $tecnico->save();
         if($tecnico){
-          $this->createHistoryUser("Crear","Creacion de etecnico correcto","Tecnicos");
+          $this->createHistoryUser("Crear","Creacion de tecnico correcto","Tecnicos");
           return response()->json(true);
         }else{
           $this->createHistoryUser("Error","Creacion de etecnico fallido","Tecnicos");
@@ -173,6 +180,8 @@ class TecnicoController extends Controller
       return response()->json($tecnico);
     }
 
+
+
 /**
  *
  */
@@ -212,6 +221,10 @@ class TecnicoController extends Controller
           $tecnico=Tecnico::find($array_tecnicos[$j]);
           $tecnico->asignado=1;
           $tecnico->save();
+
+          $id_tecnico = $array_tecnicos[$j];//se asigna el id del tecnico
+          $this->EnviarNotificacion($id_tecnico);//se envia a notificar al tecnico
+
         }
 
         $this->createHistoryUser("Distribucion","Distribucion de actividades a Tecnico","Tecnicos");
@@ -221,6 +234,36 @@ class TecnicoController extends Controller
         return response()->json("Error: ".$e);
       }
 
+    }
+
+
+    public function EnviarNotificacion($id_tecnico = 0)
+    {
+      //obteniendo tecnico asignado
+      $tecnico=Tecnico::find($id_tecnico);
+      $token_usuario = $tecnico->token_fcm;
+
+      $optionBuilder = new OptionsBuilder();
+      $optionBuilder->setTimeToLive(60*20);
+
+      $notificationBuilder = new PayloadNotificationBuilder('Tareas del día');
+      $notificationBuilder->setBody('Empezar actividades\nhola mundoo')
+                  ->setSound('default');
+
+      $dataBuilder = new PayloadDataBuilder();
+      $dataBuilder->addData(['data' => '']);
+
+      $option = $optionBuilder->build();
+      $notification = $notificationBuilder->build();
+      $data = $dataBuilder->build();
+
+      $token = $token_usuario;
+
+      $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+
+      $downstreamResponse->numberSuccess();
+      $downstreamResponse->numberFailure();
+      $downstreamResponse->numberModification();
     }
 
 
@@ -291,6 +334,22 @@ class TecnicoController extends Controller
                           WHERE t0.id_tecn=t1.tecnico_id AND t0.id_emp=".$this->getIdEmpUserAuth()
                           , []);
       return response()->json($result);
+    }
+
+    public function ActualizarTokenAdmin( Request $request )
+    {
+      try {
+          $id_user = $request[0]['id_user'];
+          $token = $request[0]['token'];
+          $user = User::find($id_user);
+          $user->token_fcm = $token;
+          $user->save();
+          
+          return response()->json($user->token_fcm);
+
+      } catch (\Exception $e) {
+        return response()->json("Error:_ ".$e);
+      }
     }
 
 }

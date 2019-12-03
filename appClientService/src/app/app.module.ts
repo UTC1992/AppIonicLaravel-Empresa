@@ -54,7 +54,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import { MessagingService } from './shared/messaging.service';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.prod';
 import { AsyncPipe } from '../../node_modules/@angular/common';
 
 //notificaciones
